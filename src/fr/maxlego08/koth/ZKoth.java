@@ -4,6 +4,7 @@ import fr.maxlego08.koth.command.CommandManager;
 import fr.maxlego08.koth.inventory.InventoryManager;
 import fr.maxlego08.koth.listener.AdapterListener;
 import fr.maxlego08.koth.save.Config;
+import fr.maxlego08.koth.save.Lang;
 import fr.maxlego08.koth.zcore.ZPlugin;
 import fr.maxlego08.koth.zcore.utils.builder.CooldownBuilder;
 
@@ -11,6 +12,7 @@ public class ZKoth extends ZPlugin {
 
 	private CommandManager commandManager;
 	private InventoryManager inventoryManager;
+	private KothManager manager;
 
 	@Override
 	public void onEnable() {
@@ -30,10 +32,13 @@ public class ZKoth extends ZPlugin {
 
 		addListener(new AdapterListener(this));
 		addListener(inventoryManager);
+		addListener(manager = new KothManager());
+		manager.eneableFaction();
 
 		/* Add Saver */
 
 		addSave(Config.getInstance());
+		addSave(Lang.getInstance());
 		addSave(new CooldownBuilder());
 
 		getSavers().forEach(saver -> saver.load(getPersist()));
@@ -72,6 +77,10 @@ public class ZKoth extends ZPlugin {
 	 */
 	public static ZKoth getInstance() {
 		return instance;
+	}
+	
+	public KothManager getManager() {
+		return manager;
 	}
 	
 }

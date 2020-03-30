@@ -32,6 +32,10 @@ import fr.maxlego08.koth.ZKoth;
 import fr.maxlego08.koth.zcore.ZPlugin;
 import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.enums.Permission;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.milkbowl.vault.economy.Economy;
 
 @SuppressWarnings("deprecation")
@@ -862,5 +866,49 @@ public abstract class ZUtils {
 		for (int index = list.size() - 1; index != -1; index--)
 			tmpList.add(list.get(index));
 		return tmpList;
+	}
+
+	/**
+	 * 
+	 * @param message
+	 * @return
+	 */
+	protected TextComponent buildTextComponent(String message) {
+		return new TextComponent(message);
+	}
+
+	/**
+	 * 
+	 * @param message
+	 * @return
+	 */
+	protected TextComponent buildTextComponentWithPrefix(String message) {
+		return new TextComponent(Message.PREFIX.getMessage() + " " + message);
+	}
+
+	/**
+	 * 
+	 * @param message
+	 * @return
+	 */
+	protected TextComponent setHoverMessage(TextComponent component, String... messages) {
+		BaseComponent[] list = new BaseComponent[messages.length];
+		for (int a = 0; a != messages.length; a++)
+			list[a] = new TextComponent(messages[a] + (messages.length - 1 == a ? "" : "\n"));
+		component.setHoverEvent(new HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, list));
+		return component;
+	}
+
+	/**
+	 * 
+	 * @param component
+	 * @param action
+	 * @param command
+	 * @return
+	 */
+	protected TextComponent setClickAction(TextComponent component, net.md_5.bungee.api.chat.ClickEvent.Action action,
+			String command) {
+		component.setClickEvent(new ClickEvent(action, command));
+		return component;
 	}
 }

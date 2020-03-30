@@ -1,8 +1,5 @@
 package fr.maxlego08.koth.listener;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -19,7 +16,6 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -28,7 +24,6 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import fr.maxlego08.koth.ZKoth;
-import fr.maxlego08.koth.save.Config;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
 
 @SuppressWarnings("deprecation")
@@ -116,27 +111,6 @@ public class AdapterListener extends ZUtils implements Listener {
 	@EventHandler
 	public void onGamemodeChange(PlayerGameModeChangeEvent event) {
 		template.getListenerAdapters().forEach(adapter -> adapter.onGamemodeChange(event, event.getPlayer()));
-	}
-
-	@EventHandler
-	public void onDrop(PlayerDropItemEvent event) {
-		template.getListenerAdapters().forEach(adapter -> adapter.onDrop(event, event.getPlayer()));
-		if (!Config.useItemFallEvent)
-			return;
-		Item item = event.getItemDrop();
-		AtomicBoolean hasSendEvent = new AtomicBoolean(false);
-		scheduleFix(100, (task, isActive) -> {
-			if (!isActive)
-				return;
-			template.getListenerAdapters().forEach(adapter -> adapter.onItemMove(event, event.getPlayer(), item,
-					item.getLocation(), item.getLocation().getBlock()));
-			if (item.isOnGround() && !hasSendEvent.get()) {
-				task.cancel();
-				hasSendEvent.set(true);
-				template.getListenerAdapters().forEach(
-						adapter -> adapter.onItemisOnGround(event, event.getPlayer(), item, item.getLocation()));
-			}
-		});
 	}
 
 	@EventHandler

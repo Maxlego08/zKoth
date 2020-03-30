@@ -2,6 +2,8 @@ package fr.maxlego08.koth;
 
 import java.util.concurrent.Callable;
 
+import org.bukkit.Bukkit;
+
 import fr.maxlego08.koth.command.CommandManager;
 import fr.maxlego08.koth.inventory.InventoryManager;
 import fr.maxlego08.koth.listener.AdapterListener;
@@ -23,12 +25,12 @@ public class ZKoth extends ZPlugin {
 	public void onEnable() {
 
 		instance = this;
-		
+
 		preEnable();
 
 		commandManager = new CommandManager(this);
 		commandManager.registerCommands();
-		
+
 		if (!isEnabled())
 			return;
 		inventoryManager = InventoryManager.getInstance();
@@ -49,6 +51,11 @@ public class ZKoth extends ZPlugin {
 
 		getSavers().forEach(saver -> saver.load(getPersist()));
 
+		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+			KothPlaceholderExpansion expansion = new KothPlaceholderExpansion(manager, getDescription().getFullName());
+			expansion.register();
+		}
+
 		Metrics metrics = new Metrics(this);
 		metrics.addCustomChart(new Metrics.SingleLineChart("koths", new Callable<Integer>() {
 			@Override
@@ -56,7 +63,7 @@ public class ZKoth extends ZPlugin {
 				return manager.size();
 			}
 		}));
-		
+
 		postEnable();
 
 	}
@@ -85,14 +92,13 @@ public class ZKoth extends ZPlugin {
 	 */
 	private static volatile ZKoth instance;
 
-
 	/**
 	 * Return a singleton instance of Template.
 	 */
 	public static ZKoth getInstance() {
 		return instance;
 	}
-	
+
 	public KothManager getManager() {
 		return manager;
 	}

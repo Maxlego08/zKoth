@@ -1,17 +1,40 @@
 package fr.maxlego08.koth.save;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.bukkit.Material;
+
+import fr.maxlego08.koth.KothLoot;
+import fr.maxlego08.koth.zcore.utils.ItemDecoder;
+import fr.maxlego08.koth.zcore.utils.builder.ItemBuilder;
 import fr.maxlego08.koth.zcore.utils.storage.Persist;
 import fr.maxlego08.koth.zcore.utils.storage.Saveable;
 
 public class Config implements Saveable {
 
-	public static String version = "0.0.0.1";
-	public static boolean useItemFallEvent = false;
-	
 	/**
 	 * static Singleton instance.
 	 */
 	private static volatile Config instance;
+	public static int cooldownInSecond = 300;
+	public static List<Integer> displayMessageCooldown = Arrays.asList(300, 120, 60, 30, 10, 5, 4, 3, 2, 1);
+	public static List<Integer> displayMessageKothCap = Arrays.asList(300, 120, 60, 30, 10, 5, 4, 3, 2, 1);
+	public static int defaultCap = 60;
+	public static KothLoot loot = KothLoot.COMMAND;
+	public static boolean giveCommandToFaction = false;
+	public static List<String> commands = new ArrayList<String>();
+	public static List<String> itemstacks = new ArrayList<String>();
+	public static int removeChestSec = 120;
+
+	static {
+
+		commands.add("bc %player% vient de gagner le koth %name% !");
+		
+		itemstacks.add(ItemDecoder.serializeItemStack(new ItemBuilder(Material.DIAMOND, 32, "§ezKoth").build()));
+		
+	}
 
 	/**
 	 * Private constructor for singleton.

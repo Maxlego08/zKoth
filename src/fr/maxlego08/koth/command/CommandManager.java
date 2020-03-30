@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import fr.maxlego08.koth.ZKoth;
+import fr.maxlego08.koth.command.commands.CommandKoth;
 import fr.maxlego08.koth.zcore.ZPlugin;
 import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.logger.Logger;
@@ -34,6 +35,8 @@ public class CommandManager extends ZUtils implements CommandExecutor {
 
 	public void registerCommands() {
 
+		registerCommand("zkoth", new CommandKoth(), "koth");
+		
 		main.getLog().log("Loading " + getUniqueCommand() + " commands", LogType.SUCCESS);
 		this.commandChecking();
 	}

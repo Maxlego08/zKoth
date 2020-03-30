@@ -3,7 +3,10 @@ package fr.maxlego08.koth.zcore.utils;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
@@ -32,6 +35,10 @@ import fr.maxlego08.koth.ZKoth;
 import fr.maxlego08.koth.zcore.ZPlugin;
 import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.enums.Permission;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.milkbowl.vault.economy.Economy;
 
 @SuppressWarnings("deprecation")
@@ -667,7 +674,8 @@ public abstract class ZUtils {
 	 * @param message
 	 */
 	protected void message(CommandSender player, Message message) {
-		player.sendMessage(Message.PREFIX.msg() + " " + message.msg());
+		if (player != null)
+			player.sendMessage(Message.PREFIX.msg() + " " + message.msg());
 	}
 
 	/**
@@ -676,7 +684,8 @@ public abstract class ZUtils {
 	 * @param message
 	 */
 	protected void message(CommandSender player, String message) {
-		player.sendMessage(Message.PREFIX.msg() + " " + message);
+		if (player != null)
+			player.sendMessage(Message.PREFIX.msg() + " " + message);
 	}
 
 	/**
@@ -685,7 +694,8 @@ public abstract class ZUtils {
 	 * @param message
 	 */
 	protected void messageWO(CommandSender player, Message message) {
-		player.sendMessage(message.msg());
+		if (player != null)
+			player.sendMessage(message.msg());
 	}
 
 	/**
@@ -695,7 +705,8 @@ public abstract class ZUtils {
 	 * @param args
 	 */
 	protected void messageWO(CommandSender player, Message message, Object... args) {
-		player.sendMessage(String.format(message.msg(), args));
+		if (player != null)
+			player.sendMessage(String.format(message.msg(), args));
 	}
 
 	/**
@@ -775,6 +786,24 @@ public abstract class ZUtils {
 				Bukkit.getScheduler().runTask(ZPlugin.z(), () -> runnable.accept(this, true));
 			}
 		}, delay, delay);
+	}
+	
+	/**
+	 * @param delay
+	 * @param runnable
+	 */
+	protected void scheduleFix(long start, long delay, BiConsumer<TimerTask, Boolean> runnable) {
+		new Timer().scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				if (!ZPlugin.z().isEnabled()) {
+					cancel();
+					runnable.accept(this, false);
+					return;
+				}
+				Bukkit.getScheduler().runTask(ZPlugin.z(), () -> runnable.accept(this, true));
+			}
+		}, start, delay);
 	}
 
 	/**
@@ -862,5 +891,73 @@ public abstract class ZUtils {
 		for (int index = list.size() - 1; index != -1; index--)
 			tmpList.add(list.get(index));
 		return tmpList;
+	}
+
+	/**
+	 * 
+	 * @param message
+	 * @return
+	 */
+	protected TextComponent buildTextComponent(String message) {
+		return new TextComponent(message);
+	}
+
+	/**
+	 * 
+	 * @param message
+	 * @return
+	 */
+	protected TextComponent buildTextComponentWithPrefix(String message) {
+		return new TextComponent(Message.PREFIX.getMessage() + " " + message);
+	}
+
+	/**
+	 * 
+	 * @param message
+	 * @return
+	 */
+	protected TextComponent setHoverMessage(TextComponent component, String... messages) {
+		BaseComponent[] list = new BaseComponent[messages.length];
+		for (int a = 0; a != messages.length; a++)
+			list[a] = new TextComponent(messages[a] + (messages.length - 1 == a ? "" : "\n"));
+		component.setHoverEvent(new HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, list));
+		return component;
+	}
+
+	/**
+	 * 
+	 * @param component
+	 * @param action
+	 * @param command
+	 * @return
+	 */
+	protected TextComponent setClickAction(TextComponent component, net.md_5.bungee.api.chat.ClickEvent.Action action,
+			String command) {
+		component.setClickEvent(new ClickEvent(action, command));
+		return component;
+	}
+
+	protected String getDay() {
+		GregorianCalendar calendar = new GregorianCalendar();
+		calendar.setTime(new Date());
+		int today = calendar.get(Calendar.DAY_OF_WEEK);
+		switch (today) {
+		case GregorianCalendar.MONDAY:
+			return "MONDAY";
+		case GregorianCalendar.TUESDAY:
+			return "TUESDAY";
+		case GregorianCalendar.WEDNESDAY:
+			return "WEDNESDAY";
+		case GregorianCalendar.THURSDAY:
+			return "THURSDAY";
+		case GregorianCalendar.FRIDAY:
+			return "FRIDAY";
+		case GregorianCalendar.SATURDAY:
+			return "SATURDAY";
+		case GregorianCalendar.SUNDAY:
+			return "SUNDAY";
+		default:
+			return null;
+		}
 	}
 }

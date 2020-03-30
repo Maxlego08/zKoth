@@ -303,16 +303,14 @@ public class KothManager extends ListenerAdapter implements Saveable {
 	@Override
 	protected void onInventoryClose(InventoryCloseEvent event, Player player) {
 
-		Config.itemstacks = new ArrayList<>();
 
 		if (event.getView().getTitle().equalsIgnoreCase("§ezKOTH §6Loots")) {
-
+			Config.itemstacks = new ArrayList<>();
 			for (ItemStack itemStack : event.getInventory().getContents())
 				if (itemStack != null)
 					Config.itemstacks.add(encode(itemStack));
+			message(player, Message.KOTH_LOOT_EDIT);
 		}
-
-		message(player, Message.KOTH_LOOT_EDIT);
 
 	}
 

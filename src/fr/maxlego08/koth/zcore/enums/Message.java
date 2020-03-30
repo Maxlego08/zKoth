@@ -52,6 +52,7 @@ public enum Message {
 	KOTH_LOCATION_NULL("You did not put this location"),
 	KOTH_FIRST("First location"),
 	KOTH_SECOND("Second location"),
+	KOTH_LOOT_EDIT("Loot save"),
 	
 	KOTH_SCHEDULER_CREATE("§eYou have just created a scheduler for the koth §6%s§e."),
 	KOTH_SCHEDULER_EMPTY("§cNo scheduler available"),
@@ -71,6 +72,7 @@ public enum Message {
 	DESCRIPTION_HELP("Show commands"),
 	DESCRIPTION_SHOW("Show koth"),
 	DESCRIPTION_SET("Set koth locations"),
+	DESCRIPTION_LOOT("Edit loot chest"),
 	DESCRIPTION_SCHEDULER("Show scheduler commands"),
 	DESCRIPTION_SCHEDULER_LIST("Show scheduler list"),
 	DESCRIPTION_SCHEDULER_ADD("Add a scheduler"),

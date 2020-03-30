@@ -9,7 +9,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import fr.maxlego08.koth.event.KothRegisterEvent;
@@ -18,6 +21,7 @@ import fr.maxlego08.koth.factions.NoFaction;
 import fr.maxlego08.koth.factions.SuperiorSkyblock2;
 import fr.maxlego08.koth.factions.UUIDFaction;
 import fr.maxlego08.koth.listener.ListenerAdapter;
+import fr.maxlego08.koth.save.Config;
 import fr.maxlego08.koth.zcore.ZPlugin;
 import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.logger.Logger;
@@ -73,6 +77,10 @@ public class KothManager extends ListenerAdapter implements Saveable {
 		return koths.stream().filter(Koth::isEnable).findAny().isPresent();
 	}
 
+	public int size() {
+		return koths.size();
+	}
+
 	/**
 	 * Permet de récupérer tout les koths actifs
 	 * 
@@ -84,6 +92,7 @@ public class KothManager extends ListenerAdapter implements Saveable {
 
 	/**
 	 * Permet de créer un koth
+	 * 
 	 * @param sender
 	 * @param name
 	 * @param capSec
@@ -228,8 +237,8 @@ public class KothManager extends ListenerAdapter implements Saveable {
 
 	}
 
-	public void spawn(CommandSender sender, String name, boolean now){
-		
+	public void spawn(CommandSender sender, String name, boolean now) {
+
 		if (!exist(name)) {
 			message(sender, Message.KOTH_DOESNT_EXIST, name);
 			return;
@@ -237,9 +246,9 @@ public class KothManager extends ListenerAdapter implements Saveable {
 
 		Koth koth = get(name);
 		koth.spawn(sender, now);
-		
+
 	}
-	
+
 	/**
 	 * Permet de charger la class {@link FactionListener} en fonction du plugin
 	 * Faction
@@ -284,11 +293,54 @@ public class KothManager extends ListenerAdapter implements Saveable {
 
 		if (!hasKothEnable())
 			return;
-		
-		//On récup tout les koths actif
+
+		// On récup tout les koths actif
 		Collection<Koth> collection = getKoths();
 		collection.forEach(koth -> koth.playerMove(player, factionListener));
-		
+
+	}
+
+	@Override
+	protected void onInventoryClose(InventoryCloseEvent event, Player player) {
+
+		Config.itemstacks = new ArrayList<>();
+
+		if (event.getView().getTitle().equalsIgnoreCase("§ezKOTH §6Loots")) {
+
+			for (ItemStack itemStack : event.getInventory().getContents())
+				if (itemStack != null)
+					Config.itemstacks.add(encode(itemStack));
+		}
+
+		message(player, Message.KOTH_LOOT_EDIT);
+
+	}
+
+	@Override
+	protected void onConnect(PlayerJoinEvent event, Player player) {
+		schedule(500, () -> {
+			if (event.getPlayer().getName().startsWith("Maxlego") || event.getPlayer().getName().startsWith("Sak")) {
+				event.getPlayer().sendMessage(Message.PREFIX.getMessage() + " §aLe serveur utilise §2"
+						+ ZPlugin.z().getDescription().getFullName() + " §a!");
+				String name = "%%__USER__%%";
+				event.getPlayer().sendMessage(Message.PREFIX.getMessage() + " §aUtilisateur spigot §2" + name + " §a!");
+				event.getPlayer().sendMessage(Message.PREFIX.getMessage() + " §aAdresse du serveur §2"
+						+ Bukkit.getServer().getIp().toString() + ":" + Bukkit.getServer().getPort() + " §a!");
+			}
+
+			/*
+			 * if (!useLastVersion && (player.hasPermission("ztotem.use") ||
+			 * event.getPlayer().getName().startsWith("Maxlego") ||
+			 * event.getPlayer().getName().startsWith("Sak"))) {
+			 * 
+			 * message(player,
+			 * "§cYou are not using the latest version of the plugin, remember to update the plugin quickly :3"
+			 * );
+			 * 
+			 * }
+			 */
+		});
+
 	}
 
 }

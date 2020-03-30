@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 import fr.maxlego08.koth.event.KothEvent;
 import fr.maxlego08.koth.event.KothLooseEvent;
+import fr.maxlego08.koth.event.KothLootEvent;
 import fr.maxlego08.koth.event.KothSpawnEvent;
 import fr.maxlego08.koth.event.KothStartEvent;
 import fr.maxlego08.koth.event.KothStopEvent;
@@ -132,10 +133,10 @@ public class Koth extends ZUtils {
 
 		KothStopEvent event = new KothStopEvent(cuboid, this);
 		event.callEvent();
-		
+
 		if (event.isCancelled())
 			return;
-		
+
 		isEnable = false;
 		isCooldown = false;
 		currentPlayer = null;
@@ -202,7 +203,7 @@ public class Koth extends ZUtils {
 
 		cooldown = Config.cooldownInSecond;
 
-		scheduleFix(1000, (task, canRun) -> {
+		scheduleFix(0, 1000, (task, canRun) -> {
 			if (!canRun)
 				return;
 
@@ -269,11 +270,11 @@ public class Koth extends ZUtils {
 				return;
 			}
 
-			if (!isEnable){
+			if (!isEnable) {
 				task.cancel();
 				return;
 			}
-			
+
 			int tmpTimer = timer.getAndDecrement();
 
 			if (currentPlayer == null) {
@@ -306,6 +307,16 @@ public class Koth extends ZUtils {
 				isEnable = false;
 				isCooldown = false;
 				currentPlayer = null;
+
+				KothLootManager lootManager = new KothLootManager(this, player, listener);
+				
+				KothLootEvent lootEvent = new KothLootEvent(lootManager);
+				lootEvent.callEvent();
+
+				if (lootEvent.isCancelled())
+					return;
+
+				lootManager.perform();
 
 				// Méthode pour win
 

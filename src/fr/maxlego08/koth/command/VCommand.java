@@ -307,12 +307,14 @@ public abstract class VCommand extends Arguments {
 
 		String tmpString = subCommands.get(0);
 
-		if (requireArgs.size() != 0 && syntaxe.equals(""))
+		boolean b = syntaxe.equals("");
+		
+		if (requireArgs.size() != 0 && b)
 			for (String requireArg : requireArgs) {
 				requireArg = "<" + requireArg + ">";
 				syntaxe += " " + requireArg;
 			}
-		if (optionalArgs.size() != 0 && syntaxe.equals(""))
+		if (optionalArgs.size() != 0 && b)
 			for (String optionalArg : optionalArgs) {
 				optionalArg = "[<" + optionalArg + ">]";
 				syntaxe += " " + optionalArg;

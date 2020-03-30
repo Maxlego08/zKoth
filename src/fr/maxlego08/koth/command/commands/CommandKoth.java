@@ -23,6 +23,7 @@ public class CommandKoth extends VCommand {
 		this.addSubCommand(new CommandKothShow());
 		this.addSubCommand(new CommandKothStop());
 		this.addSubCommand(new CommandKothScheduler());
+		this.addSubCommand(new CommandKothLoot());
 	}
 
 	@Override

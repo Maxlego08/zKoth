@@ -14,7 +14,7 @@ public enum Permission {
 	
 	ZKOTH_SET,
 
-	ZKOTH_SCHEDULER,
+	ZKOTH_SCHEDULER, ZKOTH_LOOT,
 
 	;
 

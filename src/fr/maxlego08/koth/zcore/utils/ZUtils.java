@@ -675,8 +675,7 @@ public abstract class ZUtils {
 	 */
 	protected void message(CommandSender player, Message message) {
 		if (player != null)
-			player = Bukkit.getConsoleSender();
-		player.sendMessage(Message.PREFIX.msg() + " " + message.msg());
+			player.sendMessage(Message.PREFIX.msg() + " " + message.msg());
 	}
 
 	/**

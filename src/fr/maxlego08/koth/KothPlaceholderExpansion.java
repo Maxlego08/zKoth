@@ -15,7 +15,6 @@ public class KothPlaceholderExpansion extends PlaceholderExpansion {
 		super();
 		this.manager = manager;
 		this.version = version;
-		this.register();
 	}
 
 	@Override

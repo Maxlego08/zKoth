@@ -84,18 +84,18 @@ public class KothManager extends ListenerAdapter implements Saveable {
 
 	/**
 	 * Permet de créer un koth
-	 * 
 	 * @param sender
 	 * @param name
+	 * @param capSec
 	 */
-	public void create(CommandSender sender, String name) {
+	public void create(CommandSender sender, String name, int capSec) {
 
 		if (exist(name)) {
 			message(sender, Message.KOTH_ALREADY_EXIST, name);
 			return;
 		}
 
-		Koth koth = new Koth(name);
+		Koth koth = new Koth(name, capSec);
 		koths.add(koth);
 
 		message(sender, Message.KOTH_CREATE, name);
@@ -186,11 +186,11 @@ public class KothManager extends ListenerAdapter implements Saveable {
 			TextComponent spawn = buildTextComponent(" §8(§2spawn§8)");
 			setClickAction(spawn, Action.SUGGEST_COMMAND, "/koth spawn " + koth.getName());
 			setHoverMessage(spawn, "§f» §7Click for spawn koth");
-			
+
 			TextComponent now = buildTextComponent(" §8(§2now§8)");
 			setClickAction(now, Action.SUGGEST_COMMAND, "/koth now " + koth.getName());
 			setHoverMessage(now, "§f» §7Click for spawn koth now");
-			
+
 			TextComponent delete = buildTextComponent(" §8(§cdelete§8)");
 			setClickAction(delete, Action.SUGGEST_COMMAND, "/koth delete " + koth.getName());
 			setHoverMessage(delete, "§f» §7Click for delete koth");
@@ -198,13 +198,48 @@ public class KothManager extends ListenerAdapter implements Saveable {
 			component.addExtra(spawn);
 			component.addExtra(now);
 			component.addExtra(delete);
-			
+
 			player.spigot().sendMessage(component);
 
 		});
 
 	}
 
+	/**
+	 * 
+	 * @param sender
+	 * @param name
+	 */
+	public void stop(CommandSender sender, String name) {
+
+		if (!exist(name)) {
+			message(sender, Message.KOTH_DOESNT_EXIST, name);
+			return;
+		}
+
+		Koth koth = get(name);
+
+		if (!koth.isEnable() && !koth.isCooldown()) {
+			message(sender, Message.KOTH_NO_ENABLE, name);
+			return;
+		}
+
+		koth.stop();
+
+	}
+
+	public void spawn(CommandSender sender, String name, boolean now){
+		
+		if (!exist(name)) {
+			message(sender, Message.KOTH_DOESNT_EXIST, name);
+			return;
+		}
+
+		Koth koth = get(name);
+		koth.spawn(sender, now);
+		
+	}
+	
 	/**
 	 * Permet de charger la class {@link FactionListener} en fonction du plugin
 	 * Faction
@@ -241,9 +276,19 @@ public class KothManager extends ListenerAdapter implements Saveable {
 		ZPlugin.z().addListener(factionListener);
 	}
 
+	/**
+	 * Event quand un joueur va bouger
+	 */
 	@Override
 	protected void onMove(PlayerMoveEvent event, Player player) {
 
+		if (!hasKothEnable())
+			return;
+		
+		//On récup tout les koths actif
+		Collection<Koth> collection = getKoths();
+		collection.forEach(koth -> koth.playerMove(player, factionListener));
+		
 	}
 
 }

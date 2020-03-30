@@ -1,22 +1,43 @@
 package fr.maxlego08.koth;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
+import fr.maxlego08.koth.event.KothSpawnEvent;
+import fr.maxlego08.koth.event.KothStartEvent;
+import fr.maxlego08.koth.save.Config;
+import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.utils.Cuboid;
+import fr.maxlego08.koth.zcore.utils.ZUtils;
+import fr.maxlego08.koth.zcore.utils.builder.TimerBuilder;
 
-public class Koth {
+public class Koth extends ZUtils {
 
 	private final String name;
+	private int capSec;
 	private Location pos1;
 	private Location pos2;
 	private transient boolean isEnable;
 	private transient boolean isCooldown;
-	private transient String currentPlayer;
+	private transient int cooldown;
+	private transient Player currentPlayer;
 	private transient Cuboid cuboid;
 
-	public Koth(String name) {
+	public Koth(String name, int capSec) {
 		super();
 		this.name = name;
+		this.capSec = capSec;
+	}
+
+	/**
+	 * @return the capSec
+	 */
+	public int getCapSec() {
+		return capSec;
 	}
 
 	/**
@@ -73,7 +94,7 @@ public class Koth {
 	/**
 	 * @return the currentPlayer
 	 */
-	public String getCurrentPlayer() {
+	public Player getCurrentPlayer() {
 		return currentPlayer;
 	}
 
@@ -98,6 +119,220 @@ public class Koth {
 	 */
 	public String toSecondLocation() {
 		return pos2.getBlockX() + ", " + pos2.getBlockY() + ", " + pos2.getBlockZ();
+	}
+
+	/**
+	 * Permet de stop un koth
+	 */
+	public void stop() {
+
+	}
+
+	/**
+	 * Permet de start un koth
+	 * 
+	 * @param sender
+	 * @param now
+	 */
+	public void spawn(CommandSender sender, boolean now) {
+
+		if (pos1 == null) {
+			message(sender, Message.KOTH_SET_FIRST_POSITION_NULL);
+			return;
+		}
+
+		if (pos2 == null) {
+			message(sender, Message.KOTH_SET_SECOND_POSITION_NULL);
+			return;
+		}
+
+		if (isCooldown) {
+			message(sender, Message.KOTH_SPAWN_COOLDOWN);
+			return;
+		}
+
+		if (isEnable) {
+			message(sender, Message.KOTH_SPAWN_ALREADY);
+			return;
+		}
+
+		if (cuboid == null)
+			buildCuboid();
+
+		if (now)
+			spawnNow(sender);
+		else
+			spawn(sender);
+
+	}
+
+	/**
+	 * Permet de créer le Cuboid
+	 * 
+	 * @return
+	 */
+	public Cuboid buildCuboid() {
+		if (pos1 == null || pos2 == null)
+			return null;
+		return cuboid = new Cuboid(pos1, pos2);
+	}
+
+	/**
+	 * 
+	 * @param sender
+	 */
+	private void spawn(CommandSender sender) {
+
+		isCooldown = true;
+
+		cooldown = Config.cooldownInSecond;
+
+		scheduleFix(1000, (task, canRun) -> {
+			if (!canRun)
+				return;
+
+			if (!isCooldown) {
+				task.cancel();
+				return;
+			}
+
+			// Si on doit avetir
+			if (Config.displayMessageCooldown.contains(cooldown))
+				broadcast(Message.KOTH_SPAWN_MESSAGE_COOLDOWN, null, null);
+
+			// On fait spawn le totem
+			if (cooldown <= 0) {
+				task.cancel();
+				isCooldown = false;
+				spawnNow(sender);
+			}
+
+			cooldown--;
+		});
+
+	}
+
+	/**
+	 * Permet de faire spawn le totem sans cooldown
+	 * 
+	 * @param sender
+	 */
+	private void spawnNow(CommandSender sender) {
+
+		KothSpawnEvent event = new KothSpawnEvent(cuboid, this);
+		event.callEvent();
+
+		if (event.isCancelled())
+			return;
+
+		isEnable = true;
+		currentPlayer = null;
+		broadcast(Message.KOTH_SPAWN_MESSAGE, null, null);
+
+	}
+
+	public void startCap(Player player, FactionListener listener) {
+
+		KothStartEvent event = new KothStartEvent(player, this);
+		event.callEvent();
+
+		if (event.isCancelled())
+			return;
+
+		broadcast(Message.KOHT_CATCH, player, listener.getFactionTag(player));
+
+		if (capSec <= 0)
+			capSec = Config.defaultCap;
+
+		AtomicInteger timer = new AtomicInteger(capSec);
+
+		scheduleFix(0, 1000, (task, isCancelled) -> {
+
+			if (!isCancelled) {
+				task.cancel();
+				return;
+			}
+
+			int tmpTimer = timer.getAndDecrement();
+
+			if (currentPlayer == null) {
+				task.cancel();
+				broadcast(Message.KOHT_LOOSE, player, listener.getFactionTag(player));
+				return;
+			}
+
+			if (Config.displayMessageKothCap.contains(tmpTimer))
+				broadcast(Message.KOHT_TIMER, player, listener.getFactionTag(player));
+
+			if (tmpTimer == 0) {
+
+				task.cancel();
+				broadcast(Message.KOHT_END, player, listener.getFactionTag(player));
+				// Méthode pour win
+
+			}
+		});
+
+	}
+
+	/**
+	 * 
+	 * @param message
+	 * @param player
+	 * @param currentFaction
+	 * @param cooldown
+	 */
+	private void broadcast(Message message, Player player, String currentFaction) {
+		String msg = message.getMessage();
+
+		Location location = cuboid.getCenter();
+		msg = msg.replace("%centerX%", String.valueOf(location.getBlockX()));
+		msg = msg.replace("%centerY%", String.valueOf(location.getBlockY()));
+		msg = msg.replace("%centerZ%", String.valueOf(location.getBlockZ()));
+		msg = msg.replace("%pos1X%", String.valueOf(pos1.getBlockX()));
+		msg = msg.replace("%pos1Y%", String.valueOf(pos1.getBlockY()));
+		msg = msg.replace("%pos1Z%", String.valueOf(pos1.getBlockZ()));
+		msg = msg.replace("%pos2X%", String.valueOf(pos2.getBlockX()));
+		msg = msg.replace("%pos2Y%", String.valueOf(pos2.getBlockY()));
+		msg = msg.replace("%pos2Z%", String.valueOf(pos2.getBlockZ()));
+		msg = msg.replace("%player%", player == null ? "NULL" : player.getName());
+		msg = msg.replace("%sec%", String.valueOf(cooldown));
+		msg = msg.replace("%cooldown%", TimerBuilder.getStringTime(cooldown));
+		msg = msg.replace("%currentFaction%", currentFaction == null ? "NULL" : currentFaction);
+		msg = msg.replace("%currentPlayer%",
+				this.currentPlayer == null ? Message.KOTH_NOONE.getMessage() : this.currentPlayer.getName());
+		msg = msg.replace("%name%", String.valueOf(name));
+
+		Bukkit.broadcastMessage(Message.PREFIX.getMessage() + " " + msg);
+	}
+
+	/**
+	 * Quand un joueur bouge
+	 * 
+	 * @param player
+	 * @param factionListener
+	 */
+	public void playerMove(Player player, FactionListener factionListener) {
+
+		if (!isEnable)
+			return;
+
+		if (cuboid == null)
+			return;
+
+		// Si le mec est dans le koth
+		if (currentPlayer == null && cuboid.contains(player.getLocation())) {
+
+			currentPlayer = player;
+			startCap(player, factionListener);
+
+			// Le mec sort du koth
+		} else if (currentPlayer == player && !cuboid.contains(player.getLocation())) {
+
+			currentPlayer = null;
+			
+		}
+
 	}
 
 }

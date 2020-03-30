@@ -1,5 +1,8 @@
 package fr.maxlego08.koth.save;
 
+import java.util.Arrays;
+import java.util.List;
+
 import fr.maxlego08.koth.zcore.utils.storage.Persist;
 import fr.maxlego08.koth.zcore.utils.storage.Saveable;
 
@@ -10,6 +13,10 @@ public class Config implements Saveable {
 	 * static Singleton instance.
 	 */
 	private static volatile Config instance;
+	public static int cooldownInSecond = 300;
+	public static List<Integer> displayMessageCooldown = Arrays.asList(300, 120, 60, 30, 10, 5, 4, 3, 2, 1);
+	public static List<Integer> displayMessageKothCap = Arrays.asList(300, 120, 60, 30, 10, 5, 4, 3, 2, 1);
+	public static int defaultCap = 60;
 
 	/**
 	 * Private constructor for singleton.

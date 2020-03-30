@@ -671,7 +671,8 @@ public abstract class ZUtils {
 	 * @param message
 	 */
 	protected void message(CommandSender player, Message message) {
-		player.sendMessage(Message.PREFIX.msg() + " " + message.msg());
+		if (player != null)
+			player.sendMessage(Message.PREFIX.msg() + " " + message.msg());
 	}
 
 	/**
@@ -680,7 +681,8 @@ public abstract class ZUtils {
 	 * @param message
 	 */
 	protected void message(CommandSender player, String message) {
-		player.sendMessage(Message.PREFIX.msg() + " " + message);
+		if (player != null)
+			player.sendMessage(Message.PREFIX.msg() + " " + message);
 	}
 
 	/**
@@ -689,7 +691,8 @@ public abstract class ZUtils {
 	 * @param message
 	 */
 	protected void messageWO(CommandSender player, Message message) {
-		player.sendMessage(message.msg());
+		if (player != null)
+			player.sendMessage(message.msg());
 	}
 
 	/**
@@ -699,7 +702,8 @@ public abstract class ZUtils {
 	 * @param args
 	 */
 	protected void messageWO(CommandSender player, Message message, Object... args) {
-		player.sendMessage(String.format(message.msg(), args));
+		if (player != null)
+			player.sendMessage(String.format(message.msg(), args));
 	}
 
 	/**
@@ -779,6 +783,24 @@ public abstract class ZUtils {
 				Bukkit.getScheduler().runTask(ZPlugin.z(), () -> runnable.accept(this, true));
 			}
 		}, delay, delay);
+	}
+	
+	/**
+	 * @param delay
+	 * @param runnable
+	 */
+	protected void scheduleFix(long start, long delay, BiConsumer<TimerTask, Boolean> runnable) {
+		new Timer().scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				if (!ZPlugin.z().isEnabled()) {
+					cancel();
+					runnable.accept(this, false);
+					return;
+				}
+				Bukkit.getScheduler().runTask(ZPlugin.z(), () -> runnable.accept(this, true));
+			}
+		}, start, delay);
 	}
 
 	/**

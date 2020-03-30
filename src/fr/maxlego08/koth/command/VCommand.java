@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import fr.maxlego08.koth.ZKoth;
+import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.enums.Permission;
 import fr.maxlego08.koth.zcore.utils.Arguments;
 import fr.maxlego08.koth.zcore.utils.inventory.IIventory;
@@ -46,7 +47,7 @@ public abstract class VCommand extends Arguments {
 	 */
 	private boolean ignoreParent = false;
 	private boolean ignoreArgs = false;
-	protected boolean DEBUG = false;
+	protected boolean DEBUG = true;
 
 	/**
 	 * This is the person who executes the command
@@ -225,6 +226,17 @@ public abstract class VCommand extends Arguments {
 		return this;
 	}
 
+	/**
+	 * 
+	 * @param description
+	 * @return
+	 */
+	protected VCommand setDescription(Message description) {
+		this.description = description.getMessage();
+		return this;
+	}
+
+	
 	/*
 	 * Ajouter un argument obligatoire
 	 */

@@ -137,12 +137,12 @@ public class Koth extends ZUtils {
 	public void spawn(CommandSender sender, boolean now) {
 
 		if (pos1 == null) {
-			message(sender, Message.KOTH_SET_FIRST_POSITION_NULL);
+			message(sender, Message.KOTH_SET_FIRST_POSITION_NULL, name);
 			return;
 		}
 
 		if (pos2 == null) {
-			message(sender, Message.KOTH_SET_SECOND_POSITION_NULL);
+			message(sender, Message.KOTH_SET_SECOND_POSITION_NULL, name);
 			return;
 		}
 
@@ -198,7 +198,7 @@ public class Koth extends ZUtils {
 
 			// Si on doit avetir
 			if (Config.displayMessageCooldown.contains(cooldown))
-				broadcast(Message.KOTH_SPAWN_MESSAGE_COOLDOWN, null, null);
+				broadcast(Message.KOTH_SPAWN_MESSAGE_COOLDOWN, null, null, 0);
 
 			// On fait spawn le totem
 			if (cooldown <= 0) {
@@ -227,7 +227,8 @@ public class Koth extends ZUtils {
 
 		isEnable = true;
 		currentPlayer = null;
-		broadcast(Message.KOTH_SPAWN_MESSAGE, null, null);
+		buildCuboid();
+		broadcast(Message.KOTH_SPAWN_MESSAGE, null, null, 0);
 
 	}
 
@@ -239,7 +240,7 @@ public class Koth extends ZUtils {
 		if (event.isCancelled())
 			return;
 
-		broadcast(Message.KOHT_CATCH, player, listener.getFactionTag(player));
+		broadcast(Message.KOHT_CATCH, player, listener.getFactionTag(player), 0);
 
 		if (capSec <= 0)
 			capSec = Config.defaultCap;
@@ -257,17 +258,17 @@ public class Koth extends ZUtils {
 
 			if (currentPlayer == null) {
 				task.cancel();
-				broadcast(Message.KOHT_LOOSE, player, listener.getFactionTag(player));
+				broadcast(Message.KOHT_LOOSE, player, listener.getFactionTag(player), tmpTimer);
 				return;
 			}
 
 			if (Config.displayMessageKothCap.contains(tmpTimer))
-				broadcast(Message.KOHT_TIMER, player, listener.getFactionTag(player));
+				broadcast(Message.KOHT_TIMER, player, listener.getFactionTag(player), tmpTimer);
 
 			if (tmpTimer == 0) {
 
 				task.cancel();
-				broadcast(Message.KOHT_END, player, listener.getFactionTag(player));
+				broadcast(Message.KOHT_END, player, listener.getFactionTag(player), 0);
 				// Méthode pour win
 
 			}
@@ -282,7 +283,7 @@ public class Koth extends ZUtils {
 	 * @param currentFaction
 	 * @param cooldown
 	 */
-	private void broadcast(Message message, Player player, String currentFaction) {
+	private void broadcast(Message message, Player player, String currentFaction, int cooldown) {
 		String msg = message.getMessage();
 
 		Location location = cuboid.getCenter();

@@ -3,6 +3,7 @@ package fr.maxlego08.koth.command.commands;
 import fr.maxlego08.koth.ZKoth;
 import fr.maxlego08.koth.command.CommandType;
 import fr.maxlego08.koth.command.VCommand;
+import fr.maxlego08.koth.command.commands.scheduler.CommandKothScheduler;
 import fr.maxlego08.koth.zcore.enums.Permission;
 
 public class CommandKoth extends VCommand {
@@ -17,6 +18,11 @@ public class CommandKoth extends VCommand {
 		this.addSubCommand(new CommandKothSpawn());
 		this.addSubCommand(new CommandKothVersion());
 		this.addSubCommand(new CommandKothSet());
+		this.addSubCommand(new CommandKothDelete());
+		this.addSubCommand(new CommandKothReload());
+		this.addSubCommand(new CommandKothShow());
+		this.addSubCommand(new CommandKothStop());
+		this.addSubCommand(new CommandKothScheduler());
 	}
 
 	@Override

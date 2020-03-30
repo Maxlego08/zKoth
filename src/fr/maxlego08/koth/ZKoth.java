@@ -5,6 +5,7 @@ import fr.maxlego08.koth.inventory.InventoryManager;
 import fr.maxlego08.koth.listener.AdapterListener;
 import fr.maxlego08.koth.save.Config;
 import fr.maxlego08.koth.save.Lang;
+import fr.maxlego08.koth.scheduler.SchedulerManager;
 import fr.maxlego08.koth.zcore.ZPlugin;
 import fr.maxlego08.koth.zcore.utils.builder.CooldownBuilder;
 
@@ -12,6 +13,7 @@ public class ZKoth extends ZPlugin {
 
 	private CommandManager commandManager;
 	private InventoryManager inventoryManager;
+	private SchedulerManager schedulerManager;
 	private KothManager manager;
 
 	@Override
@@ -40,6 +42,7 @@ public class ZKoth extends ZPlugin {
 		addSave(Config.getInstance());
 		addSave(Lang.getInstance());
 		addSave(new CooldownBuilder());
+		addSave(schedulerManager = new SchedulerManager(manager));
 
 		getSavers().forEach(saver -> saver.load(getPersist()));
 
@@ -82,5 +85,8 @@ public class ZKoth extends ZPlugin {
 	public KothManager getManager() {
 		return manager;
 	}
-	
+
+	public SchedulerManager getSchedulerManager() {
+		return schedulerManager;
+	}
 }

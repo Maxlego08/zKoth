@@ -3,7 +3,10 @@ package fr.maxlego08.koth.zcore.utils;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
@@ -932,5 +935,29 @@ public abstract class ZUtils {
 			String command) {
 		component.setClickEvent(new ClickEvent(action, command));
 		return component;
+	}
+
+	protected String getDay() {
+		GregorianCalendar calendar = new GregorianCalendar();
+		calendar.setTime(new Date());
+		int today = calendar.get(Calendar.DAY_OF_WEEK);
+		switch (today) {
+		case GregorianCalendar.MONDAY:
+			return "MONDAY";
+		case GregorianCalendar.TUESDAY:
+			return "TUESDAY";
+		case GregorianCalendar.WEDNESDAY:
+			return "WEDNESDAY";
+		case GregorianCalendar.THURSDAY:
+			return "THURSDAY";
+		case GregorianCalendar.FRIDAY:
+			return "FRIDAY";
+		case GregorianCalendar.SATURDAY:
+			return "SATURDAY";
+		case GregorianCalendar.SUNDAY:
+			return "SUNDAY";
+		default:
+			return null;
+		}
 	}
 }

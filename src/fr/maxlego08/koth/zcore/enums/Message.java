@@ -41,6 +41,7 @@ public enum Message {
 	KOTH_SET_SECOND_POSITION_NULL("§cThe second location cannot be found, made §f/koth set pos2 %s§c."),
 	KOTH_SPAWN_COOLDOWN("§cthe countdown to the appearance of the koth is already underway"),
 	KOTH_SPAWN_ALREADY("§cThe koth is running."),
+	KOTH_STOP("§ekoth §f%name% §ehas just been stopped."),
 	KOTH_SPAWN_MESSAGE_COOLDOWN("§eKoth §6%name% §ewill appear in §6%cooldown% §8(§7%centerX%, %centerY%, %centerZ%§8)"), 
 	KOTH_SPAWN_MESSAGE("§eKoth §6%name% §eappeared in §6%centerX%, %centerY%, %centerZ%§e."), 
 	KOHT_CATCH("§6%player% §ejust started capturing the koth §6%name%§e. §8(§7%centerX%, %centerY%, %centerZ%§8)"),

@@ -7,8 +7,12 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import fr.maxlego08.koth.event.KothEvent;
+import fr.maxlego08.koth.event.KothLooseEvent;
 import fr.maxlego08.koth.event.KothSpawnEvent;
 import fr.maxlego08.koth.event.KothStartEvent;
+import fr.maxlego08.koth.event.KothStopEvent;
+import fr.maxlego08.koth.event.KothWinEvent;
 import fr.maxlego08.koth.save.Config;
 import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.utils.Cuboid;
@@ -126,6 +130,17 @@ public class Koth extends ZUtils {
 	 */
 	public void stop() {
 
+		KothStopEvent event = new KothStopEvent(cuboid, this);
+		event.callEvent();
+		
+		if (event.isCancelled())
+			return;
+		
+		isEnable = false;
+		isCooldown = false;
+		currentPlayer = null;
+		broadcast(Message.KOTH_STOP, null, null, 0);
+
 	}
 
 	/**
@@ -234,7 +249,7 @@ public class Koth extends ZUtils {
 
 	public void startCap(Player player, FactionListener listener) {
 
-		KothStartEvent event = new KothStartEvent(player, this);
+		KothEvent event = new KothStartEvent(player, this);
 		event.callEvent();
 
 		if (event.isCancelled())
@@ -254,9 +269,21 @@ public class Koth extends ZUtils {
 				return;
 			}
 
+			if (!isEnable){
+				task.cancel();
+				return;
+			}
+			
 			int tmpTimer = timer.getAndDecrement();
 
 			if (currentPlayer == null) {
+
+				KothEvent kothEvent = new KothLooseEvent(this, player);
+				kothEvent.callEvent();
+
+				if (kothEvent.isCancelled())
+					return;
+
 				task.cancel();
 				broadcast(Message.KOHT_LOOSE, player, listener.getFactionTag(player), tmpTimer);
 				return;
@@ -267,8 +294,19 @@ public class Koth extends ZUtils {
 
 			if (tmpTimer == 0) {
 
+				KothEvent kothEvent = new KothWinEvent(this, player);
+				kothEvent.callEvent();
+
+				if (kothEvent.isCancelled())
+					return;
+
 				task.cancel();
 				broadcast(Message.KOHT_END, player, listener.getFactionTag(player), 0);
+
+				isEnable = false;
+				isCooldown = false;
+				currentPlayer = null;
+
 				// Méthode pour win
 
 			}
@@ -331,7 +369,7 @@ public class Koth extends ZUtils {
 		} else if (currentPlayer == player && !cuboid.contains(player.getLocation())) {
 
 			currentPlayer = null;
-			
+
 		}
 
 	}

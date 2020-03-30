@@ -172,7 +172,7 @@ public class SchedulerManager extends ZUtils implements Saveable {
 				component.setHoverEvent(new HoverEvent(Action.SHOW_TEXT,
 						new TextComponent[] { new TextComponent(Message.KOTH_SCHEDULER_REMOVE_HOVER.getMessage()) }));
 				component.setClickEvent(new ClickEvent(net.md_5.bungee.api.chat.ClickEvent.Action.SUGGEST_COMMAND,
-						"/totem scheduler remove " + uuid));
+						"/koth scheduler remove " + uuid));
 
 				((Player) sender).spigot().sendMessage(component);
 

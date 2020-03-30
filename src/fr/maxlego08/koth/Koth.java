@@ -214,7 +214,7 @@ public class Koth extends ZUtils {
 
 			// Si on doit avetir
 			if (Config.displayMessageCooldown.contains(cooldown))
-				broadcast(Message.KOTH_SPAWN_MESSAGE_COOLDOWN, null, null, 0);
+				broadcast(Message.KOTH_SPAWN_MESSAGE_COOLDOWN, null, null, cooldown);
 
 			// On fait spawn le totem
 			if (cooldown <= 0) {

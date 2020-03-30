@@ -86,7 +86,7 @@ public class KothManager extends ListenerAdapter implements Saveable {
 	 * 
 	 * @return
 	 */
-	public Collection<Koth> getKoths() {
+	public List<Koth> getKoths() {
 		return koths.stream().filter(Koth::isEnable).collect(Collectors.toList());
 	}
 

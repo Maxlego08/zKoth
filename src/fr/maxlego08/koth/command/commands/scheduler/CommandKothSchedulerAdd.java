@@ -16,7 +16,7 @@ public class CommandKothSchedulerAdd extends VCommand {
 		this.setDescription(Message.DESCRIPTION_SCHEDULER_ADD);
 		this.addSubCommand("add");
 		this.addRequireArg("delay/repeat");
-		this.addRequireArg("totemname");
+		this.addRequireArg("koth name");
 		this.addOptionalArg("day");
 		this.addOptionalArg("hour");
 		this.addOptionalArg("minute");

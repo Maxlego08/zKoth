@@ -11,7 +11,7 @@ public class CommandKothStop extends VCommand {
 	public CommandKothStop() {
 		this.setPermission(Permission.ZKOTH_STOP);
 		this.addSubCommand("stop");
-		this.addRequireArg("totem name");
+		this.addRequireArg("koth name");
 		this.setDescription(Message.DESCRIPTION_STOP);
 	}
 

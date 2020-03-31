@@ -11,7 +11,7 @@ public class CommandKothDelete extends VCommand {
 	public CommandKothDelete() {
 		this.setPermission(Permission.ZKOTH_DELETE);
 		this.addSubCommand("delete");
-		this.addRequireArg("totem name");
+		this.addRequireArg("koth name");
 		this.setDescription(Message.DESCRIPTION_DELETE);
 	}
 

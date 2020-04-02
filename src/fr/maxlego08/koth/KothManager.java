@@ -38,12 +38,12 @@ public class KothManager extends ListenerAdapter implements Saveable {
 
 	@Override
 	public void save(Persist persist) {
-		persist.save(this, "kohts");
+		persist.save(this, "koths");
 	}
 
 	@Override
 	public void load(Persist persist) {
-		persist.loadOrSaveDefault(this, KothManager.class, "kohts");
+		persist.loadOrSaveDefault(this, KothManager.class, "koths");
 	}
 
 	/**
@@ -267,7 +267,11 @@ public class KothManager extends ListenerAdapter implements Saveable {
 				return;
 			} else if (pl.getName().equalsIgnoreCase("Factions")) {
 				String author = pl.getDescription().getAuthors().toString();
-				if (author.contains("drtshock")) {
+				if (author.contains("Driftay")) {
+					factionListener = new UUIDFaction();
+					Logger.info("SaberFaction plugin detected successfully.", LogType.SUCCESS);
+					return;
+				} else if (author.contains("drtshock")) {
 					factionListener = new UUIDFaction();
 					Logger.info("FactionUUID plugin detected successfully.", LogType.SUCCESS);
 					return;
@@ -302,7 +306,6 @@ public class KothManager extends ListenerAdapter implements Saveable {
 
 	@Override
 	protected void onInventoryClose(InventoryCloseEvent event, Player player) {
-
 
 		if (event.getView().getTitle().equalsIgnoreCase("§ezKOTH §6Loots")) {
 			Config.itemstacks = new ArrayList<>();

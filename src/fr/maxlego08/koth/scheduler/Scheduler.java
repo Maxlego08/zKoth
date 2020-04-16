@@ -93,7 +93,7 @@ public class Scheduler extends ZUtils{
 		switch (type) {
 		case DELAY:
 			return (calendar.get(Calendar.HOUR_OF_DAY) == hour && calendar.get(Calendar.MINUTE) == minutes
-					&& super.getDay().equals(day));
+					&& super.getDay().equalsIgnoreCase(day));
 		case REPEAT:
 			if (lastCreate != 0 && System.currentTimeMillis() > lastCreate) {
 				lastCreate = System.currentTimeMillis() + (1000 * 60 * minutes);

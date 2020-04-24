@@ -31,6 +31,7 @@ public class Koth extends ZUtils {
 	private transient int cooldown;
 	private transient Player currentPlayer;
 	private transient Cuboid cuboid;
+	private transient FactionListener factionListener;
 
 	public Koth(String name, int capSec) {
 		super();
@@ -250,7 +251,9 @@ public class Koth extends ZUtils {
 
 	public void startCap(Player player, FactionListener listener) {
 
-		KothEvent event = new KothStartEvent(player, this);
+		this.factionListener = listener;
+		
+		KothEvent event = new KothStartEvent(player, this, listener);
 		event.callEvent();
 
 		if (event.isCancelled())
@@ -279,7 +282,7 @@ public class Koth extends ZUtils {
 
 			if (currentPlayer == null) {
 
-				KothEvent kothEvent = new KothLooseEvent(this, player);
+				KothEvent kothEvent = new KothLooseEvent(this, player, factionListener);
 				kothEvent.callEvent();
 
 				if (kothEvent.isCancelled())
@@ -295,7 +298,7 @@ public class Koth extends ZUtils {
 
 			if (tmpTimer == 0) {
 
-				KothEvent kothEvent = new KothWinEvent(this, player);
+				KothEvent kothEvent = new KothWinEvent(this, player, listener);
 				kothEvent.callEvent();
 
 				if (kothEvent.isCancelled())

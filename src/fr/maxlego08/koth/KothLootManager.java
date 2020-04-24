@@ -107,6 +107,7 @@ public class KothLootManager extends ZUtils {
 						
 						String finalCommand = command.replace("%player%", player.getName());
 						finalCommand = finalCommand.replace("%name%", koth.getName());
+						finalCommand = finalCommand.replace("%faction%", factionListener.getFactionTag(player));
 						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand);
 						
 					});
@@ -115,6 +116,7 @@ public class KothLootManager extends ZUtils {
 					
 					String finalCommand = command.replace("%player%", player.getName());
 					finalCommand = finalCommand.replace("%name%", koth.getName());
+					finalCommand = finalCommand.replace("%faction%", factionListener.getFactionTag(player));
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand);
 					
 				}

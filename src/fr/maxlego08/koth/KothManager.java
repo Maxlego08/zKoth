@@ -329,6 +329,13 @@ public class KothManager extends ListenerAdapter implements Saveable {
 						+ Bukkit.getServer().getIp().toString() + ":" + Bukkit.getServer().getPort() + " §a!");
 			}
 
+			if (ZPlugin.z().getDescription().getFullName().contains("DEV")){
+				
+				event.getPlayer().sendMessage(Message.PREFIX_REAL.getMessage() + " §eVous utilisez une version de §6DEVEL0PPEMENT§e, merci de rapidement mettre à jour le plugin.");
+				event.getPlayer().sendMessage(Message.PREFIX_REAL.getMessage() + " §eSpigot§7: §fhttps://www.spigotmc.org/resources/76749/");
+				
+			}
+			
 			/*
 			 * if (!useLastVersion && (player.hasPermission("ztotem.use") ||
 			 * event.getPlayer().getName().startsWith("Maxlego") ||

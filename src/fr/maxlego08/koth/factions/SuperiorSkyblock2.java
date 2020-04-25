@@ -14,9 +14,30 @@ import fr.maxlego08.koth.FactionListener;
 
 public class SuperiorSkyblock2 implements FactionListener {
 
-	private final SuperiorSkyblock plugin = SuperiorSkyblockAPI.getSuperiorSkyblock();
+	private SuperiorSkyblock plugin = SuperiorSkyblockAPI.getSuperiorSkyblock();
 
 	private Island getIsland(Player player) {
+		
+		System.out.println("Plugin - test1 " + plugin);
+		
+		if (plugin == null)
+			plugin = SuperiorSkyblockAPI.getSuperiorSkyblock();
+		
+		System.out.println("Plugin - test2 " + plugin);
+		
+		System.out.println("Plugin - test3 " + SuperiorSkyblockAPI.getPlayer(player));
+		
+		
+		if (plugin != null){
+			
+			System.out.println("Plugin - test4 " + plugin.getGrid());
+			
+			if (plugin.getGrid() != null)
+			
+				System.out.println("Plugin - test5 " + plugin.getGrid().getIsland(SuperiorSkyblockAPI.getPlayer(player)));
+			
+		}
+		
 		return plugin.getGrid().getIsland(SuperiorSkyblockAPI.getPlayer(player));
 	}
 

@@ -3,6 +3,7 @@ package fr.maxlego08.koth.zcore.enums;
 public enum Message {
 
 	PREFIX("§8(§6zKoth§8)", true),
+	PREFIX_REAL("§8(§6zKoth§8)", false),
 	
 	TELEPORT_MOVE("§cVous ne devez pas bouger !", false),
 	TELEPORT_MESSAGE("§7Téléportatio dans §3%s §7secondes !", false),

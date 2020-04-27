@@ -31,6 +31,7 @@ public class Koth extends ZUtils {
 	private transient int cooldown;
 	private transient Player currentPlayer;
 	private transient Cuboid cuboid;
+	private transient boolean hasPlayer = false;
 	private transient FactionListener factionListener;
 
 	public Koth(String name, int capSec) {
@@ -141,6 +142,7 @@ public class Koth extends ZUtils {
 		isEnable = false;
 		isCooldown = false;
 		currentPlayer = null;
+		hasPlayer = false;
 		broadcast(Message.KOTH_STOP, null, null, 0);
 
 	}
@@ -244,6 +246,7 @@ public class Koth extends ZUtils {
 
 		isEnable = true;
 		currentPlayer = null;
+		hasPlayer = false;
 		buildCuboid();
 		broadcast(Message.KOTH_SPAWN_MESSAGE, null, null, 0);
 
@@ -251,6 +254,11 @@ public class Koth extends ZUtils {
 
 	public void startCap(Player player, FactionListener listener) {
 
+		if (hasPlayer)
+			return;
+		
+		hasPlayer = true;
+		
 		this.factionListener = listener;
 		
 		KothEvent event = new KothStartEvent(player, this, listener);
@@ -269,12 +277,14 @@ public class Koth extends ZUtils {
 		scheduleFix(0, 1000, (task, isCancelled) -> {
 
 			if (!isCancelled) {
+				hasPlayer = false;
 				task.cancel();
 				return;
 			}
 
 			if (!isEnable) {
 				task.cancel();
+				hasPlayer = false;
 				return;
 			}
 
@@ -287,7 +297,8 @@ public class Koth extends ZUtils {
 
 				if (kothEvent.isCancelled())
 					return;
-
+				
+				hasPlayer = false;
 				task.cancel();
 				broadcast(Message.KOHT_LOOSE, player, listener.getFactionTag(player), tmpTimer);
 				return;
@@ -310,6 +321,7 @@ public class Koth extends ZUtils {
 				isEnable = false;
 				isCooldown = false;
 				currentPlayer = null;
+				hasPlayer = false;
 
 				KothLootManager lootManager = new KothLootManager(this, player, listener);
 				

@@ -1,5 +1,6 @@
 package fr.maxlego08.koth;
 
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.bukkit.Bukkit;
@@ -15,7 +16,9 @@ import fr.maxlego08.koth.event.KothStartEvent;
 import fr.maxlego08.koth.event.KothStopEvent;
 import fr.maxlego08.koth.event.KothWinEvent;
 import fr.maxlego08.koth.save.Config;
+import fr.maxlego08.koth.zcore.enums.ChatType;
 import fr.maxlego08.koth.zcore.enums.Message;
+import fr.maxlego08.koth.zcore.utils.ActionBar;
 import fr.maxlego08.koth.zcore.utils.Cuboid;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
 import fr.maxlego08.koth.zcore.utils.builder.TimerBuilder;
@@ -143,7 +146,7 @@ public class Koth extends ZUtils {
 		isCooldown = false;
 		currentPlayer = null;
 		hasPlayer = false;
-		broadcast(Message.KOTH_STOP, null, null, 0);
+		broadcast(Message.KOTH_STOP, null, null, 0, true);
 
 	}
 
@@ -217,7 +220,7 @@ public class Koth extends ZUtils {
 
 			// Si on doit avetir
 			if (Config.displayMessageCooldown.contains(cooldown))
-				broadcast(Message.KOTH_SPAWN_MESSAGE_COOLDOWN, null, null, cooldown);
+				broadcast(Message.KOTH_SPAWN_MESSAGE_COOLDOWN, null, null, cooldown, true);
 
 			// On fait spawn le totem
 			if (cooldown <= 0) {
@@ -248,26 +251,28 @@ public class Koth extends ZUtils {
 		currentPlayer = null;
 		hasPlayer = false;
 		buildCuboid();
-		broadcast(Message.KOTH_SPAWN_MESSAGE, null, null, 0);
+		broadcast(Message.KOTH_SPAWN_MESSAGE, null, null, 0, true);
 
 	}
+
+	private transient TimerTask task;
 
 	public void startCap(Player player, FactionListener listener) {
 
 		if (hasPlayer)
 			return;
-		
+
 		hasPlayer = true;
-		
+
 		this.factionListener = listener;
-		
+
 		KothEvent event = new KothStartEvent(player, this, listener);
 		event.callEvent();
 
 		if (event.isCancelled())
 			return;
 
-		broadcast(Message.KOHT_CATCH, player, listener.getFactionTag(player), 0);
+		broadcast(Message.KOHT_CATCH, player, listener.getFactionTag(player), 0, false);
 
 		if (capSec <= 0)
 			capSec = Config.defaultCap;
@@ -275,6 +280,8 @@ public class Koth extends ZUtils {
 		AtomicInteger timer = new AtomicInteger(capSec);
 
 		scheduleFix(0, 1000, (task, isCancelled) -> {
+
+			this.task = task;
 
 			if (!isCancelled) {
 				hasPlayer = false;
@@ -292,20 +299,25 @@ public class Koth extends ZUtils {
 
 			if (currentPlayer == null) {
 
+				if (!hasPlayer) {
+					task.cancel();
+					return;
+				}
+
 				KothEvent kothEvent = new KothLooseEvent(this, player, factionListener);
 				kothEvent.callEvent();
 
 				if (kothEvent.isCancelled())
 					return;
-				
+
 				hasPlayer = false;
 				task.cancel();
-				broadcast(Message.KOHT_LOOSE, player, listener.getFactionTag(player), tmpTimer);
+				broadcast(Message.KOHT_LOOSE, player, listener.getFactionTag(player), tmpTimer, false);
 				return;
 			}
 
 			if (Config.displayMessageKothCap.contains(tmpTimer))
-				broadcast(Message.KOHT_TIMER, player, listener.getFactionTag(player), tmpTimer);
+				broadcast(Message.KOHT_TIMER, player, listener.getFactionTag(player), tmpTimer, false);
 
 			if (tmpTimer == 0) {
 
@@ -316,7 +328,7 @@ public class Koth extends ZUtils {
 					return;
 
 				task.cancel();
-				broadcast(Message.KOHT_END, player, listener.getFactionTag(player), 0);
+				broadcast(Message.KOHT_END, player, listener.getFactionTag(player), 0, true);
 
 				isEnable = false;
 				isCooldown = false;
@@ -324,7 +336,7 @@ public class Koth extends ZUtils {
 				hasPlayer = false;
 
 				KothLootManager lootManager = new KothLootManager(this, player, listener);
-				
+
 				KothLootEvent lootEvent = new KothLootEvent(lootManager);
 				lootEvent.callEvent();
 
@@ -347,7 +359,7 @@ public class Koth extends ZUtils {
 	 * @param currentFaction
 	 * @param cooldown
 	 */
-	private void broadcast(Message message, Player player, String currentFaction, int cooldown) {
+	private void broadcast(Message message, Player player, String currentFaction, int cooldown, boolean defaultMessage) {
 		String msg = message.getMessage();
 
 		Location location = cuboid.getCenter();
@@ -368,7 +380,10 @@ public class Koth extends ZUtils {
 				this.currentPlayer == null ? Message.KOTH_NOONE.getMessage() : this.currentPlayer.getName());
 		msg = msg.replace("%name%", String.valueOf(name));
 
-		Bukkit.broadcastMessage(Message.PREFIX.getMessage() + " " + msg);
+		if (Config.messageInformationCapture.equals(ChatType.MESSAGE) || defaultMessage)
+			Bukkit.broadcastMessage(Message.PREFIX.getMessage() + " " + msg);
+		else
+			ActionBar.broadcastActionMessage(msg);
 	}
 
 	/**
@@ -392,9 +407,26 @@ public class Koth extends ZUtils {
 			startCap(player, factionListener);
 
 			// Le mec sort du koth
-		} else if (currentPlayer == player && !cuboid.contains(player.getLocation())) {
+		} else if (currentPlayer != null) {
 
-			currentPlayer = null;
+			if (!cuboid.contains(currentPlayer.getLocation())) {
+
+				Player tmpPlayer = currentPlayer;
+				currentPlayer = null;
+
+				if (task != null)
+					task.cancel();
+
+				KothEvent kothEvent = new KothLooseEvent(this, tmpPlayer, factionListener);
+				kothEvent.callEvent();
+
+				if (kothEvent.isCancelled())
+					return;
+
+				hasPlayer = false;
+				broadcast(Message.KOHT_LOOSE, tmpPlayer, factionListener.getFactionTag(player), 0, false);
+
+			}
 
 		}
 

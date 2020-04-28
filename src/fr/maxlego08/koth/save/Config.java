@@ -7,6 +7,7 @@ import java.util.List;
 import org.bukkit.Material;
 
 import fr.maxlego08.koth.KothLoot;
+import fr.maxlego08.koth.zcore.enums.ChatType;
 import fr.maxlego08.koth.zcore.utils.ItemDecoder;
 import fr.maxlego08.koth.zcore.utils.builder.ItemBuilder;
 import fr.maxlego08.koth.zcore.utils.storage.Persist;
@@ -27,6 +28,7 @@ public class Config implements Saveable {
 	public static List<String> commands = new ArrayList<String>();
 	public static List<String> itemstacks = new ArrayList<String>();
 	public static int removeChestSec = 120;
+	public static ChatType messageInformationCapture = ChatType.ACTION;
 
 	static {
 

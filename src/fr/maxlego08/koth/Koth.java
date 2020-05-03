@@ -257,7 +257,12 @@ public class Koth extends ZUtils {
 
 	private transient TimerTask task;
 
-	public void startCap(Player player, FactionListener listener) {
+	/**
+	 * 
+	 * @param player
+	 * @param listener
+	 */
+	public synchronized void startCap(Player player, FactionListener listener) {
 
 		if (hasPlayer)
 			return;
@@ -296,6 +301,13 @@ public class Koth extends ZUtils {
 			}
 
 			int tmpTimer = timer.getAndDecrement();
+
+			if (currentPlayer != null) {
+
+				if (!cuboid.contains(currentPlayer.getLocation()))
+					currentPlayer = null;
+
+			}
 
 			if (currentPlayer == null) {
 
@@ -359,7 +371,8 @@ public class Koth extends ZUtils {
 	 * @param currentFaction
 	 * @param cooldown
 	 */
-	private void broadcast(Message message, Player player, String currentFaction, int cooldown, boolean defaultMessage) {
+	private void broadcast(Message message, Player player, String currentFaction, int cooldown,
+			boolean defaultMessage) {
 		String msg = message.getMessage();
 
 		Location location = cuboid.getCenter();

@@ -16,7 +16,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import fr.maxlego08.koth.event.KothRegisterEvent;
+import fr.maxlego08.koth.factions.Guilds;
 import fr.maxlego08.koth.factions.LegacyFaction;
+import fr.maxlego08.koth.factions.MassiveFaction;
 import fr.maxlego08.koth.factions.NoFaction;
 import fr.maxlego08.koth.factions.SuperiorSkyblock2;
 import fr.maxlego08.koth.factions.UUIDFaction;
@@ -260,26 +262,32 @@ public class KothManager extends ListenerAdapter implements Saveable {
 			if (pl.getName().equalsIgnoreCase("LegacyFactions")) {
 				factionListener = new LegacyFaction();
 				Logger.info("LegacyFaction plugin detected successfully.", LogType.SUCCESS);
-				return;
 			} else if (pl.getName().equalsIgnoreCase("SuperiorSkyblock2")) {
 				factionListener = new SuperiorSkyblock2();
 				Logger.info("SuperiorSkyblock2 plugin detected successfully.", LogType.SUCCESS);
 				return;
+			} else if (pl.getName().equalsIgnoreCase("Guilds")) {
+				factionListener = new Guilds();
+				Logger.info("Guilds plugin detected successfully.", LogType.SUCCESS);
 			} else if (pl.getName().equalsIgnoreCase("Factions")) {
 				String author = pl.getDescription().getAuthors().toString();
 				if (author.contains("Driftay")) {
 					factionListener = new UUIDFaction();
 					Logger.info("SaberFaction plugin detected successfully.", LogType.SUCCESS);
-					return;
 				} else if (author.contains("drtshock")) {
 					factionListener = new UUIDFaction();
 					Logger.info("FactionUUID plugin detected successfully.", LogType.SUCCESS);
-					return;
+				} else if (author.contains("Cayorion") && Bukkit.getPluginManager().isPluginEnabled("MassiveCore")) {
+					factionListener = new MassiveFaction();
+					Logger.info("Massivecraft Faction plugin detected successfully.", LogType.SUCCESS);
 				}
 			}
 		}
-		factionListener = new NoFaction();
-		Logger.info("no faction plugin was detected.", LogType.SUCCESS);
+
+		if (factionListener == null) {
+			factionListener = new NoFaction();
+			Logger.info("no faction plugin was detected.", LogType.SUCCESS);
+		}
 
 		KothRegisterEvent event = new KothRegisterEvent(factionListener);
 		event.callEvent();
@@ -329,13 +337,15 @@ public class KothManager extends ListenerAdapter implements Saveable {
 						+ Bukkit.getServer().getIp().toString() + ":" + Bukkit.getServer().getPort() + " §a!");
 			}
 
-			if (ZPlugin.z().getDescription().getFullName().contains("DEV")){
-				
-				event.getPlayer().sendMessage(Message.PREFIX_REAL.getMessage() + " §eVous utilisez une version de §6DEVEL0PPEMENT§e, merci de rapidement mettre à jour le plugin.");
-				event.getPlayer().sendMessage(Message.PREFIX_REAL.getMessage() + " §eSpigot§7: §fhttps://www.spigotmc.org/resources/76749/");
-				
+			if (ZPlugin.z().getDescription().getFullName().contains("DEV")) {
+
+				event.getPlayer().sendMessage(Message.PREFIX_REAL.getMessage()
+						+ " §eVous utilisez une version de §6DEVEL0PPEMENT§e, merci de rapidement mettre à jour le plugin.");
+				event.getPlayer().sendMessage(
+						Message.PREFIX_REAL.getMessage() + " §eSpigot§7: §fhttps://www.spigotmc.org/resources/76749/");
+
 			}
-			
+
 			/*
 			 * if (!useLastVersion && (player.hasPermission("ztotem.use") ||
 			 * event.getPlayer().getName().startsWith("Maxlego") ||

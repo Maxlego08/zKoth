@@ -110,11 +110,11 @@ public class Metrics {
             // Every server gets it's unique random id.
             config.addDefault("serverUuid", UUID.randomUUID().toString());
             // Should failed request be logged?
-            config.addDefault("logFailedRequests", false);
+            config.addDefault("logFailedRequests", true);
             // Should the sent data be logged?
-            config.addDefault("logSentData", false);
+            config.addDefault("logSentData", true);
             // Should the response text be logged?
-            config.addDefault("logResponseStatusText", false);
+            config.addDefault("logResponseStatusText", true);
 
             // Inform the server owners about bStats
             config.options().header(

@@ -8,6 +8,8 @@ import org.bukkit.Material;
 
 import fr.maxlego08.koth.KothLoot;
 import fr.maxlego08.koth.zcore.enums.ChatType;
+import fr.maxlego08.koth.zcore.logger.Logger;
+import fr.maxlego08.koth.zcore.logger.Logger.LogType;
 import fr.maxlego08.koth.zcore.utils.ItemDecoder;
 import fr.maxlego08.koth.zcore.utils.builder.ItemBuilder;
 import fr.maxlego08.koth.zcore.utils.storage.Persist;
@@ -25,6 +27,7 @@ public class Config implements Saveable {
 	public static int defaultCap = 60;
 	public static KothLoot loot = KothLoot.COMMAND;
 	public static boolean giveCommandToFaction = false;
+	public static boolean disableJoinMessage = false;
 	public static List<String> commands = new ArrayList<String>();
 	public static List<String> itemstacks = new ArrayList<String>();
 	public static int removeChestSec = 120;
@@ -33,9 +36,9 @@ public class Config implements Saveable {
 	static {
 
 		commands.add("bc %player% vient de gagner le koth %name% !");
-		
+
 		itemstacks.add(ItemDecoder.serializeItemStack(new ItemBuilder(Material.DIAMOND, 32, "§ezKoth").build()));
-		
+
 	}
 
 	/**
@@ -65,6 +68,20 @@ public class Config implements Saveable {
 
 	public void load(Persist persist) {
 		persist.loadOrSaveDefault(getInstance(), Config.class);
+
+		if (ItemDecoder.getNMSVersion() == 1.7) {
+
+			if (messageInformationCapture.equals(ChatType.ACTION)) {
+
+				messageInformationCapture = ChatType.MESSAGE;
+				Logger.info(
+						"The messages are automatically put in the chat, your version of minecraft does not support the action bar.",
+						LogType.WARNING);
+
+			}
+
+		}
+
 	}
 
 }

@@ -20,6 +20,7 @@ import fr.maxlego08.koth.factions.Guilds;
 import fr.maxlego08.koth.factions.LegacyFaction;
 import fr.maxlego08.koth.factions.MassiveFaction;
 import fr.maxlego08.koth.factions.NoFaction;
+import fr.maxlego08.koth.factions.PrideFaction;
 import fr.maxlego08.koth.factions.SuperiorSkyblock2;
 import fr.maxlego08.koth.factions.UUIDFaction;
 import fr.maxlego08.koth.listener.ListenerAdapter;
@@ -265,7 +266,9 @@ public class KothManager extends ListenerAdapter implements Saveable {
 			} else if (pl.getName().equalsIgnoreCase("SuperiorSkyblock2")) {
 				factionListener = new SuperiorSkyblock2();
 				Logger.info("SuperiorSkyblock2 plugin detected successfully.", LogType.SUCCESS);
-				return;
+			} else if (pl.getName().equalsIgnoreCase("PrideFaction")) {
+				factionListener = new PrideFaction();
+				Logger.info("PrideNetwork plugin detected successfully.", LogType.SUCCESS);
 			} else if (pl.getName().equalsIgnoreCase("Guilds")) {
 				factionListener = new Guilds();
 				Logger.info("Guilds plugin detected successfully.", LogType.SUCCESS);

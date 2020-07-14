@@ -42,6 +42,8 @@ public class ItemDecoder {
 		} catch (Exception localException) {
 			localException.printStackTrace();
 		}
+		if (localByteArrayOutputStream == null)
+			return "null";
 		String string = Base64.encode(localByteArrayOutputStream.toByteArray());
 		itemstackSerialized.put(paramItemStack, string);
 		return string;

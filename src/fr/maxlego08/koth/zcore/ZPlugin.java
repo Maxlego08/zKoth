@@ -7,7 +7,6 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -18,7 +17,6 @@ import com.google.gson.GsonBuilder;
 import fr.maxlego08.koth.listener.ListenerAdapter;
 import fr.maxlego08.koth.zcore.logger.Logger;
 import fr.maxlego08.koth.zcore.logger.Logger.LogType;
-import fr.maxlego08.koth.zcore.utils.gson.ItemStackAdapter;
 import fr.maxlego08.koth.zcore.utils.gson.LocationAdapter;
 import fr.maxlego08.koth.zcore.utils.gson.PotionEffectAdapter;
 import fr.maxlego08.koth.zcore.utils.storage.Persist;
@@ -80,7 +78,6 @@ public abstract class ZPlugin extends JavaPlugin {
 	public GsonBuilder getGsonBuilder() {
 		return new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().serializeNulls()
 				.excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.VOLATILE)
-				.registerTypeHierarchyAdapter(ItemStack.class, new ItemStackAdapter())
 				.registerTypeAdapter(PotionEffect.class, new PotionEffectAdapter())
 				.registerTypeAdapter(Location.class, new LocationAdapter());
 	}

@@ -168,6 +168,16 @@ public class Koth extends ZUtils {
 			return;
 		}
 
+		if (pos1.getWorld() == null){
+			message(sender, Message.KOTH_SET_FIRST_POSITION_WORLD_NULL, name);
+			return;
+		}
+		
+		if (pos2.getWorld() == null){
+			message(sender, Message.KOTH_SET_SECOND_POSITION_WORLD_NULL, name);
+			return;
+		}
+		
 		if (isCooldown) {
 			message(sender, Message.KOTH_SPAWN_COOLDOWN);
 			return;
@@ -181,6 +191,11 @@ public class Koth extends ZUtils {
 		if (cuboid == null)
 			buildCuboid();
 
+		if (cuboid == null){
+			message(sender, Message.KOTH_SPAWN_ERROR);
+			return;
+		}
+		
 		if (now)
 			spawnNow(sender);
 		else

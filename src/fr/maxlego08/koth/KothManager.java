@@ -240,6 +240,12 @@ public class KothManager extends ListenerAdapter implements Saveable {
 
 	}
 
+	/**
+	 * 
+	 * @param sender
+	 * @param name
+	 * @param now
+	 */
 	public void spawn(CommandSender sender, String name, boolean now) {
 
 		if (!exist(name)) {

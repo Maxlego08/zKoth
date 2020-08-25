@@ -80,7 +80,8 @@ public enum Message {
 	DESCRIPTION_SCHEDULER("Show scheduler commands"),
 	DESCRIPTION_SCHEDULER_LIST("Show scheduler list"),
 	DESCRIPTION_SCHEDULER_ADD("Add a scheduler"),
-	DESCRIPTION_SCHEDULER_REMOVE("Remove a scheduler"),
+	DESCRIPTION_SCHEDULER_REMOVE("Remove a scheduler"), 
+	KOTH_SCHEDULER_ERROR("§cImpossible to find the day §f%s§c."),
 	
 	;
 

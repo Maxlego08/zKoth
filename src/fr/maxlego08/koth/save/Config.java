@@ -32,6 +32,7 @@ public class Config implements Saveable {
 	public static List<String> itemstacks = new ArrayList<String>();
 	public static int removeChestSec = 120;
 	public static ChatType messageInformationCapture = ChatType.ACTION;
+	public static boolean debugCommands = false;
 
 	static {
 

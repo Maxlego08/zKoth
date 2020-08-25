@@ -38,6 +38,12 @@ public class CommandKothSchedulerAdd extends VCommand {
 		case DELAY:
 
 			String day = argAsString(2);
+			
+			if (!isDay(day)){
+				message(sender, Message.KOTH_SCHEDULER_ERROR, day);
+				return CommandType.SUCCESS;
+			}
+			
 			int hour = argAsInteger(3);
 			int minute = argAsInteger(4);
 

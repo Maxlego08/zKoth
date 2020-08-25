@@ -960,4 +960,10 @@ public abstract class ZUtils {
 			return null;
 		}
 	}
+
+	protected boolean isDay(String day) {
+		return day.equalsIgnoreCase("MONDAY") || day.equalsIgnoreCase("TUESDAY") || day.equalsIgnoreCase("WEDNESDAY")
+				|| day.equalsIgnoreCase("THURSDAY") || day.equalsIgnoreCase("FRIDAY")
+				|| day.equalsIgnoreCase("SATURDAY") || day.equalsIgnoreCase("SUNDAY");
+	}
 }

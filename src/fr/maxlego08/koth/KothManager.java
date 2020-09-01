@@ -342,8 +342,6 @@ public class KothManager extends ListenerAdapter implements Saveable {
 						+ ZPlugin.z().getDescription().getFullName() + " §a!");
 				String name = "%%__USER__%%";
 				event.getPlayer().sendMessage(Message.PREFIX.getMessage() + " §aUtilisateur spigot §2" + name + " §a!");
-				event.getPlayer().sendMessage(Message.PREFIX.getMessage() + " §aAdresse du serveur §2"
-						+ Bukkit.getServer().getIp().toString() + ":" + Bukkit.getServer().getPort() + " §a!");
 			}
 
 			if (ZPlugin.z().getDescription().getFullName().contains("DEV")) {

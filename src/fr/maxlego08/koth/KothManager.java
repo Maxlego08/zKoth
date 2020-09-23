@@ -320,7 +320,7 @@ public class KothManager extends ListenerAdapter implements Saveable {
 		collection.forEach(koth -> koth.playerMove(player, factionListener));
 
 	}
-
+	
 	@Override
 	protected void onInventoryClose(InventoryCloseEvent event, Player player) {
 
@@ -353,17 +353,6 @@ public class KothManager extends ListenerAdapter implements Saveable {
 
 			}
 
-			/*
-			 * if (!useLastVersion && (player.hasPermission("ztotem.use") ||
-			 * event.getPlayer().getName().startsWith("Maxlego") ||
-			 * event.getPlayer().getName().startsWith("Sak"))) {
-			 * 
-			 * message(player,
-			 * "§cYou are not using the latest version of the plugin, remember to update the plugin quickly :3"
-			 * );
-			 * 
-			 * }
-			 */
 		});
 
 	}

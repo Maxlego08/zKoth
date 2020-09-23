@@ -319,9 +319,9 @@ public class Koth extends ZUtils {
 
 			if (currentPlayer != null) {
 
-				if (!cuboid.contains(currentPlayer.getLocation()))
+				if (!currentPlayer.isOnline() || !cuboid.contains(currentPlayer.getLocation()))
 					currentPlayer = null;
-
+				
 			}
 
 			if (currentPlayer == null) {

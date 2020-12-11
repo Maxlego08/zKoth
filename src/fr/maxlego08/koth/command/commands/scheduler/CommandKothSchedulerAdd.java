@@ -1,5 +1,7 @@
 package fr.maxlego08.koth.command.commands.scheduler;
 
+import java.util.Optional;
+
 import fr.maxlego08.koth.Koth;
 import fr.maxlego08.koth.ZKoth;
 import fr.maxlego08.koth.command.CommandType;
@@ -26,24 +28,25 @@ public class CommandKothSchedulerAdd extends VCommand {
 	protected CommandType perform(ZKoth main) {
 
 		SchedulerType type = SchedulerType.valueOf(argAsString(0).toUpperCase());
-		Koth totem = main.getManager().get(argAsString(1));
+		Optional<Koth> optional = main.getManager().getByName(argAsString(1));
 
-		if (totem == null) {
+		if (!optional.isPresent()) {
 			message(sender, Message.KOTH_DOESNT_EXIST);
 			return CommandType.DEFAULT;
 		}
 
+		Koth totem = optional.get();
 		Scheduler scheduler;
 		switch (type) {
 		case DELAY:
 
 			String day = argAsString(2);
-			
-			if (!isDay(day)){
+
+			if (!isDay(day)) {
 				message(sender, Message.KOTH_SCHEDULER_ERROR, day);
 				return CommandType.SUCCESS;
 			}
-			
+
 			int hour = argAsInteger(3);
 			int minute = argAsInteger(4);
 

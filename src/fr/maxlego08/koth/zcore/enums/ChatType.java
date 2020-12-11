@@ -4,5 +4,6 @@ public enum ChatType {
 
 	MESSAGE,
 	ACTION,
+	NONE,
 	
 }

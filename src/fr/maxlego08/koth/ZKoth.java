@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import fr.maxlego08.koth.command.CommandManager;
 import fr.maxlego08.koth.inventory.InventoryManager;
 import fr.maxlego08.koth.listener.AdapterListener;
+import fr.maxlego08.koth.placeholder.KothExpansion;
 import fr.maxlego08.koth.save.Config;
 import fr.maxlego08.koth.save.Lang;
 import fr.maxlego08.koth.scheduler.SchedulerManager;
@@ -52,11 +53,11 @@ public class ZKoth extends ZPlugin {
 		getSavers().forEach(saver -> saver.load(getPersist()));
 
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-			KothPlaceholderExpansion expansion = new KothPlaceholderExpansion(manager, getDescription().getFullName());
+			KothExpansion expansion = new KothExpansion(this);
 			expansion.register();
 		}
 
-		Metrics metrics = new Metrics(this);
+		Metrics metrics = new Metrics(this, 6924);
 		metrics.addCustomChart(new Metrics.SingleLineChart("koths", new Callable<Integer>() {
 			@Override
 			public Integer call() throws Exception {

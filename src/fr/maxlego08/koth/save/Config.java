@@ -33,10 +33,11 @@ public class Config implements Saveable {
 	public static int removeChestSec = 120;
 	public static ChatType messageInformationCapture = ChatType.ACTION;
 	public static boolean debugCommands = false;
+	public static String placeholderLocation = "%x% %y% %z% - %world%";
 
 	static {
 
-		commands.add("bc %player% vient de gagner le koth %name% !");
+		commands.add("bc %player% has just won the koth %name% !");
 
 		itemstacks.add(ItemDecoder.serializeItemStack(new ItemBuilder(Material.DIAMOND, 32, "§ezKoth").build()));
 

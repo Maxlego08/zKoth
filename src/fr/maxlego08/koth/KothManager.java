@@ -3,6 +3,7 @@ package fr.maxlego08.koth;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -16,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import fr.maxlego08.koth.event.KothRegisterEvent;
+import fr.maxlego08.koth.factions.GangPlus;
 import fr.maxlego08.koth.factions.Guilds;
 import fr.maxlego08.koth.factions.LegacyFaction;
 import fr.maxlego08.koth.factions.MassiveFaction;
@@ -65,8 +67,12 @@ public class KothManager extends ListenerAdapter implements Saveable {
 	 * @param name
 	 * @return
 	 */
-	public Koth get(String name) {
+	private Koth get(String name) {
 		return koths.stream().filter(koth -> koth.getName().equalsIgnoreCase(name)).findAny().orElse(null);
+	}
+	
+	public Optional<Koth> getByName(String name) {
+		return koths.stream().filter(koth -> koth.getName().equalsIgnoreCase(name)).findFirst();
 	}
 
 	/**
@@ -272,6 +278,9 @@ public class KothManager extends ListenerAdapter implements Saveable {
 			} else if (pl.getName().equalsIgnoreCase("SuperiorSkyblock2")) {
 				factionListener = new SuperiorSkyblock2();
 				Logger.info("SuperiorSkyblock2 plugin detected successfully.", LogType.SUCCESS);
+			} else if (pl.getName().equalsIgnoreCase("GangsPlus")) {
+				factionListener = new GangPlus();
+				Logger.info("GangsPlus plugin detected successfully.", LogType.SUCCESS);
 			} else if (pl.getName().equalsIgnoreCase("PrideFaction")) {
 				factionListener = new PrideFaction();
 				Logger.info("PrideNetwork plugin detected successfully.", LogType.SUCCESS);
@@ -320,7 +329,7 @@ public class KothManager extends ListenerAdapter implements Saveable {
 		collection.forEach(koth -> koth.playerMove(player, factionListener));
 
 	}
-	
+
 	@Override
 	protected void onInventoryClose(InventoryCloseEvent event, Player player) {
 

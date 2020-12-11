@@ -7,8 +7,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -85,16 +87,17 @@ public class SchedulerManager extends ZUtils implements Saveable {
 				Scheduler scheduler = iterator.next();
 				if (scheduler.toggle(calendar)) {
 
-					Koth koth = manager.get(scheduler.getTotemName());
+					Optional<Koth> optional = manager.getByName(scheduler.getTotemName());
 
-					if (koth == null) {
+					if (!optional.isPresent()) {
 						Logger.info("Deleting a scheduler, unable to find the koth " + scheduler.getTotemName(),
 								LogType.ERROR);
 						iterator.remove();
 						continue;
 					}
 
-					koth.spawn(null, false);
+					Koth koth = optional.get();
+					koth.spawn(Bukkit.getConsoleSender(), false);
 
 				}
 

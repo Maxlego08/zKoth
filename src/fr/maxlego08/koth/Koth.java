@@ -36,6 +36,7 @@ public class Koth extends ZUtils {
 	private transient Cuboid cuboid;
 	private transient boolean hasPlayer = false;
 	private transient FactionListener factionListener;
+	private transient AtomicInteger timer;
 
 	public Koth(String name, int capSec) {
 		super();
@@ -297,7 +298,7 @@ public class Koth extends ZUtils {
 		if (capSec <= 0)
 			capSec = Config.defaultCap;
 
-		AtomicInteger timer = new AtomicInteger(capSec);
+		timer = new AtomicInteger(capSec);
 
 		scheduleFix(0, 1000, (task, isCancelled) -> {
 
@@ -388,6 +389,10 @@ public class Koth extends ZUtils {
 	 */
 	private void broadcast(Message message, Player player, String currentFaction, int cooldown,
 			boolean defaultMessage) {
+		
+		if (Config.messageInformationCapture.equals(ChatType.NONE))
+			return;
+		
 		String msg = message.getMessage();
 
 		Location location = cuboid.getCenter();
@@ -405,7 +410,7 @@ public class Koth extends ZUtils {
 		msg = msg.replace("%cooldown%", TimerBuilder.getStringTime(cooldown));
 		msg = msg.replace("%currentFaction%", currentFaction == null ? "NULL" : currentFaction);
 		msg = msg.replace("%currentPlayer%",
-				this.currentPlayer == null ? Message.KOTH_NOONE.getMessage() : this.currentPlayer.getName());
+				this.currentPlayer == null ? Message.KOTH_NONE.getMessage() : this.currentPlayer.getName());
 		msg = msg.replace("%name%", String.valueOf(name));
 
 		if (Config.messageInformationCapture.equals(ChatType.MESSAGE) || defaultMessage)
@@ -460,4 +465,19 @@ public class Koth extends ZUtils {
 
 	}
 
+	/**
+	 * @return the cooldown
+	 */
+	public int getCooldown() {
+		return cooldown;
+	}
+	
+	public AtomicInteger getTimer() {
+		return timer;
+	}
+
+	public String getFaction() {
+		return currentPlayer == null ? Message.KOTH_NONE.getMessage() : this.factionListener.getFactionTag(currentPlayer);
+	}
+	
 }

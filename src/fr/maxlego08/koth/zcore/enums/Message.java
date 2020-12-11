@@ -28,7 +28,7 @@ public enum Message {
 	COMMAND_NO_ARG("§cImpossible de trouver la commande avec ses arguments.", true),
 	COMMAND_SYNTAXE_HELP("§a%s §b» §7%s", true),
 	
-	KOTH_NOONE("Noboby"),
+	KOTH_NONE("Noboby"),
 	KOTH_LIST("§eAvailable koths§8:"),
 	KOTH_EMPTY("§cNo koth available."),
 	KOTH_CREATE("§eYou have just created the koth §6%s§e. Now you must do §f/koth set pos1/pos2 <koth name>§e."),

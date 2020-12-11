@@ -90,7 +90,7 @@ public class ActionBar {
 					Method var23 = message0.getClass().getDeclaredMethod("sendPacket", new Class[] { var5 });
 					var23.invoke(message0, new Object[] { var6 });
 				} catch (Exception message7) {
-					message7.printStackTrace();
+					//
 				}
 			}
 		}, 1);

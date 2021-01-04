@@ -132,8 +132,15 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 	@Override
 	public void deleteKoth(CommandSender sender, String name) {
-		// TODO Auto-generated method stub
+		Optional<Koth> optional = getKoth(name);
+		if (!optional.isPresent()) {
+			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+			return;
+		}
 
+		ZKoth koth = (ZKoth) optional.get();
+		koths.remove(koth);
+		message(sender, Message.ZKOTH_DELETE_SUCCESS.replace("%name%", name));
 	}
 
 }

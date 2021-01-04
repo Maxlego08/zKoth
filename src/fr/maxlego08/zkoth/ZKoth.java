@@ -85,4 +85,10 @@ public class ZKoth implements Koth {
 		this.type = type;
 	}
 
+	@Override
+	public void move(Location minLocation, Location maxLocation) {
+		this.maxLocation = maxLocation;
+		this.minLocation = minLocation;
+	}
+
 }

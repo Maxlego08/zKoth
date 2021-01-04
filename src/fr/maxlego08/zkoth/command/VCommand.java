@@ -49,7 +49,7 @@ public abstract class VCommand extends Arguments {
 	 */
 	private boolean ignoreParent = false;
 	private boolean ignoreArgs = false;
-	protected boolean DEBUG = false;
+	protected boolean DEBUG = true;
 	protected boolean runAsync = false;
 	private CommandType tabCompleter = CommandType.DEFAULT;
 

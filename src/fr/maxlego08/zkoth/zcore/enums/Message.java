@@ -41,7 +41,8 @@ public enum Message {
 	
 	ZKOTH_CREATE_SUCCESS("§7You just created the koth §f%name%§7."), 
 	ZKOTH_DELETE_SUCCESS("§7You just deleted the koth §f%name%§7."), 
-	ZKOTH_CREATE_ERROR_SELECTION("§cYou must select a zone with the command §f/zkoth axe§c."),
+	ZKOTH_MOVE_SUCCESS("§7You have just moved the koth §f%name%§7."),
+	ZKOTH_CREATE_ERROR_SELECTION("§cYou must select a zone with the command §f/zkoth axe§c."), 
 	
 	
 	;

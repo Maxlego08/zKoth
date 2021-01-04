@@ -51,4 +51,13 @@ public interface KothManager extends Saveable {
 	 */
 	public Optional<Selection> getSelection(UUID uuid);
 
+	/**
+	 * 
+	 * @param sender
+	 * @param maxLocation
+	 * @param minLocation
+	 * @param name
+	 */
+	public void moveKoth(CommandSender sender, Location maxLocation, Location minLocation, String name);
+
 }

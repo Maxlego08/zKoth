@@ -20,6 +20,7 @@ import fr.maxlego08.zkoth.api.Koth;
 import fr.maxlego08.zkoth.api.KothManager;
 import fr.maxlego08.zkoth.api.Selection;
 import fr.maxlego08.zkoth.api.event.events.KothCreateEvent;
+import fr.maxlego08.zkoth.api.event.events.KothMoveEvent;
 import fr.maxlego08.zkoth.listener.ListenerAdapter;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
 import fr.maxlego08.zkoth.zcore.enums.Message;
@@ -141,6 +142,27 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		ZKoth koth = (ZKoth) optional.get();
 		koths.remove(koth);
 		message(sender, Message.ZKOTH_DELETE_SUCCESS.replace("%name%", name));
+	}
+
+	@Override
+	public void moveKoth(CommandSender sender, Location maxLocation, Location minLocation, String name) {
+
+		Optional<Koth> optional = getKoth(name);
+		if (!optional.isPresent()) {
+			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+			return;
+		}
+
+		Koth koth = optional.get();
+		KothMoveEvent event = new KothMoveEvent(koth, maxLocation, minLocation);
+		event.callEvent();
+
+		if (event.isCancelled())
+			return;
+
+		koth.move(minLocation, maxLocation);
+		message(sender, Message.ZKOTH_MOVE_SUCCESS.replace("%name%", name));
+
 	}
 
 }

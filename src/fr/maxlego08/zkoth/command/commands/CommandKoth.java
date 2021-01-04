@@ -13,6 +13,7 @@ public class CommandKoth extends VCommand {
 
 		this.addSubCommand(new CommandKothCreate());
 		this.addSubCommand(new CommandKothDelete());
+		this.addSubCommand(new CommandKothMove());
 		this.addSubCommand(new CommandKothAxe());
 	}
 

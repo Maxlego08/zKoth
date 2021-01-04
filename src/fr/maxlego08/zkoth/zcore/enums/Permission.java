@@ -1,7 +1,14 @@
 package fr.maxlego08.zkoth.zcore.enums;
 
 public enum Permission {
-	ZKOTH_USE, ZKOTH_AXE, ZKOTH_CREATE
+	
+	ZKOTH_USE, ZKOTH_AXE, ZKOTH_CREATE,
+	
+	ZKOTH_MOVE,
+	ZKOTH_DELETE,
+	ZKOTH_SPAWN,
+	ZKOTH_STOP,
+	ZKOTH_NOW,
 
 	;
 

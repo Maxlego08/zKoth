@@ -71,4 +71,11 @@ public interface Koth {
 	 */
 	public void setLootType(LootType type);
 
+	/**
+	 * Move koth
+	 * @param minLocation
+	 * @param maxLocation
+	 */
+	public void move(Location minLocation, Location maxLocation);
+	
 }

@@ -26,16 +26,22 @@ public enum Message {
 	TIME_MINUTE("%02d minute(s) %02d seconde(s)"),
 	TIME_SECOND("%02d seconde(s)"),
 	
-	COMMAND_SYNTAXE_ERROR("§cVous devez exécuter la commande comme ceci§7: §a%s"),
-	COMMAND_NO_PERMISSION("§cVous n'avez pas la permission d'exécuter cette commande."),
-	COMMAND_NO_CONSOLE("§cSeul un joueur peut exécuter cette commande."),
-	COMMAND_NO_ARG("§cImpossible de trouver la commande avec ses arguments."),
+	COMMAND_SYNTAXE_ERROR("§cYou have to execute the command like this§7: §2%s"),
+	COMMAND_NO_PERMISSION("§cYou do not have permission to execute this command.."),
+	COMMAND_NO_CONSOLE("§cOnly a player can execute this command."),
+	COMMAND_NO_ARG("§cImpossible to find the command with its arguments."),
 	COMMAND_SYNTAXE_HELP("§f%command% §8» §7%description%"), 
 	
 	
 	ZKOTH_AXE_RECEIVE("§7You have just received the axe for zone selection."), 
 	ZKOTH_AXE_POS1("§7You have just put the first position in §f%world%§7, §f%x%§7, §f%y%§7, §f%z%§7."),
-	ZKOTH_AXE_POS2("§7You have just put the second position in §f%world%§7, §f%x%§7, §f%y%§7, §f%z%§7."),
+	ZKOTH_AXE_POS2("§7You have just put the second position in §f%world%§7, §f%x%§7, §f%y%§7, §f%z%§7."), 
+	ZKOTH_ALREADY_EXIST("§cThe koth §f%name% §calready exists."),
+	ZKOTH_DOESNT_EXIST("§cThe koth §f%name% §cdoesnt exists."),
+	
+	ZKOTH_CREATE_SUCCESS("§7You just created the koth §f%name%§7."), 
+	ZKOTH_DELETE_SUCCESS("§7You just deleted the koth §f%name%§7."), 
+	ZKOTH_CREATE_ERROR_SELECTION("§cYou must select a zone with the command §f/zkoth axe§c."),
 	
 	
 	;

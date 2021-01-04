@@ -31,6 +31,13 @@ public interface KothManager extends Saveable {
 			int captureSeconds);
 
 	/**
+	 * 
+	 * @param sender
+	 * @param name
+	 */
+	public void deleteKoth(CommandSender sender, String name);
+
+	/**
 	 * Get koth Axe
 	 * 
 	 * @return {@link ItemStack}

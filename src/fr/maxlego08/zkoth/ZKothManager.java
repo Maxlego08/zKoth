@@ -19,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 import fr.maxlego08.zkoth.api.Koth;
 import fr.maxlego08.zkoth.api.KothManager;
 import fr.maxlego08.zkoth.api.Selection;
+import fr.maxlego08.zkoth.api.event.events.KothCreateEvent;
 import fr.maxlego08.zkoth.listener.ListenerAdapter;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
 import fr.maxlego08.zkoth.zcore.enums.Message;
@@ -28,31 +29,46 @@ import fr.maxlego08.zkoth.zcore.utils.storage.Persist;
 
 public class ZKothManager extends ListenerAdapter implements KothManager {
 
-	private static List<Koth> koths = new ArrayList<Koth>();
+	private static List<ZKoth> koths = new ArrayList<ZKoth>();
 	private final transient String itemName = "§6✤ §ezKoth axe §6✤";
 	private final transient Map<UUID, Selection> selections = new HashMap<UUID, Selection>();
 
 	@Override
 	public void save(Persist persist) {
-		// TODO Auto-generated method stub
-
+		persist.save(this, "koths");
 	}
 
 	@Override
 	public void load(Persist persist) {
-		// TODO Auto-generated method stub
-
+		persist.loadOrSaveDefault(this, ZKothManager.class, "koths");
 	}
 
 	@Override
 	public Optional<Koth> getKoth(String name) {
-		return koths.stream().filter(koth -> koth.getName().equalsIgnoreCase(name)).findFirst();
+		Optional<ZKoth> zKoth = koths.stream().filter(koth -> koth.getName().equalsIgnoreCase(name)).findFirst();
+		return zKoth.isPresent() ? Optional.of(zKoth.get()) : Optional.empty();
 	}
 
 	@Override
 	public void createKoth(CommandSender sender, String name, Location minLocation, Location maxLocation,
 			int captureSeconds) {
 
+		Optional<Koth> optional = getKoth(name);
+		if (optional.isPresent()) {
+			message(sender, Message.ZKOTH_ALREADY_EXIST.replace("%name%", name));
+			return;
+		}
+
+		Koth koth = new ZKoth(name, captureSeconds, minLocation, maxLocation);
+
+		KothCreateEvent event = new KothCreateEvent(koth);
+		event.callEvent();
+
+		if (event.isCancelled())
+			return;
+
+		koths.add((ZKoth) koth);
+		message(sender, Message.ZKOTH_CREATE_SUCCESS.replace("%name%", name));
 	}
 
 	@Override
@@ -73,7 +89,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		@SuppressWarnings("deprecation")
 		ItemStack itemStack = player.getItemInHand();
 		if (itemStack != null && event.getClickedBlock() != null && same(itemStack, itemName)) {
-			
+
 			event.setCancelled(true);
 			Optional<Selection> optional = getSelection(player.getUniqueId());
 			Selection selection = null;
@@ -112,6 +128,12 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 			}
 
 		});
+	}
+
+	@Override
+	public void deleteKoth(CommandSender sender, String name) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

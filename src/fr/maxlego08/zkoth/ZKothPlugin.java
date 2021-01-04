@@ -46,6 +46,7 @@ public class ZKothPlugin extends ZPlugin {
 		/* Add Saver */
 
 		addSave(Config.getInstance());
+		addSave((ZKothManager) kothManager);
 
 		getSavers().forEach(saver -> saver.load(getPersist()));
 

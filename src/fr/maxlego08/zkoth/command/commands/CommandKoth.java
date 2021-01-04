@@ -11,6 +11,7 @@ public class CommandKoth extends VCommand {
 	public CommandKoth() {
 		this.setPermission(Permission.ZKOTH_USE);
 
+		this.addSubCommand(new CommandKothCreate());
 		this.addSubCommand(new CommandKothAxe());
 	}
 

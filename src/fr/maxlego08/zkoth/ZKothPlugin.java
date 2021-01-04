@@ -4,12 +4,12 @@ import org.bukkit.plugin.ServicePriority;
 
 import fr.maxlego08.zkoth.api.KothManager;
 import fr.maxlego08.zkoth.command.CommandManager;
+import fr.maxlego08.zkoth.command.commands.CommandKoth;
 import fr.maxlego08.zkoth.inventory.InventoryManager;
 import fr.maxlego08.zkoth.listener.AdapterListener;
 import fr.maxlego08.zkoth.save.Config;
 import fr.maxlego08.zkoth.scoreboard.ScoreBoardManager;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
-import fr.maxlego08.zkoth.zcore.utils.builder.CooldownBuilder;
 
 /**
  * System to create your plugins very simply Projet:
@@ -29,22 +29,23 @@ public class ZKothPlugin extends ZPlugin {
 
 		this.getServer().getServicesManager().register(KothManager.class, kothManager, this, ServicePriority.High);
 
-		commandManager = new CommandManager(this);
+		this.commandManager = new CommandManager(this);
+		this.inventoryManager = InventoryManager.getInstance();
+		this.scoreboardManager = new ScoreBoardManager(1000);
 
-		if (!isEnabled())
-			return;
-		inventoryManager = InventoryManager.getInstance();
+		/* Commands */
 
-		scoreboardManager = new ScoreBoardManager(1000);
+		this.registerCommand("zkoth", new CommandKoth(), "koth");
 
 		/* Add Listener */
 
 		addListener(new AdapterListener(this));
 		addListener(inventoryManager);
+		addListener((ZKothManager) kothManager);
 
 		/* Add Saver */
+
 		addSave(Config.getInstance());
-		addSave(new CooldownBuilder());
 
 		getSavers().forEach(saver -> saver.load(getPersist()));
 
@@ -60,6 +61,10 @@ public class ZKothPlugin extends ZPlugin {
 
 		postDisable();
 
+	}
+
+	public KothManager getKothManager() {
+		return kothManager;
 	}
 
 }

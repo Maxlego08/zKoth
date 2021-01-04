@@ -7,7 +7,7 @@ import java.util.Map;
 
 public enum Message {
 
-	PREFIX("§7(§bTemplate§7)"),
+	PREFIX("§8(§fzKoth§8)"),
 	
 	TELEPORT_MOVE("§cVous ne devez pas bouger !"),
 	TELEPORT_MESSAGE("§7Téléportatio dans §3%s §7secondes !"),
@@ -30,7 +30,12 @@ public enum Message {
 	COMMAND_NO_PERMISSION("§cVous n'avez pas la permission d'exécuter cette commande."),
 	COMMAND_NO_CONSOLE("§cSeul un joueur peut exécuter cette commande."),
 	COMMAND_NO_ARG("§cImpossible de trouver la commande avec ses arguments."),
-	COMMAND_SYNTAXE_HELP("§a%s §b» §7%s"),
+	COMMAND_SYNTAXE_HELP("§f%command% §8» §7%description%"), 
+	
+	
+	ZKOTH_AXE_RECEIVE("§7You have just received the axe for zone selection."), 
+	ZKOTH_AXE_POS1("§7You have just put the first position in §f%world%§7, §f%x%§7, §f%y%§7, §f%z%§7."),
+	ZKOTH_AXE_POS2("§7You have just put the second position in §f%world%§7, §f%x%§7, §f%y%§7, §f%z%§7."),
 	
 	
 	;

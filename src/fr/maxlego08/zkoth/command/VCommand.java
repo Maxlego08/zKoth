@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import fr.maxlego08.zkoth.ZKothPlugin;
+import fr.maxlego08.zkoth.api.KothManager;
 import fr.maxlego08.zkoth.zcore.enums.Message;
 import fr.maxlego08.zkoth.zcore.enums.Permission;
 import fr.maxlego08.zkoth.zcore.utils.commands.Arguments;
@@ -62,6 +63,7 @@ public abstract class VCommand extends Arguments {
 	private String description;
 	private int argsMinLength;
 	private int argsMaxLength;
+	protected KothManager manager;
 
 	//
 	// GETTER
@@ -185,7 +187,7 @@ public abstract class VCommand extends Arguments {
 		this.permission = permission;
 		return this;
 	}
-	
+
 	/**
 	 * @param permission
 	 *            the permission to set
@@ -346,6 +348,8 @@ public abstract class VCommand extends Arguments {
 
 	public CommandType prePerform(ZKothPlugin main, CommandSender commandSender, String[] args) {
 
+		manager = main.getKothManager();
+
 		// On met à jour le nombre d'argument en fonction du nombre de parent
 
 		parentCount = parentCount(0);
@@ -388,7 +392,7 @@ public abstract class VCommand extends Arguments {
 	/**
 	 * method that allows you to execute the command
 	 */
-	protected abstract CommandType perform(ZKothPlugin main);
+	protected abstract CommandType perform(ZKothPlugin plugin);
 
 	public boolean sameSubCommands() {
 		if (parent == null)

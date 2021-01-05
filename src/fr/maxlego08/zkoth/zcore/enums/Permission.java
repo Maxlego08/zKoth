@@ -10,7 +10,7 @@ public enum Permission {
 	ZKOTH_SPAWN,
 	ZKOTH_STOP,
 	ZKOTH_NOW,
-	ZKOTH_RELOAD,
+	ZKOTH_RELOAD, ZKOTH_LIST,
 
 	;
 

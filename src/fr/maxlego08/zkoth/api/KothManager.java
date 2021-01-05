@@ -81,4 +81,10 @@ public interface KothManager extends Saveable {
 	 */
 	public boolean hasActiveKoth();
 
+	/**
+	 * 
+	 * @param sender
+	 */
+	public void sendKothList(CommandSender sender);
+
 }

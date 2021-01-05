@@ -3,6 +3,8 @@ package fr.maxlego08.zkoth.api;
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import fr.maxlego08.zkoth.api.enums.LootType;
@@ -73,9 +75,36 @@ public interface Koth {
 
 	/**
 	 * Move koth
+	 * 
 	 * @param minLocation
 	 * @param maxLocation
 	 */
 	public void move(Location minLocation, Location maxLocation);
-	
+
+	/**
+	 * 
+	 * @return true if is enable
+	 */
+	public boolean isEnable();
+
+	/**
+	 * 
+	 * @return true if is in cooldown
+	 */
+	public boolean isCooldown();
+
+	/**
+	 * Spawn koth
+	 * 
+	 * @param sender
+	 * @param now
+	 */
+	public void spawn(CommandSender sender, boolean now);
+
+	/**
+	 * 
+	 * @param player
+	 * @param factionListener
+	 */
+	public void playerMove(Player player, FactionListener factionListener);
 }

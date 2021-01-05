@@ -1,5 +1,6 @@
 package fr.maxlego08.zkoth.api;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -59,5 +60,19 @@ public interface KothManager extends Saveable {
 	 * @param name
 	 */
 	public void moveKoth(CommandSender sender, Location maxLocation, Location minLocation, String name);
+
+	/***
+	 * 
+	 * @param sender
+	 * @param name
+	 * @param isNow
+	 */
+	public void spawnKoth(CommandSender sender, String name, boolean isNow);
+
+	/**
+	 * 
+	 * @return
+	 */
+	public List<Koth> getActiveKoths();
 
 }

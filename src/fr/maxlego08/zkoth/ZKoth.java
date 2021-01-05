@@ -9,9 +9,15 @@ import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Chest;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import fr.maxlego08.zkoth.api.FactionListener;
 import fr.maxlego08.zkoth.api.Koth;
@@ -21,6 +27,7 @@ import fr.maxlego08.zkoth.api.event.events.KothLooseEvent;
 import fr.maxlego08.zkoth.api.event.events.KothSpawnEvent;
 import fr.maxlego08.zkoth.api.event.events.KothWinEvent;
 import fr.maxlego08.zkoth.save.Config;
+import fr.maxlego08.zkoth.zcore.ZPlugin;
 import fr.maxlego08.zkoth.zcore.enums.Message;
 import fr.maxlego08.zkoth.zcore.utils.Cuboid;
 import fr.maxlego08.zkoth.zcore.utils.ZUtils;
@@ -56,6 +63,7 @@ public class ZKoth extends ZUtils implements Koth {
 		this.captureSeconds = captureSeconds;
 		this.minLocation = minLocation;
 		this.maxLocation = maxLocation;
+		this.type = LootType.NONE;
 	}
 
 	@Override
@@ -145,10 +153,36 @@ public class ZKoth extends ZUtils implements Koth {
 
 	private void spawn() {
 
-		isCooldown = true;
+		this.isCooldown = true;
+		this.isEnable = true;
 		this.currentCaptureSeconds = new AtomicInteger(Config.cooldownInSecond);
 		scheduleFix(0, 1000, (task, isCancelled) -> {
 
+			this.timerTask = task;
+
+			if (!isCancelled) {
+				task.cancel();
+				return;
+			}
+
+			if (!this.isEnable) {
+				task.cancel();
+				return;
+			}
+
+			int tmpCapture = this.currentCaptureSeconds.get();
+
+			// Si on doit avetir
+			if (Config.displayMessageCooldown.contains(tmpCapture))
+				broadcast(Message.ZKOTH_EVENT_COOLDOWN);
+
+			if (tmpCapture <= 0) {
+				this.isCooldown = false;
+				this.timerTask.cancel();
+				this.spawnNow();
+			}
+
+			this.currentCaptureSeconds.decrementAndGet();
 		});
 
 	}
@@ -163,6 +197,7 @@ public class ZKoth extends ZUtils implements Koth {
 
 		this.isCooldown = false;
 		this.isEnable = true;
+		this.currentCaptureSeconds = new AtomicInteger(this.captureSeconds);
 
 		this.broadcast(Message.ZKOTH_EVENT_START);
 	}
@@ -305,7 +340,7 @@ public class ZKoth extends ZUtils implements Koth {
 				return;
 			}
 
-			int tmpCapture = this.currentCaptureSeconds.getAndDecrement();
+			int tmpCapture = this.currentCaptureSeconds.get();
 
 			if (this.currentPlayer != null) {
 				if (!this.currentPlayer.isOnline() || !cuboid.contains(this.currentPlayer.getLocation()))
@@ -344,15 +379,62 @@ public class ZKoth extends ZUtils implements Koth {
 				task.cancel();
 				broadcast(Message.ZKOTH_EVENT_WIN);
 
-				// donner les loots
+				/* Gestion des loots */
+
+				this.commands.forEach(command -> {
+					command = replaceMessage(command);
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+				});
+
+				Location center = cuboid.getCenter();
+				World world = center.getWorld();
+				while (center.getBlock().getRelative(BlockFace.DOWN).getType().equals(Material.AIR))
+					center = center.getBlock().getRelative(BlockFace.DOWN).getLocation();
+				Location location = center;
+
+				if (this.itemStacks.size() != 0)
+					switch (this.type) {
+					case CHEST:
+						location.getBlock().setType(Material.CHEST);
+						Chest chest = (Chest) location.getBlock().getState();
+
+						this.itemStacks.forEach(itemStack -> chest.getInventory().addItem(itemStack));
+
+						Bukkit.getScheduler().runTaskLater(ZPlugin.z(), () -> {
+							location.getBlock().setType(Material.AIR);
+						}, 20 * Config.removeChestSec);
+						break;
+					case DROP:
+						location.add(0.5, 0.3, 0.5);
+						this.itemStacks.forEach(itemStack -> {
+
+							Item item = world.dropItem(location, itemStack);
+							Vector vector = item.getVelocity();
+							vector.setZ(0);
+							vector.setY(0.5);
+							vector.setX(0);
+							item.setVelocity(vector);
+
+						});
+						break;
+					case INVENTORY:
+						this.itemStacks.forEach(itemStack -> give(this.currentPlayer, itemStack));
+						break;
+					case NONE:
+						break;
+					default:
+						break;
+					}
+
+				/* FIN Gestion des loots */
 
 				this.isEnable = false;
 				this.isCooldown = false;
 				this.currentPlayer = null;
 				this.timerTask = null;
 				this.currentCaptureSeconds = null;
-
-			}
+			} else
+				this.currentCaptureSeconds.decrementAndGet();
 		});
 	}
 
@@ -375,6 +457,11 @@ public class ZKoth extends ZUtils implements Koth {
 			this.commands.remove(id - 1);
 		} catch (Exception e) {
 		}
+	}
+
+	@Override
+	public void setItemStacks(List<ItemStack> itemStacks) {
+		this.itemStacks = itemStacks;
 	}
 
 }

@@ -126,4 +126,10 @@ public interface Koth {
 	 * @param id
 	 */
 	public void removeCommand(int id);
+
+	/**
+	 * 
+	 * @param itemStacks
+	 */
+	public void setItemStacks(List<ItemStack> itemStacks);
 }

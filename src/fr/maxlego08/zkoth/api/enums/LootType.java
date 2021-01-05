@@ -5,5 +5,6 @@ public enum LootType {
 	DROP,
 	CHEST,
 	INVENTORY,
+	NONE,
 	
 }

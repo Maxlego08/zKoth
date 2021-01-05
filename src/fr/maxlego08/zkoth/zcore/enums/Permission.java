@@ -15,6 +15,7 @@ public enum Permission {
 	ZKOTH_INFO, 
 	ZKOTH_COMMAND_ADD,
 	ZKOTH_COMMAND_REMOVE,
+	ZKOTH_LOOT,
 
 	;
 

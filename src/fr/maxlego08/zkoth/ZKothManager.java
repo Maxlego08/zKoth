@@ -14,10 +14,13 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -26,6 +29,7 @@ import fr.maxlego08.zkoth.api.FactionListener;
 import fr.maxlego08.zkoth.api.Koth;
 import fr.maxlego08.zkoth.api.KothManager;
 import fr.maxlego08.zkoth.api.Selection;
+import fr.maxlego08.zkoth.api.enums.LootType;
 import fr.maxlego08.zkoth.api.event.events.KothCreateEvent;
 import fr.maxlego08.zkoth.api.event.events.KothHookEvent;
 import fr.maxlego08.zkoth.api.event.events.KothMoveEvent;
@@ -401,6 +405,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		message(sender, "§fName: §b%s", koth.getName());
 		message(sender, "§fCoordinate: §b%s", location);
+		message(sender, "§fLoot type: §b%s", koth.getLootType().name());
 		message(sender, "§fCommands §8(§7" + koth.getCommands().size() + "§8):");
 		if (sender instanceof ConsoleCommandSender) {
 			koth.getCommands().forEach(command -> messageWO(sender, " §7" + command));
@@ -429,7 +434,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 	@Override
 	public void addCommand(CommandSender sender, String name, String command) {
-		
+
 		Optional<Koth> optional = getKoth(name);
 		if (!optional.isPresent()) {
 			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
@@ -443,7 +448,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 	@Override
 	public void removeCommand(CommandSender sender, String name, int id) {
-	
+
 		Optional<Koth> optional = getKoth(name);
 		if (!optional.isPresent()) {
 			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
@@ -453,7 +458,68 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		Koth koth = optional.get();
 		koth.removeCommand(id);
 		message(sender, "§7You have just deleted a command.");
-		
+
+	}
+
+	@Override
+	public void setKothLoot(CommandSender sender, String name, LootType type) {
+
+		Optional<Koth> optional = getKoth(name);
+		if (!optional.isPresent()) {
+			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+			return;
+		}
+
+		Koth koth = optional.get();
+		koth.setLootType(type);
+		message(sender, "§7You have just set the type to §f%s§7.", type.name().toLowerCase());
+	}
+
+	@Override
+	public void updateLoots(Player player, String name) {
+
+		Optional<Koth> optional = getKoth(name);
+		if (!optional.isPresent()) {
+			message(player, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+			return;
+		}
+
+		Koth koth = optional.get();
+		Inventory inventory = Bukkit.createInventory(null, 54, "§8Loots: " + name);
+		int slot = 0;
+		for (ItemStack itemStack : koth.getItemStacks()) {
+			inventory.setItem(slot, itemStack);
+		}
+
+		player.openInventory(inventory);
+
+	}
+
+	@Override
+	protected void onInventoryClose(InventoryCloseEvent event, Player player) {
+
+		InventoryView view = event.getView();
+		String title = view.getTitle();
+
+		if (title.startsWith("§8Loots: ")) {
+
+			String name = title.replace("§8Loots: ", "");
+			Optional<Koth> optional = getKoth(name);
+			if (!optional.isPresent()) {
+				message(player, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+				return;
+			}
+
+			Koth koth = optional.get();
+			List<ItemStack> itemStacks = new ArrayList<>();
+			for (ItemStack itemStack : event.getInventory().getContents())
+				if (itemStack != null)
+					itemStacks.add(itemStack);
+
+			koth.setItemStacks(itemStacks);
+			message(player, "§aYou have just modified the loots of the koth §2%s.", koth.getName());
+		}
+
 	}
 
 }

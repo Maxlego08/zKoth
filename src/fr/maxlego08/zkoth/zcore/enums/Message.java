@@ -72,6 +72,15 @@ public enum Message {
 			"§8§m-+------------------------------+-"
 			),
 	
+	ZKOTH_EVENT_COOLDOWN(MessageType.CENTER, 
+			"§8§m-+------------------------------+-",
+			"",
+			"§fThe koth §n%name%§f will appear in §d%capture%",
+			"§fCoordinate§8: §7%x%, %y%, %z%.",
+			"",
+			"§8§m-+------------------------------+-"
+			),
+	
 	ZKOHT_EVENT_CATCH(MessageType.ACTION, "§d%player% §fjust started capturing the koth §n%name%§f. §8(§7%x%, %y%, %z%§8)"),
 	ZKOHT_EVENT_LOOSE(MessageType.ACTION, "§d%player% §fjust loose koth §n%name%§f. §8(§7%x%, %y%, %z%§8)"),
 	ZKOHT_EVENT_TIMER(MessageType.ACTION, "§fAnother §b%capture% §fbefore §d%player% §fwins the koth §n%name%§e. §8(§7%x%, %y%, %z%§8)"),

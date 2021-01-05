@@ -6,8 +6,10 @@ import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import fr.maxlego08.zkoth.api.enums.LootType;
 import fr.maxlego08.zkoth.zcore.utils.storage.Saveable;
 
 public interface KothManager extends Saveable {
@@ -109,5 +111,20 @@ public interface KothManager extends Saveable {
 	 * @param id
 	 */
 	public void removeCommand(CommandSender sender, String name, int id);
+
+	/**
+	 * 
+	 * @param sender
+	 * @param name
+	 * @param type
+	 */
+	public void setKothLoot(CommandSender sender, String name, LootType type);
+
+	/**
+	 * 
+	 * @param player
+	 * @param name
+	 */
+	public void updateLoots(Player player, String name);
 
 }

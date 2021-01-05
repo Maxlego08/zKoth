@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.PluginManager;
 
 import fr.maxlego08.zkoth.api.FactionListener;
 import fr.maxlego08.zkoth.api.Koth;
@@ -28,12 +29,17 @@ import fr.maxlego08.zkoth.api.event.events.KothCreateEvent;
 import fr.maxlego08.zkoth.api.event.events.KothHookEvent;
 import fr.maxlego08.zkoth.api.event.events.KothMoveEvent;
 import fr.maxlego08.zkoth.api.event.events.KothWinEvent;
+import fr.maxlego08.zkoth.hooks.FactionsXHook;
+import fr.maxlego08.zkoth.hooks.GuildsHook;
 import fr.maxlego08.zkoth.hooks.NoFaction;
+import fr.maxlego08.zkoth.hooks.SuperiorSkyblock2Hook;
 import fr.maxlego08.zkoth.listener.ListenerAdapter;
 import fr.maxlego08.zkoth.save.Config;
 import fr.maxlego08.zkoth.scoreboard.ScoreBoardManager;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
 import fr.maxlego08.zkoth.zcore.enums.Message;
+import fr.maxlego08.zkoth.zcore.logger.Logger;
+import fr.maxlego08.zkoth.zcore.logger.Logger.LogType;
 import fr.maxlego08.zkoth.zcore.utils.ZSelection;
 import fr.maxlego08.zkoth.zcore.utils.builder.ItemBuilder;
 import fr.maxlego08.zkoth.zcore.utils.storage.Persist;
@@ -49,6 +55,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 	private transient long playerMoveEventCooldown = 0;
 
 	/**
+	 * @param plugin
 	 * @param manager
 	 */
 	public ZKothManager(ScoreBoardManager manager) {
@@ -67,9 +74,20 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		/* Enable faction */
 
-		if (factionListener == null) {
-			factionListener = new NoFaction();
+		PluginManager pluginManager = Bukkit.getPluginManager();
 
+		if (pluginManager.isPluginEnabled("FactionsX")) {
+			factionListener = new FactionsXHook();
+			Logger.info("FactionsX plugin detected successfully.", LogType.SUCCESS);
+		} else if (pluginManager.isPluginEnabled("SuperiorSkyblock2")) {
+			factionListener = new SuperiorSkyblock2Hook();
+			Logger.info("SuperiorSkyblock2 plugin detected successfully.", LogType.SUCCESS);
+		} else if (pluginManager.isPluginEnabled("Guilds")) {
+			factionListener = new GuildsHook();
+			Logger.info("Guilds plugin detected successfully.", LogType.SUCCESS);
+		} else {
+			factionListener = new NoFaction();
+			Logger.info("No plugin was detected.", LogType.SUCCESS);
 		}
 
 		KothHookEvent event = new KothHookEvent(factionListener);

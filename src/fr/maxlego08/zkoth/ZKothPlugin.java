@@ -8,9 +8,10 @@ import fr.maxlego08.zkoth.command.commands.CommandKoth;
 import fr.maxlego08.zkoth.inventory.InventoryManager;
 import fr.maxlego08.zkoth.listener.AdapterListener;
 import fr.maxlego08.zkoth.save.Config;
+import fr.maxlego08.zkoth.save.MessageLoader;
 import fr.maxlego08.zkoth.scoreboard.ScoreBoardManager;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
-import me.glaremasters.guilds.libs.bstats.bukkit.Metrics;
+import fr.maxlego08.zkoth.zcore.utils.plugins.Metrics;
 
 /**
  * System to create your plugins very simply Projet:
@@ -22,6 +23,7 @@ import me.glaremasters.guilds.libs.bstats.bukkit.Metrics;
 public class ZKothPlugin extends ZPlugin {
 
 	private KothManager kothManager;
+	private final MessageLoader messageLoader = new MessageLoader(this);
 
 	@Override
 	public void onEnable() {
@@ -50,6 +52,7 @@ public class ZKothPlugin extends ZPlugin {
 
 		addSave(Config.getInstance());
 		addSave((ZKothManager) kothManager);
+		addSave(messageLoader);
 
 		getSavers().forEach(saver -> saver.load(getPersist()));
 
@@ -70,6 +73,10 @@ public class ZKothPlugin extends ZPlugin {
 
 	}
 
+	public MessageLoader getMessageLoader() {
+		return messageLoader;
+	}
+	
 	public KothManager getKothManager() {
 		return kothManager;
 	}

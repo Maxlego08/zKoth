@@ -14,16 +14,16 @@ public enum Message {
 
 	PREFIX("§8(§fzKoth§8)"),
 	
-	TELEPORT_MOVE("§cVous ne devez pas bouger !"),
-	TELEPORT_MESSAGE("§7Téléportatio dans §3%s §7secondes !"),
-	TELEPORT_ERROR("§cVous avez déjà une téléportation en cours !"),
-	TELEPORT_SUCCESS("§7Téléportation effectué !"),
+	TELEPORT_MOVE("§cVous ne devez pas bouger !", false),
+	TELEPORT_MESSAGE("§7Téléportatio dans §3%s §7secondes !", false),
+	TELEPORT_ERROR("§cVous avez déjà une téléportation en cours !", false),
+	TELEPORT_SUCCESS("§7Téléportation effectué !", false),
 	
-	INVENTORY_NULL("§cImpossible de trouver l'inventaire avec l'id §6%s§c."),
-	INVENTORY_CLONE_NULL("§cLe clone de l'inventaire est null !"),
-	INVENTORY_OPEN_ERROR("§cUne erreur est survenu avec l'ouverture de l'inventaire §6%s§c."),
-	INVENTORY_BUTTON_PREVIOUS("§f» §7Page précédente"),
-	INVENTORY_BUTTON_NEXT("§f» §7Page suivante"),
+	INVENTORY_NULL("§cImpossible de trouver l'inventaire avec l'id §6%id%§c.", false),
+	INVENTORY_CLONE_NULL("§cLe clone de l'inventaire est null !", false),
+	INVENTORY_OPEN_ERROR("§cUne erreur est survenu avec l'ouverture de l'inventaire §6%id%§c.", false),
+	INVENTORY_BUTTON_PREVIOUS("§f» §7Page précédente", false),
+	INVENTORY_BUTTON_NEXT("§f» §7Page suivante", false),
 	
 	TIME_DAY("%02dd %02dh %02dm %02ds"),
 	TIME_HOUR("%02dh %02dm %02ds"),

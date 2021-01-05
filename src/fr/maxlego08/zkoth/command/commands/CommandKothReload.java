@@ -18,6 +18,7 @@ public class CommandKothReload extends VCommand {
 	protected CommandType perform(ZKothPlugin plugin) {
 
 		Config.getInstance().load(plugin.getPersist());
+		plugin.getMessageLoader().load(plugin.getPersist());
 		message(sender, "§2Reload !");
 
 		return CommandType.SUCCESS;

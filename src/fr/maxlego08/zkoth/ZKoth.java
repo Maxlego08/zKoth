@@ -42,7 +42,7 @@ public class ZKoth extends ZUtils implements Koth {
 	private Location maxLocation;
 	private LootType type;
 	private List<String> commands = new ArrayList<String>();
-	private List<ItemStack> itemStacks = new ArrayList<ItemStack>();
+	private List<String> itemStacks = new ArrayList<String>();
 
 	private transient boolean isEnable = false;
 	private transient boolean isCooldown = false;
@@ -104,7 +104,7 @@ public class ZKoth extends ZUtils implements Koth {
 
 	@Override
 	public List<ItemStack> getItemStacks() {
-		return this.itemStacks;
+		return this.itemStacks.stream().map(e -> decode(e)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -398,7 +398,7 @@ public class ZKoth extends ZUtils implements Koth {
 						location.getBlock().setType(Material.CHEST);
 						Chest chest = (Chest) location.getBlock().getState();
 
-						this.itemStacks.forEach(itemStack -> chest.getInventory().addItem(itemStack));
+						this.getItemStacks().forEach(itemStack -> chest.getInventory().addItem(itemStack));
 
 						Bukkit.getScheduler().runTaskLater(ZPlugin.z(), () -> {
 							location.getBlock().setType(Material.AIR);
@@ -406,7 +406,7 @@ public class ZKoth extends ZUtils implements Koth {
 						break;
 					case DROP:
 						location.add(0.5, 0.3, 0.5);
-						this.itemStacks.forEach(itemStack -> {
+						this.getItemStacks().forEach(itemStack -> {
 
 							Item item = world.dropItem(location, itemStack);
 							Vector vector = item.getVelocity();
@@ -418,7 +418,7 @@ public class ZKoth extends ZUtils implements Koth {
 						});
 						break;
 					case INVENTORY:
-						this.itemStacks.forEach(itemStack -> give(this.currentPlayer, itemStack));
+						this.getItemStacks().forEach(itemStack -> give(this.currentPlayer, itemStack));
 						break;
 					case NONE:
 						break;
@@ -461,7 +461,7 @@ public class ZKoth extends ZUtils implements Koth {
 
 	@Override
 	public void setItemStacks(List<ItemStack> itemStacks) {
-		this.itemStacks = itemStacks;
+		this.itemStacks = itemStacks.stream().map(e -> encode(e)).collect(Collectors.toList());
 	}
 
 }

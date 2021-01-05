@@ -30,7 +30,8 @@ import fr.maxlego08.zkoth.api.event.events.KothCreateEvent;
 import fr.maxlego08.zkoth.api.event.events.KothHookEvent;
 import fr.maxlego08.zkoth.api.event.events.KothMoveEvent;
 import fr.maxlego08.zkoth.api.event.events.KothWinEvent;
-import fr.maxlego08.zkoth.hooks.FactionUUIDHook;
+import fr.maxlego08.zkoth.hooks.FactionMassiveHook;
+import fr.maxlego08.zkoth.hooks.FactionsHook;
 import fr.maxlego08.zkoth.hooks.FactionsXHook;
 import fr.maxlego08.zkoth.hooks.GuildsHook;
 import fr.maxlego08.zkoth.hooks.NoFaction;
@@ -98,19 +99,24 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 			Plugin plugin = pluginManager.getPlugin("Factions");
 			List<String> authors = plugin.getDescription().getAuthors();
 
-			if (authors.contains("Savag3life")) {
+			if (authors.contains("Cayorion") && pluginManager.isPluginEnabled("MassiveCore")) {
 
-				factionListener = new FactionUUIDHook();
+				factionListener = new FactionMassiveHook();
+				Logger.info("MassiveCraft plugin detected successfully.", LogType.SUCCESS);
+
+			} else if (authors.contains("Savag3life")) {
+
+				factionListener = new FactionsHook();
 				Logger.info("SavageFaction plugin detected successfully.", LogType.SUCCESS);
-				
+
 			} else if (authors.contains("Driftay")) {
 
-				factionListener = new FactionUUIDHook();
+				factionListener = new FactionsHook();
 				Logger.info("SaberFaction plugin detected successfully.", LogType.SUCCESS);
 
 			} else if (authors.contains("drtshock")) {
 
-				factionListener = new FactionUUIDHook();
+				factionListener = new FactionsHook();
 				Logger.info("FactionUUID plugin detected successfully.", LogType.SUCCESS);
 
 			}

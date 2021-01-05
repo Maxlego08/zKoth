@@ -4,20 +4,21 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
-import com.massivecraft.factions.FPlayers;
+import com.massivecraft.factions.entity.MPlayer;
 
 import fr.maxlego08.zkoth.api.FactionListener;
 
-public class FactionUUIDHook implements FactionListener {
+public class FactionMassiveHook implements FactionListener {
 
 	@Override
 	public String getFactionTag(Player player) {
-		return FPlayers.getInstance().getByPlayer(player).getFaction().getTag();
+		return MPlayer.get(player).getFaction().getName();
 	}
+
 
 	@Override
 	public List<Player> getOnlinePlayer(Player player) {
-		return FPlayers.getInstance().getByPlayer(player).getFaction().getOnlinePlayers();
+		return MPlayer.get(player).getFaction().getOnlinePlayers();
 	}
 
 }

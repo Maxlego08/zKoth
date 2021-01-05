@@ -66,14 +66,15 @@ public enum Message {
 	ZKOTH_EVENT_WIN(MessageType.CENTER, 
 			"§8§m-+------------------------------+-",
 			"",
-			"§d%player% §fof faction §7%faction §fhas just captured",
-			"§fthe koth, and §nwins §fthe event!",
+			"§d%player% §fof faction §7%faction% §fhas just captured",
+			"§fthe koth, and §nwins§f the event!",
 			"",
 			"§8§m-+------------------------------+-"
 			),
 	
 	ZKOHT_EVENT_CATCH(MessageType.ACTION, "§d%player% §fjust started capturing the koth §n%name%§f. §8(§7%x%, %y%, %z%§8)"),
 	ZKOHT_EVENT_LOOSE(MessageType.ACTION, "§d%player% §fjust loose koth §n%name%§f. §8(§7%x%, %y%, %z%§8)"),
+	ZKOHT_EVENT_TIMER(MessageType.ACTION, "§fAnother §b%capture% §fbefore §d%player% §fwins the koth §n%name%§e. §8(§7%x%, %y%, %z%§8)"),
 	
 	;
 

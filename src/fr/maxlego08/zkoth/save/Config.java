@@ -1,11 +1,16 @@
 package fr.maxlego08.zkoth.save;
 
+import java.util.Arrays;
+import java.util.List;
+
 import fr.maxlego08.zkoth.zcore.utils.storage.Persist;
 import fr.maxlego08.zkoth.zcore.utils.storage.Saveable;
 
 public class Config implements Saveable {
 
 	public static long playerMoveEventCooldown = 50;
+	public static List<Integer> displayMessageCooldown = Arrays.asList(300, 120, 60, 30, 10, 5, 4, 3, 2, 1);
+	public static List<Integer> displayMessageKothCap = Arrays.asList(300, 120, 60, 30, 10, 5, 4, 3, 2, 1);
 	
 	/**
 	 * static Singleton instance.

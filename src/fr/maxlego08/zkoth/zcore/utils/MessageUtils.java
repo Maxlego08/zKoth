@@ -108,9 +108,9 @@ public abstract class MessageUtils extends LocationUtils {
 	 * @param message
 	 * @param args
 	 */
-	protected void broadcastAction(String message, Object... args) {
+	protected void broadcastAction(String message) {
 		for (Player player : Bukkit.getOnlinePlayers())
-			ActionBar.sendActionBar(player, String.format(message, args));
+			ActionBar.sendActionBar(player, message);
 	}
 
 }

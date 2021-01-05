@@ -1,12 +1,13 @@
 package fr.maxlego08.zkoth.zcore.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import fr.maxlego08.zkoth.zcore.enums.Message;
 import fr.maxlego08.zkoth.zcore.utils.players.ActionBar;
 
-public abstract class MessageUtils extends LocationUtils{
+public abstract class MessageUtils extends LocationUtils {
 
 	/**
 	 * 
@@ -24,6 +25,15 @@ public abstract class MessageUtils extends LocationUtils{
 	 */
 	protected void message(CommandSender player, String message) {
 		player.sendMessage(Message.PREFIX.msg() + " " + message);
+	}
+
+	/**
+	 * 
+	 * @param player
+	 * @param message
+	 */
+	protected void broadcast(String message) {
+		Bukkit.broadcastMessage(Message.PREFIX.msg() + " " + message);
 	}
 
 	/**
@@ -90,6 +100,17 @@ public abstract class MessageUtils extends LocationUtils{
 	 */
 	protected void actionMessage(Player player, Message message, Object... args) {
 		ActionBar.sendActionBar(player, String.format(message.msg(), args));
+	}
+
+	/**
+	 * 
+	 * @param player
+	 * @param message
+	 * @param args
+	 */
+	protected void broadcastAction(String message, Object... args) {
+		for (Player player : Bukkit.getOnlinePlayers())
+			ActionBar.sendActionBar(player, String.format(message, args));
 	}
 
 }

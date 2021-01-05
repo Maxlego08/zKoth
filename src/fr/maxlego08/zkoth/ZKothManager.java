@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,14 +15,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
+import fr.maxlego08.zkoth.api.FactionListener;
 import fr.maxlego08.zkoth.api.Koth;
 import fr.maxlego08.zkoth.api.KothManager;
 import fr.maxlego08.zkoth.api.Selection;
 import fr.maxlego08.zkoth.api.event.events.KothCreateEvent;
+import fr.maxlego08.zkoth.api.event.events.KothHookEvent;
 import fr.maxlego08.zkoth.api.event.events.KothMoveEvent;
+import fr.maxlego08.zkoth.hooks.NoFaction;
 import fr.maxlego08.zkoth.listener.ListenerAdapter;
+import fr.maxlego08.zkoth.save.Config;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
 import fr.maxlego08.zkoth.zcore.enums.Message;
 import fr.maxlego08.zkoth.zcore.utils.ZSelection;
@@ -33,6 +39,8 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 	private static List<ZKoth> koths = new ArrayList<ZKoth>();
 	private final transient String itemName = "§6✤ §ezKoth axe §6✤";
 	private final transient Map<UUID, Selection> selections = new HashMap<UUID, Selection>();
+	private transient FactionListener factionListener;
+	private transient long playerMoveEventCooldown = 0;
 
 	@Override
 	public void save(Persist persist) {
@@ -42,6 +50,18 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 	@Override
 	public void load(Persist persist) {
 		persist.loadOrSaveDefault(this, ZKothManager.class, "koths");
+
+		/* Enable faction */
+
+		if (factionListener == null) {
+			factionListener = new NoFaction();
+
+		}
+
+		KothHookEvent event = new KothHookEvent(factionListener);
+		event.callEvent();
+
+		factionListener = event.getFactionListener();
 	}
 
 	@Override
@@ -133,6 +153,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 	@Override
 	public void deleteKoth(CommandSender sender, String name) {
+
 		Optional<Koth> optional = getKoth(name);
 		if (!optional.isPresent()) {
 			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
@@ -162,6 +183,41 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		koth.move(minLocation, maxLocation);
 		message(sender, Message.ZKOTH_MOVE_SUCCESS.replace("%name%", name));
+
+	}
+
+	@Override
+	public void spawnKoth(CommandSender sender, String name, boolean isNow) {
+
+		Optional<Koth> optional = getKoth(name);
+		if (!optional.isPresent()) {
+			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+			return;
+		}
+
+		Koth koth = optional.get();
+		koth.spawn(sender, isNow);
+	}
+
+	@Override
+	public List<Koth> getActiveKoths() {
+		return koths.stream().filter(koth -> koth.isEnable() && !koth.isCooldown()).collect(Collectors.toList());
+	}
+
+	@Override
+	protected void onMove(PlayerMoveEvent event, Player player) {
+
+		if (this.playerMoveEventCooldown != 0 && this.playerMoveEventCooldown > System.currentTimeMillis()) {
+
+			//Do nothin
+			
+		} else {
+
+			this.playerMoveEventCooldown = System.currentTimeMillis() + Config.playerMoveEventCooldown;
+			List<Koth> koths = getActiveKoths();
+			koths.forEach(koth -> koth.playerMove(player, factionListener));
+
+		}
 
 	}
 

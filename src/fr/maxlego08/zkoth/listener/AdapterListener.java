@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -44,15 +45,15 @@ public class AdapterListener extends ZUtils implements Listener {
 		template.getListenerAdapters().forEach(adapter -> adapter.onQuit(event, event.getPlayer()));
 	}
 
-	/*@EventHandler
+	@EventHandler
 	public void onMove(PlayerMoveEvent event) {
 		template.getListenerAdapters().forEach(adapter -> adapter.onMove(event, event.getPlayer()));
-		if (event.getFrom().getBlockX() >> 1 == event.getTo().getBlockX() >> 1
+		/*if (event.getFrom().getBlockX() >> 1 == event.getTo().getBlockX() >> 1
 				&& event.getFrom().getBlockZ() >> 1 == event.getTo().getBlockZ() >> 1
 				&& event.getFrom().getWorld() == event.getTo().getWorld())
 			return;
-		template.getListenerAdapters().forEach(adapter -> adapter.onPlayerWalk(event, event.getPlayer(), 1));
-	}*/
+		template.getListenerAdapters().forEach(adapter -> adapter.onPlayerWalk(event, event.getPlayer(), 1));*/
+	}
 
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {

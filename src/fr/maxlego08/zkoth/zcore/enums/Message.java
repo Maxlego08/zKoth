@@ -5,6 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.inventory.ItemStack;
+
+import fr.maxlego08.zkoth.api.enums.MessageType;
+import fr.maxlego08.zkoth.zcore.utils.ItemDecoder;
+
 public enum Message {
 
 	PREFIX("§8(§fzKoth§8)"),
@@ -45,13 +50,41 @@ public enum Message {
 	ZKOTH_CREATE_ERROR_SELECTION("§cYou must select a zone with the command §f/zkoth axe§c."), 
 	
 	
+	ZKOTH_SPAWN_ERROR("§cImpossible to spawn the koth, positions do not work. You have to do §f/zkoth move <name>§c."), 
+	ZKOTH_SPAWN_COOLDOWN("§cthe countdown to the appearance of the koth is already underway"),
+	ZKOTH_SPAWN_ALREADY("§cThe koth is running."),
+	
+	ZKOTH_EVENT_START(MessageType.CENTER, 
+			"§8§m-+------------------------------+-",
+			"",
+			"§fThe koth §b%name% §has just appeared!",
+			"§fCoordinate§8: §7%x%, %y%, %z%.",
+			"",
+			"§8§m-+------------------------------+-"
+			),
+	
+	ZKOTH_EVENT_WIN(MessageType.CENTER, 
+			"§8§m-+------------------------------+-",
+			"",
+			"§d%player% §fof faction §7%faction §fhas just captured",
+			"§fthe koth, and §nwins §fthe event!",
+			"",
+			"§8§m-+------------------------------+-"
+			),
+	
+	ZKOHT_EVENT_CATCH(MessageType.ACTION, "§d%player% §fjust started capturing the koth §n%name%§f. §8(§7%x%, %y%, %z%§8)"),
+	ZKOHT_EVENT_LOOSE(MessageType.ACTION, "§d%player% §fjust loose koth §n%name%§f. §8(§7%x%, %y%, %z%§8)"),
+	
 	;
 
 	private List<String> messages;
 	private String message;
 	private Map<String, Object> titles = new HashMap<>();
 	private boolean use = true;
+	private MessageType type = MessageType.TCHAT;
 
+	private ItemStack itemStack;
+	
 	/**
 	 * 
 	 * @param message
@@ -61,6 +94,14 @@ public enum Message {
 		this.use = true;
 	}
 
+	/**
+	 * 
+	 * @param title
+	 * @param subTitle
+	 * @param a
+	 * @param b
+	 * @param c
+	 */
 	private Message(String title, String subTitle, int a, int b, int c) {
 		this.use = true;
 		this.titles.put("title", title);
@@ -69,6 +110,7 @@ public enum Message {
 		this.titles.put("time", b);
 		this.titles.put("end", c);
 		this.titles.put("isUse", true);
+		this.type = MessageType.TITLE;
 	}
 
 	/**
@@ -78,6 +120,26 @@ public enum Message {
 	private Message(String... message) {
 		this.messages = Arrays.asList(message);
 		this.use = true;
+	}
+	
+	/**
+	 * 
+	 * @param message
+	 */
+	private Message(MessageType type, String... message) {
+		this.messages = Arrays.asList(message);
+		this.use = true;
+		this.type = type;
+	}
+	
+	/**
+	 * 
+	 * @param message
+	 */
+	private Message(MessageType type, String message) {
+		this.message = message;
+		this.use = true;
+		this.type = type;
 	}
 
 	/**
@@ -160,6 +222,22 @@ public enum Message {
 
 	public String replace(String a, String b) {
 		return message.replace(a, b);
+	}
+
+	public MessageType getType() {
+		return type.equals(MessageType.ACTION) && ItemDecoder.isClaquaxVersion() ? MessageType.TCHAT : type;
+	}
+	
+	public ItemStack getItemStack() {
+		return itemStack;
+	}
+
+	public void setType(MessageType type) {
+		this.type = type;
+	}
+	
+	public void setItemStack(ItemStack itemStack) {
+		this.itemStack = itemStack;
 	}
 
 }

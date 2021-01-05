@@ -49,6 +49,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
 import fr.maxlego08.zkoth.ZKothPlugin;
+import fr.maxlego08.zkoth.api.enums.DefaultFontInfo;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
 import fr.maxlego08.zkoth.zcore.enums.EnumInventory;
 import fr.maxlego08.zkoth.zcore.enums.Message;
@@ -679,6 +680,24 @@ public abstract class ZUtils extends MessageUtils {
 	}
 
 	/**
+	 * @param delay
+	 * @param runnable
+	 */
+	protected void scheduleFix(long start, long delay, BiConsumer<TimerTask, Boolean> runnable) {
+		new Timer().scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				if (!ZPlugin.z().isEnabled()) {
+					cancel();
+					runnable.accept(this, false);
+					return;
+				}
+				Bukkit.getScheduler().runTask(ZPlugin.z(), () -> runnable.accept(this, true));
+			}
+		}, start, delay);
+	}
+	
+	/**
 	 * 
 	 * @param element
 	 * @return
@@ -1303,4 +1322,56 @@ public abstract class ZUtils extends MessageUtils {
 		}
 	}
 
+	private final transient static int CENTER_PX = 154;
+	
+	/**
+	 * 
+	 * @param message
+	 * @return message
+	 */
+	protected String getCenteredMessage(String message) {
+		if (message == null || message.equals(""))
+			return "";
+		message = ChatColor.translateAlternateColorCodes('&', message);
+
+		int messagePxSize = 0;
+		boolean previousCode = false;
+		boolean isBold = false;
+
+		for (char c : message.toCharArray()) {
+			if (c == '§') {
+				previousCode = true;
+				continue;
+			} else if (previousCode == true) {
+				previousCode = false;
+				if (c == 'l' || c == 'L') {
+					isBold = true;
+					continue;
+				} else
+					isBold = false;
+			} else {
+				DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(c);
+				messagePxSize += isBold ? dFI.getBoldLength() : dFI.getLength();
+				messagePxSize++;
+			}
+		}
+
+		int halvedMessageSize = messagePxSize / 2;
+		int toCompensate = CENTER_PX - halvedMessageSize;
+		int spaceLength = DefaultFontInfo.SPACE.getLength() + 1;
+		int compensated = 0;
+		StringBuilder sb = new StringBuilder();
+		while (compensated < toCompensate) {
+			sb.append(" ");
+			compensated += spaceLength;
+		}
+		return sb.toString() + message;
+	}
+	
+	protected void broadcastCenterMessage(List<String> messages) {
+		messages.stream().map(e -> e = getCenteredMessage(e)).forEach(e -> {
+			Bukkit.broadcastMessage(e);
+		});
+	}
+	
 }

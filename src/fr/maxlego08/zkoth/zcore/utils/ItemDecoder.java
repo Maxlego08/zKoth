@@ -137,6 +137,10 @@ public class ItemDecoder {
 	public static boolean isOneHand() {
 		return getNMSVersion() == 1.7 || getNMSVersion() == 1.8;
 	}
+	
+	public static boolean isClaquaxVersion() {
+		return getNMSVersion() == 1.7;
+	}
 
 	/**
 	 * 

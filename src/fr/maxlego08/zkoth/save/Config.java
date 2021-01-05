@@ -5,6 +5,8 @@ import fr.maxlego08.zkoth.zcore.utils.storage.Saveable;
 
 public class Config implements Saveable {
 
+	public static long playerMoveEventCooldown = 50;
+	
 	/**
 	 * static Singleton instance.
 	 */

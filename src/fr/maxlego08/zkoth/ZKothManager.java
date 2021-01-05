@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
 import fr.maxlego08.zkoth.api.FactionListener;
@@ -29,6 +30,7 @@ import fr.maxlego08.zkoth.api.event.events.KothCreateEvent;
 import fr.maxlego08.zkoth.api.event.events.KothHookEvent;
 import fr.maxlego08.zkoth.api.event.events.KothMoveEvent;
 import fr.maxlego08.zkoth.api.event.events.KothWinEvent;
+import fr.maxlego08.zkoth.hooks.FactionUUIDHook;
 import fr.maxlego08.zkoth.hooks.FactionsXHook;
 import fr.maxlego08.zkoth.hooks.GuildsHook;
 import fr.maxlego08.zkoth.hooks.NoFaction;
@@ -77,14 +79,30 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		PluginManager pluginManager = Bukkit.getPluginManager();
 
 		if (pluginManager.isPluginEnabled("FactionsX")) {
+			
 			factionListener = new FactionsXHook();
 			Logger.info("FactionsX plugin detected successfully.", LogType.SUCCESS);
+			
 		} else if (pluginManager.isPluginEnabled("SuperiorSkyblock2")) {
+			
 			factionListener = new SuperiorSkyblock2Hook();
 			Logger.info("SuperiorSkyblock2 plugin detected successfully.", LogType.SUCCESS);
+			
 		} else if (pluginManager.isPluginEnabled("Guilds")) {
+			
 			factionListener = new GuildsHook();
 			Logger.info("Guilds plugin detected successfully.", LogType.SUCCESS);
+			
+		} else if (pluginManager.isPluginEnabled("Factions")) {
+			
+			Plugin plugin = pluginManager.getPlugin("Factions");
+			List<String> authors = plugin.getDescription().getAuthors();
+			if (authors.contains("drtshock")){
+				
+				factionListener = new FactionUUIDHook();
+				Logger.info("FactionUUID plugin detected successfully.", LogType.SUCCESS);
+			}
+			
 		} else {
 			factionListener = new NoFaction();
 			Logger.info("No plugin was detected.", LogType.SUCCESS);

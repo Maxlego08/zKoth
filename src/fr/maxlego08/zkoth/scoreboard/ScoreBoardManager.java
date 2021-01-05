@@ -1,24 +1,20 @@
 package fr.maxlego08.zkoth.scoreboard;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.entity.Player;
 
+import fr.maxlego08.zkoth.save.Config;
 import fr.maxlego08.zkoth.zcore.utils.ZUtils;
 import fr.maxlego08.zkoth.zcore.utils.interfaces.CollectionConsumer;
 
 public class ScoreBoardManager extends ZUtils {
 
 	private final Map<Player, FastBoard> boards = new HashMap<Player, FastBoard>();
-	private final long schedulerMillisecond;
 	private boolean isRunning = false;
 	private CollectionConsumer<Player> lines;
-
-	public ScoreBoardManager(long schedulerMillisecond) {
-		super();
-		this.schedulerMillisecond = schedulerMillisecond;
-	}
 
 	/**
 	 * Start scheduler
@@ -30,7 +26,7 @@ public class ScoreBoardManager extends ZUtils {
 
 		isRunning = true;
 
-		scheduleFix(schedulerMillisecond, (task, canRun) -> {
+		scheduleFix(Config.schedulerMillisecond, (task, canRun) -> {
 
 			// If the task cannot continue then we do not update the scoreboard
 			if (!canRun)
@@ -47,7 +43,11 @@ public class ScoreBoardManager extends ZUtils {
 				return;
 			}
 
-			boards.forEach((player, board) -> board.updateLines(lines.accept(player)));
+			Collection<String> lines = this.lines.accept(null);
+			boards.forEach((player, board) -> {
+				if (player.isOnline())
+					board.updateLines(lines);
+			});
 
 		});
 	}
@@ -105,6 +105,11 @@ public class ScoreBoardManager extends ZUtils {
 		return true;
 	}
 
+	public void clearBoard() {
+		this.boards.keySet().forEach(key -> delete(key));
+		this.boards.clear();
+	}
+
 	/**
 	 * Update board line
 	 * 
@@ -146,13 +151,6 @@ public class ScoreBoardManager extends ZUtils {
 	}
 
 	/**
-	 * @return the schedulerMillisecond
-	 */
-	public long getSchedulerMillisecond() {
-		return schedulerMillisecond;
-	}
-
-	/**
 	 * @return the isRunning
 	 */
 	public boolean isRunning() {
@@ -181,7 +179,7 @@ public class ScoreBoardManager extends ZUtils {
 	public void setLines(CollectionConsumer<Player> lines) {
 		this.lines = lines;
 	}
-	
+
 	/**
 	 * @param lines
 	 *            the lines to set

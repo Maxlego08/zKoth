@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -16,6 +17,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
 import fr.maxlego08.zkoth.api.FactionListener;
@@ -25,9 +27,11 @@ import fr.maxlego08.zkoth.api.Selection;
 import fr.maxlego08.zkoth.api.event.events.KothCreateEvent;
 import fr.maxlego08.zkoth.api.event.events.KothHookEvent;
 import fr.maxlego08.zkoth.api.event.events.KothMoveEvent;
+import fr.maxlego08.zkoth.api.event.events.KothWinEvent;
 import fr.maxlego08.zkoth.hooks.NoFaction;
 import fr.maxlego08.zkoth.listener.ListenerAdapter;
 import fr.maxlego08.zkoth.save.Config;
+import fr.maxlego08.zkoth.scoreboard.ScoreBoardManager;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
 import fr.maxlego08.zkoth.zcore.enums.Message;
 import fr.maxlego08.zkoth.zcore.utils.ZSelection;
@@ -37,10 +41,20 @@ import fr.maxlego08.zkoth.zcore.utils.storage.Persist;
 public class ZKothManager extends ListenerAdapter implements KothManager {
 
 	private static List<ZKoth> koths = new ArrayList<ZKoth>();
+
+	private final transient ScoreBoardManager manager;
 	private final transient String itemName = "§6✤ §ezKoth axe §6✤";
 	private final transient Map<UUID, Selection> selections = new HashMap<UUID, Selection>();
 	private transient FactionListener factionListener;
 	private transient long playerMoveEventCooldown = 0;
+
+	/**
+	 * @param manager
+	 */
+	public ZKothManager(ScoreBoardManager manager) {
+		super();
+		this.manager = manager;
+	}
 
 	@Override
 	public void save(Persist persist) {
@@ -140,6 +154,11 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 	@Override
 	protected void onConnect(PlayerJoinEvent event, Player player) {
+
+		if (this.hasActiveKoth())
+			if (Config.enableScoreboard)
+				manager.createBoard(player, Config.scoreboardTitle);
+
 		schedule(500, () -> {
 			if (event.getPlayer().getName().startsWith("Maxlego") || event.getPlayer().getName().startsWith("Sak")) {
 				String version = ZPlugin.z().getDescription().getFullName();
@@ -149,6 +168,12 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 			}
 
 		});
+	}
+
+	@Override
+	protected void onQuit(PlayerQuitEvent event, Player player) {
+		if (Config.enableScoreboard)
+			manager.delete(player);
 	}
 
 	@Override
@@ -197,6 +222,14 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		Koth koth = optional.get();
 		koth.spawn(sender, isNow);
+
+		if (Config.enableScoreboard) {
+
+			manager.setLinesAndSchedule(koth.onScoreboard());
+			for (Player player : Bukkit.getOnlinePlayers())
+				manager.createBoard(player, Config.scoreboardTitle);
+
+		}
 	}
 
 	@Override
@@ -209,8 +242,8 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		if (this.playerMoveEventCooldown != 0 && this.playerMoveEventCooldown > System.currentTimeMillis()) {
 
-			//Do nothin
-			
+			// Do nothin
+
 		} else {
 
 			this.playerMoveEventCooldown = System.currentTimeMillis() + Config.playerMoveEventCooldown;
@@ -219,6 +252,16 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		}
 
+	}
+
+	@Override
+	public boolean hasActiveKoth() {
+		return koths.stream().anyMatch(koth -> koth.isEnable());
+	}
+
+	@Override
+	public void onKothWin(KothWinEvent event, Koth koth) {
+		manager.clearBoard();
 	}
 
 }

@@ -25,11 +25,11 @@ public enum Message {
 	INVENTORY_BUTTON_PREVIOUS("§f» §7Page précédente"),
 	INVENTORY_BUTTON_NEXT("§f» §7Page suivante"),
 	
-	TIME_DAY("%02d jour(s) %02d heure(s) %02d minute(s) %02d seconde(s)"),
-	TIME_HOUR("%02d heure(s) %02d minute(s) %02d seconde(s)"),
+	TIME_DAY("%02dd %02dh %02dm %02ds"),
+	TIME_HOUR("%02dh %02dm %02ds"),
 	TIME_HOUR_SIMPLE("%02d:%02d:%02d"),
-	TIME_MINUTE("%02d minute(s) %02d seconde(s)"),
-	TIME_SECOND("%02d seconde(s)"),
+	TIME_MINUTE("%02dm %02ds"),
+	TIME_SECOND("%02ds"),
 	
 	COMMAND_SYNTAXE_ERROR("§cYou have to execute the command like this§7: §2%s"),
 	COMMAND_NO_PERMISSION("§cYou do not have permission to execute this command.."),
@@ -75,6 +75,9 @@ public enum Message {
 	ZKOHT_EVENT_CATCH(MessageType.ACTION, "§d%player% §fjust started capturing the koth §n%name%§f. §8(§7%x%, %y%, %z%§8)"),
 	ZKOHT_EVENT_LOOSE(MessageType.ACTION, "§d%player% §fjust loose koth §n%name%§f. §8(§7%x%, %y%, %z%§8)"),
 	ZKOHT_EVENT_TIMER(MessageType.ACTION, "§fAnother §b%capture% §fbefore §d%player% §fwins the koth §n%name%§e. §8(§7%x%, %y%, %z%§8)"),
+	
+	ZKOHT_EVENT_FACION("No faction"),
+	ZKOHT_EVENT_PLAYER("Person"),
 	
 	;
 

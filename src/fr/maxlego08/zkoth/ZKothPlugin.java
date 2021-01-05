@@ -20,18 +20,20 @@ import fr.maxlego08.zkoth.zcore.ZPlugin;
  */
 public class ZKothPlugin extends ZPlugin {
 
-	private final KothManager kothManager = new ZKothManager();
+	private KothManager kothManager;
 
 	@Override
 	public void onEnable() {
 
 		preEnable();
 
+		this.scoreboardManager = new ScoreBoardManager();
+		this.kothManager = new ZKothManager(this.scoreboardManager);
+
 		this.getServer().getServicesManager().register(KothManager.class, kothManager, this, ServicePriority.High);
 
 		this.commandManager = new CommandManager(this);
 		this.inventoryManager = InventoryManager.getInstance();
-		this.scoreboardManager = new ScoreBoardManager(1000);
 
 		/* Commands */
 
@@ -58,6 +60,7 @@ public class ZKothPlugin extends ZPlugin {
 
 		preDisable();
 
+		this.scoreboardManager.setRunning(false);
 		getSavers().forEach(saver -> saver.save(getPersist()));
 
 		postDisable();

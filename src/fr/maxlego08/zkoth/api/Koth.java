@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 
 import fr.maxlego08.zkoth.api.enums.LootType;
 import fr.maxlego08.zkoth.zcore.utils.Cuboid;
+import fr.maxlego08.zkoth.zcore.utils.interfaces.CollectionConsumer;
 
 public interface Koth {
 
@@ -107,4 +108,10 @@ public interface Koth {
 	 * @param factionListener
 	 */
 	public void playerMove(Player player, FactionListener factionListener);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public CollectionConsumer<Player> onScoreboard();
 }

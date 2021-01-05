@@ -515,9 +515,9 @@ public class FastBoard {
 	}
 
 	private void sendPacket(Object packet) throws ReflectiveOperationException {
-		if (deleted) {
-			throw new IllegalStateException("This FastBoard is deleted");
-		}
+		
+		if (deleted) 
+			return;
 
 		if (player.isOnline()) {
 			Object entityPlayer = PLAYER_GET_HANDLE.invoke(player);

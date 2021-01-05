@@ -1,5 +1,6 @@
 package fr.maxlego08.zkoth.save;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,7 +12,32 @@ public class Config implements Saveable {
 	public static long playerMoveEventCooldown = 50;
 	public static List<Integer> displayMessageCooldown = Arrays.asList(300, 120, 60, 30, 10, 5, 4, 3, 2, 1);
 	public static List<Integer> displayMessageKothCap = Arrays.asList(300, 120, 60, 30, 10, 5, 4, 3, 2, 1);
-	
+	public static boolean enableScoreboard = false;
+	public static String scoreboardTitle = "§fzKoth";
+	public static List<String> scoreboard = new ArrayList<String>();
+	public static List<String> scoreboardCooldown = new ArrayList<String>();
+	public static long schedulerMillisecond = 1000;
+
+	static {
+
+		scoreboard.add("§r");
+		scoreboard.add("§fKoth: §b%name%");
+		scoreboard.add("§fCoordinate: §b%x% %y% %z%");
+		scoreboard.add("§fFaction: §b%faction%");
+		scoreboard.add("§0");
+		scoreboard.add("§fTime: §d%capture%");
+		scoreboard.add("§1");
+		scoreboard.add("§fhttps://groupez.xyz");
+		
+		scoreboardCooldown.add("§r");
+		scoreboardCooldown.add("§fKoth: §b%name%");
+		scoreboardCooldown.add("§fCoordinate: §b%x% %y% %z%");
+		scoreboardCooldown.add("§fStarts in: §d%capture%");
+		scoreboardCooldown.add("§1");
+		scoreboardCooldown.add("§fhttps://groupez.xyz");
+		
+	}
+
 	/**
 	 * static Singleton instance.
 	 */

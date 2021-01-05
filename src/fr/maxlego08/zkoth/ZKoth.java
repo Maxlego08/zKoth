@@ -25,6 +25,7 @@ import fr.maxlego08.zkoth.zcore.enums.Message;
 import fr.maxlego08.zkoth.zcore.utils.Cuboid;
 import fr.maxlego08.zkoth.zcore.utils.ZUtils;
 import fr.maxlego08.zkoth.zcore.utils.builder.TimerBuilder;
+import fr.maxlego08.zkoth.zcore.utils.interfaces.CollectionConsumer;
 
 public class ZKoth extends ZUtils implements Koth {
 
@@ -214,11 +215,14 @@ public class ZKoth extends ZUtils implements Koth {
 		message = message.replace("%x%", String.valueOf(center.getBlockX()));
 		message = message.replace("%y%", String.valueOf(center.getBlockY()));
 		message = message.replace("%z%", String.valueOf(center.getBlockZ()));
-		message = message.replace("%capture%", TimerBuilder.getStringTime(this.currentCaptureSeconds == null ? 0 : currentCaptureSeconds.get()));
+		message = message.replace("%capture%", TimerBuilder
+				.getStringTime(this.currentCaptureSeconds == null ? this.captureSeconds : currentCaptureSeconds.get()));
 		message = message.replace("%world%", center.getWorld().getName());
 		message = message.replace("%name%", this.name);
-		message = message.replace("%player%", this.currentPlayer == null ? "" : this.currentPlayer.getName());
-		String faction = this.currentPlayer == null ? "NONE" : this.factionListener.getFactionTag(this.currentPlayer);
+		message = message.replace("%player%",
+				this.currentPlayer == null ? Message.ZKOHT_EVENT_PLAYER.getMessage() : this.currentPlayer.getName());
+		String faction = this.currentPlayer == null ? Message.ZKOHT_EVENT_FACION.getMessage()
+				: this.factionListener.getFactionTag(this.currentPlayer);
 		message = message.replace("%faction%", faction);
 
 		return message;
@@ -247,7 +251,7 @@ public class ZKoth extends ZUtils implements Koth {
 				return;
 
 			broadcast(Message.ZKOHT_EVENT_LOOSE);
-			
+
 			if (this.timerTask != null)
 				this.timerTask.cancel();
 
@@ -275,13 +279,13 @@ public class ZKoth extends ZUtils implements Koth {
 		}
 
 		broadcast(Message.ZKOHT_EVENT_CATCH);
-		
+
 		int captureSeconds = event.getCaptureSeconds();
 		captureSeconds = captureSeconds < 0 ? 30 : captureSeconds;
 		this.currentCaptureSeconds = new AtomicInteger(captureSeconds);
 		Cuboid cuboid = getCuboid();
 
-		scheduleFix(1000, 1000, (task, isCancelled) -> {
+		scheduleFix(0, 1000, (task, isCancelled) -> {
 
 			this.timerTask = task;
 
@@ -298,12 +302,12 @@ public class ZKoth extends ZUtils implements Koth {
 			int tmpCapture = this.currentCaptureSeconds.getAndDecrement();
 
 			if (this.currentPlayer != null) {
-				if (!this.currentPlayer.isOnline() || !cuboid.contains(this.currentPlayer.getLocation())) 
+				if (!this.currentPlayer.isOnline() || !cuboid.contains(this.currentPlayer.getLocation()))
 					this.currentPlayer = null;
 			}
 
 			if (this.currentPlayer == null) {
-				
+
 				KothLooseEvent kothLooseEvent = new KothLooseEvent(this.currentPlayer, this);
 				kothLooseEvent.callEvent();
 
@@ -333,18 +337,25 @@ public class ZKoth extends ZUtils implements Koth {
 
 				task.cancel();
 				broadcast(Message.ZKOTH_EVENT_WIN);
-				
-				//donner les loots
-				
+
+				// donner les loots
+
 				this.isEnable = false;
 				this.isCooldown = false;
 				this.currentPlayer = null;
 				this.timerTask = null;
 				this.currentCaptureSeconds = null;
-				
 
 			}
 		});
+	}
+
+	@Override
+	public CollectionConsumer<Player> onScoreboard() {
+		if (isCooldown)
+			return p -> Config.scoreboardCooldown.stream().map(e -> replaceMessage(e)).collect(Collectors.toList());
+		else
+			return p -> Config.scoreboard.stream().map(e -> replaceMessage(e)).collect(Collectors.toList());
 	}
 
 }

@@ -10,6 +10,7 @@ import fr.maxlego08.zkoth.listener.AdapterListener;
 import fr.maxlego08.zkoth.save.Config;
 import fr.maxlego08.zkoth.scoreboard.ScoreBoardManager;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
+import me.glaremasters.guilds.libs.bstats.bukkit.Metrics;
 
 /**
  * System to create your plugins very simply Projet:
@@ -52,6 +53,8 @@ public class ZKothPlugin extends ZPlugin {
 
 		getSavers().forEach(saver -> saver.load(getPersist()));
 
+		new Metrics(this, 6924);
+		
 		postEnable();
 	}
 

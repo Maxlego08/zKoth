@@ -79,31 +79,40 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		PluginManager pluginManager = Bukkit.getPluginManager();
 
 		if (pluginManager.isPluginEnabled("FactionsX")) {
-			
+
 			factionListener = new FactionsXHook();
 			Logger.info("FactionsX plugin detected successfully.", LogType.SUCCESS);
-			
+
 		} else if (pluginManager.isPluginEnabled("SuperiorSkyblock2")) {
-			
+
 			factionListener = new SuperiorSkyblock2Hook();
 			Logger.info("SuperiorSkyblock2 plugin detected successfully.", LogType.SUCCESS);
-			
+
 		} else if (pluginManager.isPluginEnabled("Guilds")) {
-			
+
 			factionListener = new GuildsHook();
 			Logger.info("Guilds plugin detected successfully.", LogType.SUCCESS);
-			
+
 		} else if (pluginManager.isPluginEnabled("Factions")) {
-			
+
 			Plugin plugin = pluginManager.getPlugin("Factions");
 			List<String> authors = plugin.getDescription().getAuthors();
-			if (authors.contains("drtshock")){
-				
+
+			if (authors.contains("Driftay")) {
+
+				factionListener = new FactionUUIDHook();
+				Logger.info("SaberFaction plugin detected successfully.", LogType.SUCCESS);
+
+			} else if (authors.contains("drtshock")) {
+
 				factionListener = new FactionUUIDHook();
 				Logger.info("FactionUUID plugin detected successfully.", LogType.SUCCESS);
+
 			}
-			
-		} else {
+
+		} else
+
+		{
 			factionListener = new NoFaction();
 			Logger.info("No plugin was detected.", LogType.SUCCESS);
 		}

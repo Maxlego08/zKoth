@@ -98,7 +98,12 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 			Plugin plugin = pluginManager.getPlugin("Factions");
 			List<String> authors = plugin.getDescription().getAuthors();
 
-			if (authors.contains("Driftay")) {
+			if (authors.contains("Savag3life")) {
+
+				factionListener = new FactionUUIDHook();
+				Logger.info("SavageFaction plugin detected successfully.", LogType.SUCCESS);
+				
+			} else if (authors.contains("Driftay")) {
 
 				factionListener = new FactionUUIDHook();
 				Logger.info("SaberFaction plugin detected successfully.", LogType.SUCCESS);

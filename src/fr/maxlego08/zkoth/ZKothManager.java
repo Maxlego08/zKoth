@@ -202,8 +202,8 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 			Location location = event.getClickedBlock().getLocation();
 			org.bukkit.event.block.Action action = event.getAction();
 			selection.action(action, location);
-			String message = (action.equals(org.bukkit.event.block.Action.LEFT_CLICK_BLOCK) ? Message.ZKOTH_AXE_POS1 : Message.ZKOTH_AXE_POS2)
-					.getMessage();
+			String message = (action.equals(org.bukkit.event.block.Action.LEFT_CLICK_BLOCK) ? Message.ZKOTH_AXE_POS1
+					: Message.ZKOTH_AXE_POS2).getMessage();
 			message = message.replace("%x%", String.valueOf(location.getBlockX()));
 			message = message.replace("%y%", String.valueOf(location.getBlockY()));
 			message = message.replace("%z%", String.valueOf(location.getBlockZ()));
@@ -362,7 +362,8 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 				+ center.getBlockZ();
 
 		setHoverMessage(component, "§7Coordinate: " + location);
-		
+		setClickAction(component, Action.SUGGEST_COMMAND, "/koth info " + koth.getName());
+
 		TextComponent spawn = buildTextComponent("§8(§2Spawn§8)");
 		setClickAction(spawn, Action.SUGGEST_COMMAND, "/koth spawn " + koth.getName());
 		setHoverMessage(spawn, "§7Click for spawn koth");
@@ -374,13 +375,85 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		TextComponent delete = buildTextComponent(" §8(§cDelete§8)");
 		setClickAction(delete, Action.SUGGEST_COMMAND, "/koth delete " + koth.getName());
 		setHoverMessage(delete, "§7Click for delete koth");
-		
+
 		component.addExtra(spawn);
 		component.addExtra(now);
 		component.addExtra(delete);
-		
+
 		player.spigot().sendMessage(component);
 
+	}
+
+	@Override
+	public void showInformations(CommandSender sender, String name) {
+
+		Optional<Koth> optional = getKoth(name);
+		if (!optional.isPresent()) {
+			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+			return;
+		}
+
+		Koth koth = optional.get();
+		Cuboid cuboid = koth.getCuboid();
+		Location center = cuboid.getCenter();
+		String location = center.getWorld().getName() + ", " + center.getBlockX() + ", " + center.getBlockY() + ", "
+				+ center.getBlockZ();
+
+		message(sender, "§fName: §b%s", koth.getName());
+		message(sender, "§fCoordinate: §b%s", location);
+		message(sender, "§fCommands §8(§7" + koth.getCommands().size() + "§8):");
+		if (sender instanceof ConsoleCommandSender) {
+			koth.getCommands().forEach(command -> messageWO(sender, " §7" + command));
+			message(sender, "§dHow to add command ? §d/zkoth add <koth> <command>");
+		} else {
+
+			Player player = (Player) sender;
+
+			for (int a = 0; a != koth.getCommands().size(); a++) {
+
+				TextComponent textComponent = buildTextComponent(" §b#" + (a + 1) + " §f" + koth.getCommands().get(0));
+				setClickAction(textComponent, Action.SUGGEST_COMMAND, "/koth remove " + koth.getName() + " " + (a + 1));
+				setHoverMessage(textComponent, "§7Click for remove command");
+				player.spigot().sendMessage(textComponent);
+
+			}
+
+			TextComponent textComponent = buildTextComponent(
+					Message.PREFIX.getMessage() + " §fHow to add command ? §d/zkoth §dadd §d<koth> §d<command>");
+			setClickAction(textComponent, Action.SUGGEST_COMMAND, "/koth add " + koth.getName() + " ");
+			setHoverMessage(textComponent, "§7Click for add command");
+			player.spigot().sendMessage(textComponent);
+		}
+
+	}
+
+	@Override
+	public void addCommand(CommandSender sender, String name, String command) {
+		
+		Optional<Koth> optional = getKoth(name);
+		if (!optional.isPresent()) {
+			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+			return;
+		}
+
+		Koth koth = optional.get();
+		koth.addCommand(command);
+		message(sender, "§fYou have just added the command §8\"§7" + command + "\"");
+	}
+
+	@Override
+	public void removeCommand(CommandSender sender, String name, int id) {
+	
+		Optional<Koth> optional = getKoth(name);
+		if (!optional.isPresent()) {
+			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+			return;
+		}
+
+		Koth koth = optional.get();
+		koth.removeCommand(id);
+		message(sender, "§7You have just deleted a command.");
+		
 	}
 
 }

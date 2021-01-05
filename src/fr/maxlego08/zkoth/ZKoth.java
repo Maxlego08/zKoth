@@ -145,6 +145,12 @@ public class ZKoth extends ZUtils implements Koth {
 
 	private void spawn() {
 
+		isCooldown = true;
+		this.currentCaptureSeconds = new AtomicInteger(Config.cooldownInSecond);
+		scheduleFix(0, 1000, (task, isCancelled) -> {
+
+		});
+
 	}
 
 	private void spawnNow() {
@@ -356,6 +362,19 @@ public class ZKoth extends ZUtils implements Koth {
 			return p -> Config.scoreboardCooldown.stream().map(e -> replaceMessage(e)).collect(Collectors.toList());
 		else
 			return p -> Config.scoreboard.stream().map(e -> replaceMessage(e)).collect(Collectors.toList());
+	}
+
+	@Override
+	public void addCommand(String command) {
+		this.commands.add(command);
+	}
+
+	@Override
+	public void removeCommand(int id) {
+		try {
+			this.commands.remove(id - 1);
+		} catch (Exception e) {
+		}
 	}
 
 }

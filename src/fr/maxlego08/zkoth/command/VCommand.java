@@ -49,6 +49,7 @@ public abstract class VCommand extends Arguments {
 	 */
 	private boolean ignoreParent = false;
 	private boolean ignoreArgs = false;
+	private boolean bypassCheck = false;
 	protected boolean DEBUG = true;
 	protected boolean runAsync = false;
 	private CommandType tabCompleter = CommandType.DEFAULT;
@@ -69,6 +70,10 @@ public abstract class VCommand extends Arguments {
 	// GETTER
 	//
 
+	public void setBypassCheck(boolean bypassCheck) {
+		this.bypassCheck = bypassCheck;
+	}
+	
 	/**
 	 * @return the permission
 	 */
@@ -371,8 +376,8 @@ public abstract class VCommand extends Arguments {
 			}
 		}
 
-		if (argsMinLength != 0 && argsMaxLength != 0
-				&& !(args.length >= argsMinLength && args.length <= argsMaxLength)) {
+		if (!bypassCheck && (argsMinLength != 0 && argsMaxLength != 0
+				&& !(args.length >= argsMinLength && args.length <= argsMaxLength))) {
 			return CommandType.SYNTAX_ERROR;
 		}
 

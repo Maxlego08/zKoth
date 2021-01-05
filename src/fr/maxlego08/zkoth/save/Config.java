@@ -17,6 +17,7 @@ public class Config implements Saveable {
 	public static List<String> scoreboard = new ArrayList<String>();
 	public static List<String> scoreboardCooldown = new ArrayList<String>();
 	public static long schedulerMillisecond = 1000;
+	public static int cooldownInSecond = 300;
 
 	static {
 

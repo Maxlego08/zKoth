@@ -87,4 +87,27 @@ public interface KothManager extends Saveable {
 	 */
 	public void sendKothList(CommandSender sender);
 
+	/**
+	 * Show informations
+	 * @param sender
+	 * @param name
+	 */
+	public void showInformations(CommandSender sender, String name);
+
+	/**
+	 * 
+	 * @param sender
+	 * @param name
+	 * @param command
+	 */
+	public void addCommand(CommandSender sender, String name, String command);
+
+	/**
+	 * Remove commands
+	 * @param sender
+	 * @param name
+	 * @param id
+	 */
+	public void removeCommand(CommandSender sender, String name, int id);
+
 }

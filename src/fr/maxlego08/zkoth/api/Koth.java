@@ -114,4 +114,16 @@ public interface Koth {
 	 * @return
 	 */
 	public CollectionConsumer<Player> onScoreboard();
+
+	/**
+	 * 
+	 * @param command
+	 */
+	public void addCommand(String command);
+
+	/**
+	 * 
+	 * @param id
+	 */
+	public void removeCommand(int id);
 }

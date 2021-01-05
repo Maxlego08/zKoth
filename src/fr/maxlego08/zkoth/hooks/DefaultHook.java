@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import fr.maxlego08.zkoth.api.FactionListener;
 
-public class NoFaction implements FactionListener {
+public class DefaultHook implements FactionListener {
 
 	@Override
 	public String getFactionTag(Player player) {

@@ -34,7 +34,8 @@ import fr.maxlego08.zkoth.hooks.FactionMassiveHook;
 import fr.maxlego08.zkoth.hooks.FactionsHook;
 import fr.maxlego08.zkoth.hooks.FactionsXHook;
 import fr.maxlego08.zkoth.hooks.GuildsHook;
-import fr.maxlego08.zkoth.hooks.NoFaction;
+import fr.maxlego08.zkoth.hooks.DefaultHook;
+import fr.maxlego08.zkoth.hooks.FactionLegacyHook;
 import fr.maxlego08.zkoth.hooks.SuperiorSkyblock2Hook;
 import fr.maxlego08.zkoth.listener.ListenerAdapter;
 import fr.maxlego08.zkoth.save.Config;
@@ -94,6 +95,11 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 			factionListener = new GuildsHook();
 			Logger.info("Guilds plugin detected successfully.", LogType.SUCCESS);
 
+		} else if (pluginManager.isPluginEnabled("LegacyFactions")) {
+
+			factionListener = new FactionLegacyHook();
+			Logger.info("LegacyFactions plugin detected successfully.", LogType.SUCCESS);
+
 		} else if (pluginManager.isPluginEnabled("Factions")) {
 
 			Plugin plugin = pluginManager.getPlugin("Factions");
@@ -124,7 +130,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		} else
 
 		{
-			factionListener = new NoFaction();
+			factionListener = new DefaultHook();
 			Logger.info("No plugin was detected.", LogType.SUCCESS);
 		}
 

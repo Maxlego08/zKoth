@@ -33,6 +33,7 @@ import fr.maxlego08.zkoth.api.enums.LootType;
 import fr.maxlego08.zkoth.api.event.events.KothCreateEvent;
 import fr.maxlego08.zkoth.api.event.events.KothHookEvent;
 import fr.maxlego08.zkoth.api.event.events.KothMoveEvent;
+import fr.maxlego08.zkoth.api.event.events.KothStopEvent;
 import fr.maxlego08.zkoth.api.event.events.KothWinEvent;
 import fr.maxlego08.zkoth.hooks.FactionMassiveHook;
 import fr.maxlego08.zkoth.hooks.FactionsHook;
@@ -334,6 +335,11 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 	}
 
 	@Override
+	public void onKothStop(KothStopEvent event, Koth koth) {
+		manager.clearBoard();
+	}
+
+	@Override
 	public void sendKothList(CommandSender sender) {
 
 		if (sender instanceof ConsoleCommandSender) {
@@ -519,6 +525,20 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 			koth.setItemStacks(itemStacks);
 			message(player, "§aYou have just modified the loots of the koth §2%s.", koth.getName());
 		}
+
+	}
+
+	@Override
+	public void stopKoth(CommandSender sender, String name) {
+
+		Optional<Koth> optional = getKoth(name);
+		if (!optional.isPresent()) {
+			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+			return;
+		}
+
+		Koth koth = optional.get();
+		koth.stop(sender);
 
 	}
 

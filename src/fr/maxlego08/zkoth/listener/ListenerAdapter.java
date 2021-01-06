@@ -28,6 +28,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import fr.maxlego08.zkoth.api.Koth;
+import fr.maxlego08.zkoth.api.event.events.KothStopEvent;
 import fr.maxlego08.zkoth.api.event.events.KothWinEvent;
 import fr.maxlego08.zkoth.zcore.utils.ZUtils;
 
@@ -108,5 +109,8 @@ public abstract class ListenerAdapter extends ZUtils{
 	
 	public void onKothWin(KothWinEvent event, Koth koth){
 		
+	}
+
+	public void onKothStop(KothStopEvent event, Koth koth) {
 	}
 }

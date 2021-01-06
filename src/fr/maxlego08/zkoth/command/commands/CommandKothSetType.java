@@ -15,7 +15,7 @@ import fr.maxlego08.zkoth.zcore.utils.commands.CommandType;
 public class CommandKothSetType extends VCommand {
 
 	public CommandKothSetType() {
-		this.setPermission(Permission.ZKOTH_COMMAND_REMOVE);
+		this.setPermission(Permission.ZKOTH_TYPE);
 		this.addSubCommand("settype");
 		this.setDescription("Set loot type");
 		this.addRequireArg("name");

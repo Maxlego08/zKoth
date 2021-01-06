@@ -132,4 +132,10 @@ public interface Koth {
 	 * @param itemStacks
 	 */
 	public void setItemStacks(List<ItemStack> itemStacks);
+	
+	/**
+	 * 
+	 * @param sender
+	 */
+	public void stop(CommandSender sender);
 }

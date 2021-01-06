@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import fr.maxlego08.zkoth.ZKothPlugin;
+import fr.maxlego08.zkoth.api.event.events.KothStopEvent;
 import fr.maxlego08.zkoth.api.event.events.KothWinEvent;
 import fr.maxlego08.zkoth.zcore.utils.ZUtils;
 
@@ -64,6 +65,11 @@ public class AdapterListener extends ZUtils implements Listener {
 	@EventHandler
 	public void onKoth(KothWinEvent event) {
 		template.getListenerAdapters().forEach(adapter -> adapter.onKothWin(event, event.getKoth()));
+	}
+	
+	@EventHandler
+	public void onKoth(KothStopEvent event) {
+		template.getListenerAdapters().forEach(adapter -> adapter.onKothStop(event, event.getKoth()));
 	}
 
 }

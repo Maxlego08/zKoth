@@ -111,6 +111,13 @@ public interface KothManager extends Saveable {
 	 * @param id
 	 */
 	public void removeCommand(CommandSender sender, String name, int id);
+	
+	/**
+	 * Stop koth
+	 * @param sender
+	 * @param name
+	 */
+	public void stopKoth(CommandSender sender, String name);
 
 	/**
 	 * 

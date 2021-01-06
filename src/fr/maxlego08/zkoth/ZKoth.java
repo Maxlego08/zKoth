@@ -25,6 +25,7 @@ import fr.maxlego08.zkoth.api.enums.LootType;
 import fr.maxlego08.zkoth.api.event.events.KothCatchEvent;
 import fr.maxlego08.zkoth.api.event.events.KothLooseEvent;
 import fr.maxlego08.zkoth.api.event.events.KothSpawnEvent;
+import fr.maxlego08.zkoth.api.event.events.KothStopEvent;
 import fr.maxlego08.zkoth.api.event.events.KothWinEvent;
 import fr.maxlego08.zkoth.save.Config;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
@@ -462,6 +463,30 @@ public class ZKoth extends ZUtils implements Koth {
 	@Override
 	public void setItemStacks(List<ItemStack> itemStacks) {
 		this.itemStacks = itemStacks.stream().map(e -> encode(e)).collect(Collectors.toList());
+	}
+
+	@Override
+	public void stop(CommandSender sender) {
+		
+		if (!isEnable){
+			message(sender, Message.ZKOTH_EVENT_DISABLE);
+			return;
+		}
+		
+		KothStopEvent event = new KothStopEvent(this);
+		event.callEvent();
+		
+		if (event.isCancelled())
+			return;
+		
+		this.timerTask.cancel();
+		this.isEnable = false;
+		this.isCooldown = false;
+		this.currentPlayer = null;
+		this.timerTask = null;
+		this.currentCaptureSeconds = null;
+		
+		broadcast(Message.ZKOHT_EVENT_STOP);
 	}
 
 }

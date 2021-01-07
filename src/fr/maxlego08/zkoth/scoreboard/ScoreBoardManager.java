@@ -3,6 +3,7 @@ package fr.maxlego08.zkoth.scoreboard;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -74,10 +75,33 @@ public class ScoreBoardManager extends ZUtils {
 			board.updateLines(lines.accept(player));
 
 		boards.put(player, board);
-		this.scoreboard.hide(player);
+		this.scoreboard.hide(player, create(board, player, title));
 
 		return board;
 
+	}
+
+	/**
+	 * 
+	 * @param player
+	 * @param title
+	 * @return
+	 */
+	private Consumer<Player> create(FastBoard current, Player player, String title) {
+		return p -> {
+
+			if (current != null)
+				current.delete();
+			boards.remove(player);
+
+			FastBoard board = new FastBoard(player);
+			board.updateTitle(title);
+
+			if (lines != null)
+				board.updateLines(lines.accept(player));
+
+			boards.put(player, board);
+		};
 	}
 
 	/**
@@ -91,7 +115,9 @@ public class ScoreBoardManager extends ZUtils {
 			return false;
 		FastBoard board = getBoard(player);
 		board.delete();
-		this.scoreboard.toggle(player);
+		this.scoreboard.toggle(player, p -> {
+
+		});
 		return true;
 	}
 
@@ -114,8 +140,10 @@ public class ScoreBoardManager extends ZUtils {
 		this.isRunning = false;
 		this.boards.keySet().forEach(key -> delete(key));
 		this.boards.clear();
-		for(Player player : Bukkit.getOnlinePlayers())
-			this.scoreboard.toggle(player);
+		for (Player player : Bukkit.getOnlinePlayers())
+			this.scoreboard.toggle(player, p -> {
+
+			});
 	}
 
 	/**
@@ -204,15 +232,12 @@ public class ScoreBoardManager extends ZUtils {
 	public void setDefaultScoreboard() {
 		if (this.scoreboard == null) {
 			this.scoreboard = new Scoreboard() {
-
 				@Override
-				public void toggle(Player player) {
-
+				public void toggle(Player player, Consumer<Player> after) {
 				}
 
 				@Override
-				public void hide(Player player) {
-
+				public void hide(Player player, Consumer<Player> after) {
 				}
 			};
 		}

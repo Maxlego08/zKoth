@@ -1,5 +1,7 @@
 package fr.maxlego08.zkoth.scoreboard.implementations;
 
+import java.util.function.Consumer;
+
 import org.bukkit.entity.Player;
 
 import be.maximvdw.featherboard.api.FeatherBoardAPI;
@@ -12,13 +14,13 @@ public class FeatherBoardHook implements Scoreboard {
 	}
 
 	@Override
-	public void toggle(Player player) {
+	public void toggle(Player player, Consumer<Player> after) {
 		if (!FeatherBoardAPI.isToggled(player))
 			FeatherBoardAPI.toggle(player, true);
 	}
 
 	@Override
-	public void hide(Player player) {
+	public void hide(Player player, Consumer<Player> after) {
 		if (FeatherBoardAPI.isToggled(player))
 			FeatherBoardAPI.toggle(player, true);
 	}

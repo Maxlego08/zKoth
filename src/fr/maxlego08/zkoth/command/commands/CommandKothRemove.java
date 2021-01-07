@@ -9,7 +9,7 @@ public class CommandKothRemove extends VCommand {
 
 	public CommandKothRemove() {
 		this.setPermission(Permission.ZKOTH_COMMAND_REMOVE);
-		this.addSubCommand("remove");
+		this.addSubCommand("removec");
 		this.setDescription("Remove commands");
 		this.addRequireArg("name");
 		this.addRequireArg("id");

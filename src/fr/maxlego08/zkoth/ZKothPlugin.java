@@ -10,8 +10,10 @@ import fr.maxlego08.zkoth.listener.AdapterListener;
 import fr.maxlego08.zkoth.save.Config;
 import fr.maxlego08.zkoth.save.MessageLoader;
 import fr.maxlego08.zkoth.scoreboard.ScoreBoardManager;
+import fr.maxlego08.zkoth.scoreboard.implementations.FeatherBoardHook;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
 import fr.maxlego08.zkoth.zcore.utils.plugins.Metrics;
+import fr.maxlego08.zkoth.zcore.utils.plugins.Plugins;
 
 /**
  * System to create your plugins very simply Projet:
@@ -54,10 +56,16 @@ public class ZKothPlugin extends ZPlugin {
 		addSave((ZKothManager) kothManager);
 		addSave(messageLoader);
 
+		if (this.isEnable(Plugins.FEATHERBOARD)) {
+			this.scoreboardManager.setScoreboard(new FeatherBoardHook());
+		}
+		this.scoreboardManager.setDefaultScoreboard();
+		
+		
 		getSavers().forEach(saver -> saver.load(getPersist()));
 
 		new Metrics(this, 6924);
-		
+
 		postEnable();
 	}
 
@@ -76,7 +84,7 @@ public class ZKothPlugin extends ZPlugin {
 	public MessageLoader getMessageLoader() {
 		return messageLoader;
 	}
-	
+
 	public KothManager getKothManager() {
 		return kothManager;
 	}

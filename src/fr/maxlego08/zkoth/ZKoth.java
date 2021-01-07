@@ -226,8 +226,15 @@ public class ZKoth extends ZUtils implements Koth {
 			break;
 		}
 		case TCHAT: {
-			String realMessage = replaceMessage(message.getMessage());
-			this.broadcast(realMessage);
+			if (message.getMessages().size() == 0) {
+				String realMessage = replaceMessage(message.getMessage());
+				this.broadcast(realMessage);
+			} else {
+				message.getMessages().forEach(m -> {
+					String realMessage = replaceMessage(m);
+					this.broadcast(realMessage);
+				});
+			}
 			break;
 		}
 		case TITLE: {
@@ -467,26 +474,29 @@ public class ZKoth extends ZUtils implements Koth {
 
 	@Override
 	public void stop(CommandSender sender) {
-		
-		if (!isEnable){
+
+		if (!isEnable) {
 			message(sender, Message.ZKOTH_EVENT_DISABLE);
 			return;
 		}
-		
+
 		KothStopEvent event = new KothStopEvent(this);
 		event.callEvent();
-		
+
 		if (event.isCancelled())
 			return;
+
+		broadcast(Message.ZKOHT_EVENT_STOP);
 		
-		this.timerTask.cancel();
+		if (this.timerTask != null)
+			this.timerTask.cancel();
+		this.timerTask = null;
 		this.isEnable = false;
 		this.isCooldown = false;
 		this.currentPlayer = null;
 		this.timerTask = null;
 		this.currentCaptureSeconds = null;
-		
-		broadcast(Message.ZKOHT_EVENT_STOP);
+
 	}
 
 }

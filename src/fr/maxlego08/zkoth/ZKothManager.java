@@ -415,7 +415,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		message(sender, "§fCommands §8(§7" + koth.getCommands().size() + "§8):");
 		if (sender instanceof ConsoleCommandSender) {
 			koth.getCommands().forEach(command -> messageWO(sender, " §7" + command));
-			message(sender, "§dHow to add command ? §d/zkoth add <koth> <command>");
+			message(sender, "§dHow to add command ? §d/zkoth addc <koth> <command>");
 		} else {
 
 			Player player = (Player) sender;
@@ -423,15 +423,15 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 			for (int a = 0; a != koth.getCommands().size(); a++) {
 
 				TextComponent textComponent = buildTextComponent(" §b#" + (a + 1) + " §f" + koth.getCommands().get(0));
-				setClickAction(textComponent, Action.SUGGEST_COMMAND, "/koth remove " + koth.getName() + " " + (a + 1));
+				setClickAction(textComponent, Action.SUGGEST_COMMAND, "/koth removec " + koth.getName() + " " + (a + 1));
 				setHoverMessage(textComponent, "§7Click for remove command");
 				player.spigot().sendMessage(textComponent);
 
 			}
 
 			TextComponent textComponent = buildTextComponent(
-					Message.PREFIX.getMessage() + " §fHow to add command ? §d/zkoth §dadd §d<koth> §d<command>");
-			setClickAction(textComponent, Action.SUGGEST_COMMAND, "/koth add " + koth.getName() + " ");
+					Message.PREFIX.getMessage() + " §fHow to add command ? §d/zkoth §daddc §d<koth> §d<command>");
+			setClickAction(textComponent, Action.SUGGEST_COMMAND, "/koth addc " + koth.getName() + " ");
 			setHoverMessage(textComponent, "§7Click for add command");
 			player.spigot().sendMessage(textComponent);
 		}
@@ -449,7 +449,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		Koth koth = optional.get();
 		koth.addCommand(command);
-		message(sender, "§fYou have just added the command §8\"§7" + command + "\"");
+		message(sender, "§fYou have just added the command §8\"§7" + command + "§8\"");
 	}
 
 	@Override

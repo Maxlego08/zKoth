@@ -4,8 +4,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import fr.maxlego08.zkoth.api.Scoreboard;
 import fr.maxlego08.zkoth.save.Config;
 import fr.maxlego08.zkoth.zcore.utils.ZUtils;
 import fr.maxlego08.zkoth.zcore.utils.interfaces.CollectionConsumer;
@@ -15,6 +17,7 @@ public class ScoreBoardManager extends ZUtils {
 	private final Map<Player, FastBoard> boards = new HashMap<Player, FastBoard>();
 	private boolean isRunning = false;
 	private CollectionConsumer<Player> lines;
+	private Scoreboard scoreboard;
 
 	/**
 	 * Start scheduler
@@ -71,6 +74,7 @@ public class ScoreBoardManager extends ZUtils {
 			board.updateLines(lines.accept(player));
 
 		boards.put(player, board);
+		this.scoreboard.hide(player);
 
 		return board;
 
@@ -87,6 +91,7 @@ public class ScoreBoardManager extends ZUtils {
 			return false;
 		FastBoard board = getBoard(player);
 		board.delete();
+		this.scoreboard.toggle(player);
 		return true;
 	}
 
@@ -106,8 +111,11 @@ public class ScoreBoardManager extends ZUtils {
 	}
 
 	public void clearBoard() {
+		this.isRunning = false;
 		this.boards.keySet().forEach(key -> delete(key));
 		this.boards.clear();
+		for(Player player : Bukkit.getOnlinePlayers())
+			this.scoreboard.toggle(player);
 	}
 
 	/**
@@ -187,6 +195,27 @@ public class ScoreBoardManager extends ZUtils {
 	public void setLinesAndSchedule(CollectionConsumer<Player> lines) {
 		this.lines = lines;
 		this.schedule();
+	}
+
+	public void setScoreboard(Scoreboard scoreboard) {
+		this.scoreboard = scoreboard;
+	}
+
+	public void setDefaultScoreboard() {
+		if (this.scoreboard == null) {
+			this.scoreboard = new Scoreboard() {
+
+				@Override
+				public void toggle(Player player) {
+
+				}
+
+				@Override
+				public void hide(Player player) {
+
+				}
+			};
+		}
 	}
 
 }

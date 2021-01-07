@@ -76,7 +76,7 @@ public interface KothManager extends Saveable {
 	 * @return
 	 */
 	public List<Koth> getActiveKoths();
-	
+
 	/**
 	 * 
 	 * @return true if have active koth
@@ -91,6 +91,7 @@ public interface KothManager extends Saveable {
 
 	/**
 	 * Show informations
+	 * 
 	 * @param sender
 	 * @param name
 	 */
@@ -106,14 +107,16 @@ public interface KothManager extends Saveable {
 
 	/**
 	 * Remove commands
+	 * 
 	 * @param sender
 	 * @param name
 	 * @param id
 	 */
 	public void removeCommand(CommandSender sender, String name, int id);
-	
+
 	/**
 	 * Stop koth
+	 * 
 	 * @param sender
 	 * @param name
 	 */
@@ -133,5 +136,13 @@ public interface KothManager extends Saveable {
 	 * @param name
 	 */
 	public void updateLoots(Player player, String name);
+
+	/**
+	 * 
+	 * @param sender
+	 * @param name
+	 * @param second
+	 */
+	public void setCaptureSeconds(CommandSender sender, String name, int second);
 
 }

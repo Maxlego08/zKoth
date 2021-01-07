@@ -52,6 +52,7 @@ import fr.maxlego08.zkoth.zcore.logger.Logger.LogType;
 import fr.maxlego08.zkoth.zcore.utils.Cuboid;
 import fr.maxlego08.zkoth.zcore.utils.ZSelection;
 import fr.maxlego08.zkoth.zcore.utils.builder.ItemBuilder;
+import fr.maxlego08.zkoth.zcore.utils.builder.TimerBuilder;
 import fr.maxlego08.zkoth.zcore.utils.storage.Persist;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -423,7 +424,8 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 			for (int a = 0; a != koth.getCommands().size(); a++) {
 
 				TextComponent textComponent = buildTextComponent(" §b#" + (a + 1) + " §f" + koth.getCommands().get(0));
-				setClickAction(textComponent, Action.SUGGEST_COMMAND, "/koth removec " + koth.getName() + " " + (a + 1));
+				setClickAction(textComponent, Action.SUGGEST_COMMAND,
+						"/koth removec " + koth.getName() + " " + (a + 1));
 				setHoverMessage(textComponent, "§7Click for remove command");
 				player.spigot().sendMessage(textComponent);
 
@@ -540,6 +542,21 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		Koth koth = optional.get();
 		koth.stop(sender);
 
+	}
+
+	@Override
+	public void setCaptureSeconds(CommandSender sender, String name, int second) {
+
+		Optional<Koth> optional = getKoth(name);
+		if (!optional.isPresent()) {
+			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+			return;
+		}
+
+		Koth koth = optional.get();
+		koth.setCapture(second);
+		message(sender, "§aYou have just modified the capture time of the koth §n%s§a to §f%s§a.", koth.getName(),
+				TimerBuilder.getStringTime(second));
 	}
 
 }

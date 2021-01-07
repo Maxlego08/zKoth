@@ -108,7 +108,7 @@ public interface Koth {
 	 * @param factionListener
 	 */
 	public void playerMove(Player player, FactionListener factionListener);
-	
+
 	/**
 	 * 
 	 * @return
@@ -132,10 +132,16 @@ public interface Koth {
 	 * @param itemStacks
 	 */
 	public void setItemStacks(List<ItemStack> itemStacks);
-	
+
 	/**
 	 * 
 	 * @param sender
 	 */
 	public void stop(CommandSender sender);
+
+	/**
+	 * 
+	 * @param second
+	 */
+	public void setCapture(int second);
 }

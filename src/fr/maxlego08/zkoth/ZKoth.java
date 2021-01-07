@@ -499,4 +499,9 @@ public class ZKoth extends ZUtils implements Koth {
 
 	}
 
+	@Override
+	public void setCapture(int second) {
+		this.captureSeconds = second;
+	}
+
 }

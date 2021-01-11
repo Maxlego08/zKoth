@@ -1,5 +1,9 @@
 package fr.maxlego08.zkoth.command.commands;
 
+import java.util.List;
+
+import org.bukkit.command.CommandSender;
+
 import fr.maxlego08.zkoth.ZKothPlugin;
 import fr.maxlego08.zkoth.command.VCommand;
 import fr.maxlego08.zkoth.zcore.enums.Permission;
@@ -13,6 +17,7 @@ public class CommandKothRemove extends VCommand {
 		this.setDescription("Remove commands");
 		this.addRequireArg("name");
 		this.addRequireArg("id");
+		this.setTabCompletor();
 	}
 
 	@Override
@@ -24,6 +29,17 @@ public class CommandKothRemove extends VCommand {
 		manager.removeCommand(sender, name, id);
 
 		return CommandType.SUCCESS;
+	}
+	
+	@Override
+	public List<String> toTab(ZKothPlugin plugin, CommandSender sender2, String[] args) {
+		if (manager == null)
+			manager = plugin.getKothManager();
+		if (args.length == 2) {
+			String startWith = args[1];
+			return generateList(manager.getKothNames(), startWith);
+		}
+		return null;
 	}
 
 }

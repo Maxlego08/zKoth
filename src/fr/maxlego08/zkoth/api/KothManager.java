@@ -144,5 +144,11 @@ public interface KothManager extends Saveable {
 	 * @param second
 	 */
 	public void setCaptureSeconds(CommandSender sender, String name, int second);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public List<String> getKothNames();
 
 }

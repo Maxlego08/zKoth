@@ -559,4 +559,9 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 				TimerBuilder.getStringTime(second));
 	}
 
+	@Override
+	public List<String> getKothNames() {
+		return koths.stream().map(e -> e.getName()).collect(Collectors.toList());
+	}
+
 }

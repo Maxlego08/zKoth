@@ -42,7 +42,12 @@ public class CommandKothSetType extends VCommand {
 	@Override
 	public List<String> toTab(ZKothPlugin plugin, CommandSender sender2, String[] args) {
 
-		if (args.length == 3) {
+		if (manager == null)
+			manager = plugin.getKothManager();
+		if (args.length == 2) {
+			String startWith = args[1];
+			return generateList(manager.getKothNames(), startWith);
+		} else if (args.length == 3) {
 
 			String startWith = args[2];
 			List<String> strings = Arrays.asList(LootType.values()).stream().map(e -> e.name().toLowerCase())

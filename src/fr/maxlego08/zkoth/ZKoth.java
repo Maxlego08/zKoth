@@ -449,9 +449,10 @@ public class ZKoth extends ZUtils implements Koth {
 	@Override
 	public CollectionConsumer<Player> onScoreboard() {
 		if (isCooldown)
-			return p -> Config.scoreboardCooldown.stream().map(e -> replaceMessage(e)).collect(Collectors.toList());
+			return p -> Config.scoreboardCooldown.stream().map(e -> papi(replaceMessage(e), p))
+					.collect(Collectors.toList());
 		else
-			return p -> Config.scoreboard.stream().map(e -> replaceMessage(e)).collect(Collectors.toList());
+			return p -> Config.scoreboard.stream().map(e -> papi(replaceMessage(e), p)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -487,7 +488,7 @@ public class ZKoth extends ZUtils implements Koth {
 			return;
 
 		broadcast(Message.ZKOHT_EVENT_STOP);
-		
+
 		if (this.timerTask != null)
 			this.timerTask.cancel();
 		this.timerTask = null;

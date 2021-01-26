@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import fr.maxlego08.zkoth.api.Scoreboard;
@@ -111,10 +110,13 @@ public class ScoreBoardManager extends ZUtils {
 	 * @return
 	 */
 	public boolean delete(Player player) {
+		
 		if (!hasBoard(player))
 			return false;
+		
 		FastBoard board = getBoard(player);
 		board.delete();
+		
 		this.scoreboard.toggle(player, p -> {
 
 		});
@@ -140,10 +142,6 @@ public class ScoreBoardManager extends ZUtils {
 		this.isRunning = false;
 		this.boards.keySet().forEach(key -> delete(key));
 		this.boards.clear();
-		for (Player player : Bukkit.getOnlinePlayers())
-			this.scoreboard.toggle(player, p -> {
-
-			});
 	}
 
 	/**

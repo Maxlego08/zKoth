@@ -12,6 +12,7 @@ import fr.maxlego08.zkoth.save.MessageLoader;
 import fr.maxlego08.zkoth.scoreboard.ScoreBoardManager;
 import fr.maxlego08.zkoth.scoreboard.implementations.FeatherBoardHook;
 import fr.maxlego08.zkoth.scoreboard.implementations.TabPremiumHook;
+import fr.maxlego08.zkoth.scoreboard.implementations.TitleManagerHook;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
 import fr.maxlego08.zkoth.zcore.utils.plugins.Metrics;
 import fr.maxlego08.zkoth.zcore.utils.plugins.Plugins;
@@ -61,6 +62,8 @@ public class ZKothPlugin extends ZPlugin {
 			this.scoreboardManager.setScoreboard(new FeatherBoardHook());
 		} else if (this.isEnable(Plugins.TAB)) {
 			this.scoreboardManager.setScoreboard(new TabPremiumHook());
+		} else if (this.isEnable(Plugins.TITLEMANAGER)) {
+			this.scoreboardManager.setScoreboard(new TitleManagerHook());
 		}
 		this.scoreboardManager.setDefaultScoreboard();
 

@@ -15,7 +15,6 @@ public class TabPremiumHook implements Scoreboard {
 	@Override
 	public void toggle(Player player, Consumer<Player> after) {
 		TabPlayer tabPlayer = TABAPI.getPlayer(player.getUniqueId());
-		System.out.println(tabPlayer);
 		if (tabPlayer != null && !tabPlayer.isScoreboardVisible())
 			tabPlayer.toggleScoreboard(false);
 	}

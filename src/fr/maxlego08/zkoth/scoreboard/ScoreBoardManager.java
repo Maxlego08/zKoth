@@ -240,5 +240,9 @@ public class ScoreBoardManager extends ZUtils {
 			};
 		}
 	}
+	
+	public Scoreboard getScoreboard() {
+		return scoreboard;
+	}
 
 }

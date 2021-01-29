@@ -14,6 +14,7 @@ import fr.maxlego08.zkoth.scoreboard.implementations.FeatherBoardHook;
 import fr.maxlego08.zkoth.scoreboard.implementations.TabPremiumHook;
 import fr.maxlego08.zkoth.scoreboard.implementations.TitleManagerHook;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
+import fr.maxlego08.zkoth.zcore.logger.Logger;
 import fr.maxlego08.zkoth.zcore.utils.plugins.Metrics;
 import fr.maxlego08.zkoth.zcore.utils.plugins.Plugins;
 
@@ -60,12 +61,20 @@ public class ZKothPlugin extends ZPlugin {
 
 		if (this.isEnable(Plugins.FEATHERBOARD)) {
 			this.scoreboardManager.setScoreboard(new FeatherBoardHook());
-		} else if (this.isEnable(Plugins.TAB)) {
-			this.scoreboardManager.setScoreboard(new TabPremiumHook());
-		} else if (this.isEnable(Plugins.TITLEMANAGER)) {
+		}
+		
+		try {
+			if (this.isEnable(Plugins.TAB) && Class.forName("me/neznamy/tab/api/TABAPI") != null) {
+				this.scoreboardManager.setScoreboard(new TabPremiumHook());
+			}
+		} catch (ClassNotFoundException e) {
+		}
+		
+		if (this.isEnable(Plugins.TITLEMANAGER)) {
 			this.scoreboardManager.setScoreboard(new TitleManagerHook());
 		}
 		this.scoreboardManager.setDefaultScoreboard();
+		Logger.info("Load " + this.scoreboardManager.getScoreboard().getClass().getName() + " scoreboard manager");
 
 		getSavers().forEach(saver -> saver.load(getPersist()));
 

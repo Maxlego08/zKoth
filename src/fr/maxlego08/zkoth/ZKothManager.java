@@ -35,12 +35,13 @@ import fr.maxlego08.zkoth.api.event.events.KothHookEvent;
 import fr.maxlego08.zkoth.api.event.events.KothMoveEvent;
 import fr.maxlego08.zkoth.api.event.events.KothStopEvent;
 import fr.maxlego08.zkoth.api.event.events.KothWinEvent;
+import fr.maxlego08.zkoth.hooks.DefaultHook;
+import fr.maxlego08.zkoth.hooks.FactionLegacyHook;
 import fr.maxlego08.zkoth.hooks.FactionMassiveHook;
 import fr.maxlego08.zkoth.hooks.FactionsHook;
 import fr.maxlego08.zkoth.hooks.FactionsXHook;
+import fr.maxlego08.zkoth.hooks.GangsHook;
 import fr.maxlego08.zkoth.hooks.GuildsHook;
-import fr.maxlego08.zkoth.hooks.DefaultHook;
-import fr.maxlego08.zkoth.hooks.FactionLegacyHook;
 import fr.maxlego08.zkoth.hooks.SuperiorSkyblock2Hook;
 import fr.maxlego08.zkoth.listener.ListenerAdapter;
 import fr.maxlego08.zkoth.save.Config;
@@ -54,6 +55,7 @@ import fr.maxlego08.zkoth.zcore.utils.ZSelection;
 import fr.maxlego08.zkoth.zcore.utils.builder.ItemBuilder;
 import fr.maxlego08.zkoth.zcore.utils.builder.TimerBuilder;
 import fr.maxlego08.zkoth.zcore.utils.storage.Persist;
+import net.brcdev.gangs.GangsPlugin;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -98,6 +100,11 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 			factionListener = new SuperiorSkyblock2Hook();
 			Logger.info("SuperiorSkyblock2 plugin detected successfully.", LogType.SUCCESS);
+
+		} else if (pluginManager.isPluginEnabled("GangsPlus")) {
+
+			factionListener = new GangsHook();
+			Logger.info("GangsPlus plugin detected successfully.", LogType.SUCCESS);
 
 		} else if (pluginManager.isPluginEnabled("Guilds")) {
 

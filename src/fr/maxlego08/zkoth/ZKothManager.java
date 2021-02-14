@@ -55,7 +55,6 @@ import fr.maxlego08.zkoth.zcore.utils.ZSelection;
 import fr.maxlego08.zkoth.zcore.utils.builder.ItemBuilder;
 import fr.maxlego08.zkoth.zcore.utils.builder.TimerBuilder;
 import fr.maxlego08.zkoth.zcore.utils.storage.Persist;
-import net.brcdev.gangs.GangsPlugin;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
 import net.md_5.bungee.api.chat.TextComponent;
 

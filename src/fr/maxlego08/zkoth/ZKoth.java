@@ -327,7 +327,8 @@ public class ZKoth extends ZUtils implements Koth {
 			return;
 		}
 
-		broadcast(Message.ZKOHT_EVENT_CATCH);
+		if (Config.enableStartCapMessage)
+			broadcast(Message.ZKOHT_EVENT_CATCH);
 
 		int captureSeconds = event.getCaptureSeconds();
 		captureSeconds = captureSeconds < 0 ? 30 : captureSeconds;
@@ -369,7 +370,8 @@ public class ZKoth extends ZUtils implements Koth {
 				this.timerTask = null;
 				this.currentPlayer = null;
 
-				broadcast(Message.ZKOHT_EVENT_LOOSE);
+				if (Config.enableLooseCapMessage)
+					broadcast(Message.ZKOHT_EVENT_LOOSE);
 				return;
 
 			}

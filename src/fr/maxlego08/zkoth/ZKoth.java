@@ -261,9 +261,11 @@ public class ZKoth extends ZUtils implements Koth {
 
 		Cuboid cuboid = getCuboid();
 		Location center = cuboid.getCenter();
-		message = message.replace("%x%", String.valueOf(center.getBlockX()));
-		message = message.replace("%y%", String.valueOf(center.getBlockY()));
-		message = message.replace("%z%", String.valueOf(center.getBlockZ()));
+		if (center != null) {
+			message = message.replace("%x%", String.valueOf(center.getBlockX()));
+			message = message.replace("%y%", String.valueOf(center.getBlockY()));
+			message = message.replace("%z%", String.valueOf(center.getBlockZ()));
+		}
 		message = message.replace("%capture%", TimerBuilder
 				.getStringTime(this.currentCaptureSeconds == null ? this.captureSeconds : currentCaptureSeconds.get()));
 		message = message.replace("%world%", center.getWorld().getName());

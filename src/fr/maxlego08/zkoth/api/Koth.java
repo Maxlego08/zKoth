@@ -144,4 +144,22 @@ public interface Koth {
 	 * @param second
 	 */
 	public void setCapture(int second);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public int getCurrentSecond();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getCurrentPlayer();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getCurrentFaction();
 }

@@ -25,6 +25,7 @@ import fr.maxlego08.zkoth.api.enums.LootType;
 import fr.maxlego08.zkoth.api.event.events.KothCatchEvent;
 import fr.maxlego08.zkoth.api.event.events.KothLooseEvent;
 import fr.maxlego08.zkoth.api.event.events.KothSpawnEvent;
+import fr.maxlego08.zkoth.api.event.events.KothStartEvent;
 import fr.maxlego08.zkoth.api.event.events.KothStopEvent;
 import fr.maxlego08.zkoth.api.event.events.KothWinEvent;
 import fr.maxlego08.zkoth.save.Config;
@@ -157,6 +158,13 @@ public class ZKoth extends ZUtils implements Koth {
 		this.isCooldown = true;
 		this.isEnable = true;
 		this.currentCaptureSeconds = new AtomicInteger(Config.cooldownInSecond);
+
+		KothStartEvent event = new KothStartEvent(this);
+		event.callEvent();
+
+		if (event.isCancelled())
+			return;
+
 		scheduleFix(0, 1000, (task, isCancelled) -> {
 
 			this.timerTask = task;
@@ -507,6 +515,22 @@ public class ZKoth extends ZUtils implements Koth {
 	@Override
 	public void setCapture(int second) {
 		this.captureSeconds = second;
+	}
+
+	@Override
+	public int getCurrentSecond() {
+		return this.currentCaptureSeconds == null ? 0 : this.currentCaptureSeconds.get();
+	}
+
+	@Override
+	public String getCurrentPlayer() {
+		return this.currentPlayer == null ? Message.ZKOHT_EVENT_PLAYER.getMessage() : this.currentPlayer.getName();
+	}
+
+	@Override
+	public String getCurrentFaction() {
+		return this.currentPlayer == null ? Message.ZKOHT_EVENT_FACION.getMessage()
+				: this.factionListener.getFactionTag(this.currentPlayer);
 	}
 
 }

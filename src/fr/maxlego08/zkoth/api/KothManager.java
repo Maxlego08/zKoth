@@ -76,6 +76,8 @@ public interface KothManager extends Saveable {
 	 * @return
 	 */
 	public List<Koth> getActiveKoths();
+	
+	public List<Koth> getEnableKoths();
 
 	/**
 	 * 

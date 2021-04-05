@@ -6,6 +6,7 @@ public enum Plugins {
 	ESSENTIALS("Essentials"), 
 	FEATHERBOARD("FeatherBoard"),
 	TAB("TAB"),
+	PLACEHOLDERAPI("PlaceholderAPI"),
 	TITLEMANAGER("TitleManager"),
 	
 	;

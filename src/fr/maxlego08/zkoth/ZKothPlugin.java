@@ -15,6 +15,7 @@ import fr.maxlego08.zkoth.scoreboard.implementations.TabPremiumHook;
 import fr.maxlego08.zkoth.scoreboard.implementations.TitleManagerHook;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
 import fr.maxlego08.zkoth.zcore.logger.Logger;
+import fr.maxlego08.zkoth.zcore.logger.Logger.LogType;
 import fr.maxlego08.zkoth.zcore.utils.plugins.Metrics;
 import fr.maxlego08.zkoth.zcore.utils.plugins.Plugins;
 
@@ -76,6 +77,12 @@ public class ZKothPlugin extends ZPlugin {
 		this.scoreboardManager.setDefaultScoreboard();
 		Logger.info("Load " + this.scoreboardManager.getScoreboard().getClass().getName() + " scoreboard manager");
 
+		if (this.isEnable(Plugins.PLACEHOLDERAPI)){
+			Logger.info("Load PlaceHolderAPI", LogType.INFO);
+			KothExpension expension = new KothExpension(this, kothManager);
+			expension.register();
+		}
+		
 		getSavers().forEach(saver -> saver.load(getPersist()));
 
 		new Metrics(this, 6924);

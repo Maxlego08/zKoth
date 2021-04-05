@@ -319,6 +319,11 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 	public List<Koth> getActiveKoths() {
 		return koths.stream().filter(koth -> koth.isEnable() && !koth.isCooldown()).collect(Collectors.toList());
 	}
+	
+	@Override
+	public List<Koth> getEnableKoths() {
+		return koths.stream().filter(koth -> koth.isEnable()|| koth.isCooldown()).collect(Collectors.toList());
+	}
 
 	@Override
 	protected void onMove(PlayerMoveEvent event, Player player) {
@@ -507,9 +512,8 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		Koth koth = optional.get();
 		Inventory inventory = Bukkit.createInventory(null, 54, "§8Loots: " + name);
 		int slot = 0;
-		for (ItemStack itemStack : koth.getItemStacks()) {
-			inventory.setItem(slot, itemStack);
-		}
+		for (ItemStack itemStack : koth.getItemStacks()) 
+			inventory.setItem(slot++, itemStack);
 
 		player.openInventory(inventory);
 

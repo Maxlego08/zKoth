@@ -6,5 +6,6 @@ public enum MessageType {
 	TCHAT,
 	TITLE,
 	CENTER,
+	NONE,
 	
 }

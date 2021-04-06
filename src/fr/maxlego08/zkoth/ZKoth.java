@@ -255,6 +255,7 @@ public class ZKoth extends ZUtils implements Koth {
 				this.title(player, title, subTitle, fadeInTime, showTime, fadeOutTime);
 			break;
 		}
+		case NONE:
 		default:
 			break;
 		}

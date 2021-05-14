@@ -22,6 +22,7 @@ import org.bukkit.util.Vector;
 import fr.maxlego08.zkoth.api.FactionListener;
 import fr.maxlego08.zkoth.api.Koth;
 import fr.maxlego08.zkoth.api.enums.LootType;
+import fr.maxlego08.zkoth.api.event.events.KothCapEvent;
 import fr.maxlego08.zkoth.api.event.events.KothCatchEvent;
 import fr.maxlego08.zkoth.api.event.events.KothLooseEvent;
 import fr.maxlego08.zkoth.api.event.events.KothSpawnEvent;
@@ -472,8 +473,14 @@ public class ZKoth extends ZUtils implements Koth {
 				this.currentPlayer = null;
 				this.timerTask = null;
 				this.currentCaptureSeconds = null;
-			} else
+			} else {
+				
+				KothCapEvent capEvent = new KothCapEvent(this, player, this.currentCaptureSeconds.get(),
+						this.factionListener.getFactionTag(player));
+				capEvent.callEvent();
+
 				this.currentCaptureSeconds.decrementAndGet();
+			}
 		});
 	}
 

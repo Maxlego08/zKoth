@@ -18,6 +18,7 @@ public enum Permission {
 	ZKOTH_LOOT, 
 	ZKOTH_TYPE, 
 	ZKOTH_SETCAPTURE,
+	ZKOTH_SCHEDULER,
 
 	;
 

@@ -153,6 +153,24 @@ public class ZKoth extends ZUtils implements Koth {
 
 	}
 
+	@Override
+	public void spawn(boolean now) {
+
+		if (this.minLocation == null || this.maxLocation == null) {
+			return;
+		} else if (this.isCooldown) {
+			return;
+		} else if (this.isEnable) {
+			return;
+		} else {
+			if (now)
+				spawnNow();
+			else
+				spawn();
+		}
+
+	}
+
 	private void spawn() {
 
 		this.isCooldown = true;
@@ -404,7 +422,7 @@ public class ZKoth extends ZUtils implements Koth {
 
 				this.commands.forEach(command -> {
 					command = replaceMessage(command);
-					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), papi(command, player));
 				});
 
 				Location center = cuboid.getCenter();

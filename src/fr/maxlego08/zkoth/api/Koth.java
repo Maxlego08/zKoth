@@ -101,6 +101,12 @@ public interface Koth {
 	 * @param now
 	 */
 	public void spawn(CommandSender sender, boolean now);
+	
+	/**
+	 * 
+	 * @param now
+	 */
+	public void spawn(boolean now);
 
 	/**
 	 * 

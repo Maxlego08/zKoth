@@ -91,6 +91,20 @@ public enum Message {
 	ZKOHT_EVENT_PLAYER("Person"), 
 	ZKOTH_EVENT_DISABLE("§cThe event is not enable."),
 	
+	ZKOTH_SCHEDULER_CREATE("§eYou have just created a scheduler for the koth §6%s§e."),
+	ZKOTH_SCHEDULER_EMPTY("§cNo scheduler available"),
+	ZKOTH_SCHEDULER_REMOVE_HOVER("§7Click to delete the scheduler"),
+	ZKOTH_SCHEDULER_LIST("§6%totemName%§7, §f%type%§7, §e%day%§7, §e%hour%§7, §e%minute%"),
+	ZKOTH_SCHEDULER_LIST_REPEAT("§6%totemName%§7, §f%type%§7, §e%timer%"),
+	ZKOTH_SCHEDULER_REMOVE_ERROR("§cYou must make /koth scheduler list and then click on one of the koths to be able to delete it"),
+	ZKOTH_SCHEDULER_REMOVE_SUCCESS("§eYou have just deleted the scheduler"),
+	
+	DESCRIPTION_SCHEDULER("Show scheduler commands"),
+	DESCRIPTION_SCHEDULER_LIST("Show scheduler list"),
+	DESCRIPTION_SCHEDULER_ADD("Add a scheduler"),
+	DESCRIPTION_SCHEDULER_REMOVE("Remove a scheduler"), 
+	KOTH_SCHEDULER_ERROR("§cImpossible to find the day §f%s§c."),
+	
 	;
 
 	private List<String> messages;

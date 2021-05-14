@@ -7,7 +7,10 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -304,7 +307,6 @@ public abstract class ZUtils extends MessageUtils {
 		return decimalFormat.format(decimal);
 	}
 
-
 	/**
 	 * 
 	 * @param player
@@ -494,7 +496,7 @@ public abstract class ZUtils extends MessageUtils {
 	protected boolean hasPermission(Permissible permissible, Permission permission) {
 		return permissible.hasPermission(permission.getPermission());
 	}
-	
+
 	/**
 	 * 
 	 * @param permissible
@@ -540,7 +542,7 @@ public abstract class ZUtils extends MessageUtils {
 			}
 		}, start, delay);
 	}
-	
+
 	/**
 	 * 
 	 * @param element
@@ -1167,7 +1169,7 @@ public abstract class ZUtils extends MessageUtils {
 	}
 
 	private final transient static int CENTER_PX = 154;
-	
+
 	/**
 	 * 
 	 * @param message
@@ -1211,11 +1213,41 @@ public abstract class ZUtils extends MessageUtils {
 		}
 		return sb.toString() + message;
 	}
-	
+
 	protected void broadcastCenterMessage(List<String> messages) {
 		messages.stream().map(e -> e = getCenteredMessage(e)).forEach(e -> {
 			Bukkit.broadcastMessage(e);
 		});
 	}
-	
+
+	protected String getDay() {
+		GregorianCalendar calendar = new GregorianCalendar();
+		calendar.setTime(new Date());
+		int today = calendar.get(Calendar.DAY_OF_WEEK);
+		switch (today) {
+		case GregorianCalendar.MONDAY:
+			return "MONDAY";
+		case GregorianCalendar.TUESDAY:
+			return "TUESDAY";
+		case GregorianCalendar.WEDNESDAY:
+			return "WEDNESDAY";
+		case GregorianCalendar.THURSDAY:
+			return "THURSDAY";
+		case GregorianCalendar.FRIDAY:
+			return "FRIDAY";
+		case GregorianCalendar.SATURDAY:
+			return "SATURDAY";
+		case GregorianCalendar.SUNDAY:
+			return "SUNDAY";
+		default:
+			return null;
+		}
+	}
+
+	protected boolean isDay(String day) {
+		return day.equalsIgnoreCase("MONDAY") || day.equalsIgnoreCase("TUESDAY") || day.equalsIgnoreCase("WEDNESDAY")
+				|| day.equalsIgnoreCase("THURSDAY") || day.equalsIgnoreCase("FRIDAY")
+				|| day.equalsIgnoreCase("SATURDAY") || day.equalsIgnoreCase("SUNDAY");
+	}
+
 }

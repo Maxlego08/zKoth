@@ -2,7 +2,6 @@ package fr.maxlego08.zkoth;
 
 import org.bukkit.plugin.ServicePriority;
 
-import be.maximvdw.featherboard.ch;
 import fr.maxlego08.zkoth.api.KothManager;
 import fr.maxlego08.zkoth.command.CommandManager;
 import fr.maxlego08.zkoth.command.commands.CommandKoth;

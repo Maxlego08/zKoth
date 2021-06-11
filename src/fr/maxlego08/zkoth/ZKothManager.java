@@ -35,6 +35,7 @@ import fr.maxlego08.zkoth.api.event.events.KothHookEvent;
 import fr.maxlego08.zkoth.api.event.events.KothMoveEvent;
 import fr.maxlego08.zkoth.api.event.events.KothStopEvent;
 import fr.maxlego08.zkoth.api.event.events.KothWinEvent;
+import fr.maxlego08.zkoth.hooks.ClanHook;
 import fr.maxlego08.zkoth.hooks.DefaultHook;
 import fr.maxlego08.zkoth.hooks.FactionLegacyHook;
 import fr.maxlego08.zkoth.hooks.FactionMassiveHook;
@@ -100,6 +101,11 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 			factionListener = new SuperiorSkyblock2Hook();
 			Logger.info("SuperiorSkyblock2 plugin detected successfully.", LogType.SUCCESS);
+			
+		} else if (pluginManager.isPluginEnabled("Clans")) {
+			
+			factionListener = new ClanHook();
+			Logger.info("Clans plugin detected successfully.", LogType.SUCCESS);
 
 		} else if (pluginManager.isPluginEnabled("GangsPlus")) {
 

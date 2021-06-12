@@ -382,7 +382,8 @@ public class ZKoth extends ZUtils implements Koth {
 			int tmpCapture = this.currentCaptureSeconds.get();
 
 			if (this.currentPlayer != null) {
-				if (!this.currentPlayer.isOnline() || !cuboid.contains(this.currentPlayer.getLocation()))
+				if (!this.currentPlayer.isValid() || !this.currentPlayer.isOnline()
+						|| !cuboid.contains(this.currentPlayer.getLocation()))
 					this.currentPlayer = null;
 			}
 
@@ -474,7 +475,7 @@ public class ZKoth extends ZUtils implements Koth {
 				this.timerTask = null;
 				this.currentCaptureSeconds = null;
 			} else {
-				
+
 				KothCapEvent capEvent = new KothCapEvent(this, player, this.currentCaptureSeconds.get(),
 						this.factionListener.getFactionTag(player));
 				capEvent.callEvent();

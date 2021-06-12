@@ -2,6 +2,7 @@ package fr.maxlego08.zkoth.save;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,9 +125,11 @@ public class MessageLoader extends YamlUtils implements Saveable {
 				if (configuration.contains(key + ".messages")) {
 					List<String> messages = configuration.getStringList(key + ".messages");
 					enumMessage.setMessages(color(messages));
+					enumMessage.setMessage(null);
 				} else {
 					String message = configuration.getString(key + ".message");
 					enumMessage.setMessage(color(message));
+					enumMessage.setMessages(new ArrayList<String>());
 				}
 				break;
 			}

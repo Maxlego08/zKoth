@@ -8,7 +8,7 @@ import java.util.Map;
 import org.bukkit.inventory.ItemStack;
 
 import fr.maxlego08.zkoth.api.enums.MessageType;
-import fr.maxlego08.zkoth.zcore.utils.ItemDecoder;
+import fr.maxlego08.zkoth.zcore.utils.nms.NMSUtils;
 
 public enum Message {
 
@@ -255,7 +255,7 @@ public enum Message {
 	}
 
 	public MessageType getType() {
-		return type.equals(MessageType.ACTION) && ItemDecoder.isClaquaxVersion() ? MessageType.TCHAT : type;
+		return type.equals(MessageType.ACTION) && NMSUtils.isVeryOldVersion() ? MessageType.TCHAT : type;
 	}
 	
 	public ItemStack getItemStack() {

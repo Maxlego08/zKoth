@@ -14,7 +14,7 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
 import fr.maxlego08.zkoth.zcore.ZPlugin;
-import fr.maxlego08.zkoth.zcore.utils.ItemDecoder;
+import fr.maxlego08.zkoth.zcore.utils.nms.ItemStackUtils;
 
 public class ItemStackerAdapter extends TypeAdapter<ItemStack> {
 
@@ -43,13 +43,13 @@ public class ItemStackerAdapter extends TypeAdapter<ItemStack> {
 
 	private String getRaw(ItemStack itemStack) {
 		Map<String, Object> serial = new HashMap<String, Object>();
-		serial.put(ITEMSTACK, ItemDecoder.serializeItemStack(itemStack));
+		serial.put(ITEMSTACK, ItemStackUtils.serializeItemStack(itemStack));
 		return ZPlugin.z().getGson().toJson(itemStack);
 	}
 
 	private ItemStack fromRaw(String raw) {
 		Map<String, Object> keys = ZPlugin.z().getGson().fromJson(raw, seriType);
-		return ItemDecoder.deserializeItemStack((String) keys.get(ITEMSTACK));
+		return ItemStackUtils.deserializeItemStack((String) keys.get(ITEMSTACK));
 	}
 
 }

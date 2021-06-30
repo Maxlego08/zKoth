@@ -1113,7 +1113,7 @@ public abstract class ZUtils extends MessageUtils {
 	protected void title(Player player, String title, String subtitle, int fadeInTime, int showTime, int fadeOutTime) {
 		try {
 			Object chatTitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class)
-					.invoke(null, "{\"text\": \"" + title + "\"}");
+					.invoke(null, "{\"text\": \"" + papi(title, player) + "\"}");
 			Constructor<?> titleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(
 					getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"),
 					int.class, int.class, int.class);
@@ -1122,7 +1122,7 @@ public abstract class ZUtils extends MessageUtils {
 					fadeInTime, showTime, fadeOutTime);
 
 			Object chatsTitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class)
-					.invoke(null, "{\"text\": \"" + subtitle + "\"}");
+					.invoke(null, "{\"text\": \"" + papi(subtitle, player) + "\"}");
 			Constructor<?> timingTitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(
 					getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"),
 					int.class, int.class, int.class);
@@ -1216,7 +1216,9 @@ public abstract class ZUtils extends MessageUtils {
 
 	protected void broadcastCenterMessage(List<String> messages) {
 		messages.stream().map(e -> e = getCenteredMessage(e)).forEach(e -> {
-			Bukkit.broadcastMessage(e);
+			for(Player player : Bukkit.getOnlinePlayers()){
+				message(player, e);
+			}
 		});
 	}
 

@@ -110,7 +110,7 @@ public abstract class MessageUtils extends LocationUtils {
 	 */
 	protected void broadcastAction(String message) {
 		for (Player player : Bukkit.getOnlinePlayers())
-			ActionBar.sendActionBar(player, message);
+			ActionBar.sendActionBar(player, papi(message, player));
 	}
 
 }

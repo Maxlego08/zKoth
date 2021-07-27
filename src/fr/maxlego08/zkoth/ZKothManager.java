@@ -89,74 +89,79 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		persist.loadOrSaveDefault(this, ZKothManager.class, "koths");
 
 		/* Enable faction */
+		if (!Config.useNoFactionHook) {
 
-		PluginManager pluginManager = Bukkit.getPluginManager();
+			PluginManager pluginManager = Bukkit.getPluginManager();
 
-		if (pluginManager.isPluginEnabled("FactionsX")) {
+			if (pluginManager.isPluginEnabled("FactionsX")) {
 
-			factionListener = new FactionsXHook();
-			Logger.info("FactionsX plugin detected successfully.", LogType.SUCCESS);
+				factionListener = new FactionsXHook();
+				Logger.info("FactionsX plugin detected successfully.", LogType.SUCCESS);
 
-		} else if (pluginManager.isPluginEnabled("SuperiorSkyblock2")) {
+			} else if (pluginManager.isPluginEnabled("SuperiorSkyblock2")) {
 
-			factionListener = new SuperiorSkyblock2Hook();
-			Logger.info("SuperiorSkyblock2 plugin detected successfully.", LogType.SUCCESS);
-			
-		} else if (pluginManager.isPluginEnabled("Clans")) {
-			
-			factionListener = new ClanHook();
-			Logger.info("Clans plugin detected successfully.", LogType.SUCCESS);
+				factionListener = new SuperiorSkyblock2Hook();
+				Logger.info("SuperiorSkyblock2 plugin detected successfully.", LogType.SUCCESS);
 
-		} else if (pluginManager.isPluginEnabled("GangsPlus")) {
+			} else if (pluginManager.isPluginEnabled("Clans")) {
 
-			factionListener = new GangsHook();
-			Logger.info("GangsPlus plugin detected successfully.", LogType.SUCCESS);
-			
-		} else if (pluginManager.isPluginEnabled("UltimateFactions")) {
-			
-			factionListener = new UltimateFaction();
-			Logger.info("UltimateFactions plugin detected successfully.", LogType.SUCCESS);
+				factionListener = new ClanHook();
+				Logger.info("Clans plugin detected successfully.", LogType.SUCCESS);
 
-		} else if (pluginManager.isPluginEnabled("Guilds")) {
+			} else if (pluginManager.isPluginEnabled("GangsPlus")) {
 
-			factionListener = new GuildsHook();
-			Logger.info("Guilds plugin detected successfully.", LogType.SUCCESS);
+				factionListener = new GangsHook();
+				Logger.info("GangsPlus plugin detected successfully.", LogType.SUCCESS);
 
-		} else if (pluginManager.isPluginEnabled("LegacyFactions")) {
+			} else if (pluginManager.isPluginEnabled("UltimateFactions")) {
 
-			factionListener = new FactionLegacyHook();
-			Logger.info("LegacyFactions plugin detected successfully.", LogType.SUCCESS);
+				factionListener = new UltimateFaction();
+				Logger.info("UltimateFactions plugin detected successfully.", LogType.SUCCESS);
 
-		} else if (pluginManager.isPluginEnabled("Factions")) {
+			} else if (pluginManager.isPluginEnabled("Guilds")) {
 
-			Plugin plugin = pluginManager.getPlugin("Factions");
-			List<String> authors = plugin.getDescription().getAuthors();
+				factionListener = new GuildsHook();
+				Logger.info("Guilds plugin detected successfully.", LogType.SUCCESS);
 
-			if (authors.contains("Cayorion") && pluginManager.isPluginEnabled("MassiveCore")) {
+			} else if (pluginManager.isPluginEnabled("LegacyFactions")) {
 
-				factionListener = new FactionMassiveHook();
-				Logger.info("MassiveCraft plugin detected successfully.", LogType.SUCCESS);
+				factionListener = new FactionLegacyHook();
+				Logger.info("LegacyFactions plugin detected successfully.", LogType.SUCCESS);
 
-			} else if (authors.contains("Savag3life")) {
+			} else if (pluginManager.isPluginEnabled("Factions")) {
 
-				factionListener = new FactionsHook();
-				Logger.info("SavageFaction plugin detected successfully.", LogType.SUCCESS);
+				Plugin plugin = pluginManager.getPlugin("Factions");
+				List<String> authors = plugin.getDescription().getAuthors();
 
-			} else if (authors.contains("Driftay")) {
+				if (authors.contains("Cayorion") && pluginManager.isPluginEnabled("MassiveCore")) {
 
-				factionListener = new FactionsHook();
-				Logger.info("SaberFaction plugin detected successfully.", LogType.SUCCESS);
+					factionListener = new FactionMassiveHook();
+					Logger.info("MassiveCraft plugin detected successfully.", LogType.SUCCESS);
 
-			} else if (authors.contains("drtshock")) {
+				} else if (authors.contains("Savag3life")) {
 
-				factionListener = new FactionsHook();
-				Logger.info("FactionUUID plugin detected successfully.", LogType.SUCCESS);
+					factionListener = new FactionsHook();
+					Logger.info("SavageFaction plugin detected successfully.", LogType.SUCCESS);
 
+				} else if (authors.contains("Driftay")) {
+
+					factionListener = new FactionsHook();
+					Logger.info("SaberFaction plugin detected successfully.", LogType.SUCCESS);
+
+				} else if (authors.contains("drtshock")) {
+
+					factionListener = new FactionsHook();
+					Logger.info("FactionUUID plugin detected successfully.", LogType.SUCCESS);
+
+				}
+
+			} else
+
+			{
+				factionListener = new DefaultHook();
+				Logger.info("No plugin was detected.", LogType.SUCCESS);
 			}
-
-		} else
-
-		{
+		} else {
 			factionListener = new DefaultHook();
 			Logger.info("No plugin was detected.", LogType.SUCCESS);
 		}
@@ -325,10 +330,10 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 	public List<Koth> getActiveKoths() {
 		return koths.stream().filter(koth -> koth.isEnable() && !koth.isCooldown()).collect(Collectors.toList());
 	}
-	
+
 	@Override
 	public List<Koth> getEnableKoths() {
-		return koths.stream().filter(koth -> koth.isEnable()|| koth.isCooldown()).collect(Collectors.toList());
+		return koths.stream().filter(koth -> koth.isEnable() || koth.isCooldown()).collect(Collectors.toList());
 	}
 
 	@Override
@@ -518,7 +523,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		Koth koth = optional.get();
 		Inventory inventory = Bukkit.createInventory(null, 54, "§8Loots: " + name);
 		int slot = 0;
-		for (ItemStack itemStack : koth.getItemStacks()) 
+		for (ItemStack itemStack : koth.getItemStacks())
 			inventory.setItem(slot++, itemStack);
 
 		player.openInventory(inventory);

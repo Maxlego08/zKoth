@@ -13,6 +13,7 @@ public class Config implements Saveable {
 	public static List<Integer> displayMessageCooldown = Arrays.asList(300, 120, 60, 30, 10, 5, 4, 3, 2, 1);
 	public static List<Integer> displayMessageKothCap = Arrays.asList(300, 120, 60, 30, 10, 5, 4, 3, 2, 1);
 	public static boolean enableScoreboard = false;
+	public static boolean useNoFactionHook = false;
 	public static boolean enableStartCapMessage = true;
 	public static boolean enableLooseCapMessage = true;
 	public static String scoreboardTitle = "§fzKoth";

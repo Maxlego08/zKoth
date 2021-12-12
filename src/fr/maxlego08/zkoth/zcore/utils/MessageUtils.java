@@ -15,7 +15,7 @@ public abstract class MessageUtils extends LocationUtils {
 	 * @param message
 	 */
 	protected void message(CommandSender player, Message message) {
-		player.sendMessage(Message.PREFIX.msg() + " " + papi(message.msg(), player));
+		player.sendMessage(Message.PREFIX.msg() + papi(message.msg(), player));
 	}
 
 	/**
@@ -24,7 +24,7 @@ public abstract class MessageUtils extends LocationUtils {
 	 * @param message
 	 */
 	protected void message(CommandSender player, String message) {
-		player.sendMessage(Message.PREFIX.msg() + " " + papi(message, player));
+		player.sendMessage(Message.PREFIX.msg() + papi(message, player));
 	}
 
 	/**
@@ -33,7 +33,7 @@ public abstract class MessageUtils extends LocationUtils {
 	 * @param message
 	 */
 	protected void broadcast(String message) {
-		Bukkit.broadcastMessage(Message.PREFIX.msg() + " " + message);
+		Bukkit.broadcastMessage(Message.PREFIX.msg() + message);
 	}
 
 	/**
@@ -42,7 +42,7 @@ public abstract class MessageUtils extends LocationUtils {
 	 * @param message
 	 */
 	protected void message(CommandSender player, String message, Object... args) {
-		player.sendMessage(Message.PREFIX.msg() + " " + String.format(papi(message, player), args));
+		player.sendMessage(Message.PREFIX.msg() + String.format(papi(message, player), args));
 	}
 
 	/**
@@ -89,7 +89,7 @@ public abstract class MessageUtils extends LocationUtils {
 	 * @param args
 	 */
 	protected void message(CommandSender player, Message message, Object... args) {
-		player.sendMessage(Message.PREFIX.msg() + " " + String.format(papi(message.msg(), player), args));
+		player.sendMessage(Message.PREFIX.msg() + String.format(papi(message.msg(), player), args));
 	}
 
 	/**

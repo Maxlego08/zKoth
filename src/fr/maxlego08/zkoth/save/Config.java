@@ -13,6 +13,7 @@ public class Config implements Saveable {
 	public static List<Integer> displayMessageCooldown = Arrays.asList(300, 120, 60, 30, 10, 5, 4, 3, 2, 1);
 	public static List<Integer> displayMessageKothCap = Arrays.asList(300, 120, 60, 30, 10, 5, 4, 3, 2, 1);
 	public static boolean enableScoreboard = false;
+	public static boolean enableVersionChecker = true;
 	public static boolean useNoFactionHook = false;
 	public static boolean enableStartCapMessage = true;
 	public static boolean enableLooseCapMessage = true;
@@ -32,14 +33,14 @@ public class Config implements Saveable {
 		scoreboard.add("§0");
 		scoreboard.add("§fTime: §d%capture%");
 		scoreboard.add("§1");
-		scoreboard.add("§fhttps://groupez.xyz");
+		scoreboard.add("§fhttps://groupez.dev");
 		
 		scoreboardCooldown.add("§r");
 		scoreboardCooldown.add("§fKoth: §b%name%");
 		scoreboardCooldown.add("§fCoordinate: §b%x% %y% %z%");
 		scoreboardCooldown.add("§fStarts in: §d%capture%");
 		scoreboardCooldown.add("§1");
-		scoreboardCooldown.add("§fhttps://groupez.xyz");
+		scoreboardCooldown.add("§fhttps://groupez.dev");
 		
 	}
 

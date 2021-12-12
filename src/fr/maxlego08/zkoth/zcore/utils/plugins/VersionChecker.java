@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import fr.maxlego08.zkoth.save.Config;
 import fr.maxlego08.zkoth.zcore.enums.Message;
 import fr.maxlego08.zkoth.zcore.logger.Logger;
 
@@ -61,7 +62,7 @@ public class VersionChecker implements Listener {
 			this.useLastVersion = atomicBoolean.get();
 			if (atomicBoolean.get())
 				Logger.info("No update available.");
-			else {
+			else if (Config.enableVersionChecker) {
 				Logger.info("New update available. Your version: " + pluginVersion + ", latest version: " + version);
 				Logger.info("Download plugin here: " + String.format(URL_RESOURCE, this.pluginID));
 			}
@@ -72,7 +73,7 @@ public class VersionChecker implements Listener {
 	@EventHandler
 	public void onConnect(PlayerJoinEvent event) {
 		final Player player = event.getPlayer();
-		if (!useLastVersion && event.getPlayer().hasPermission("zplugin.notifs")) {
+		if (!useLastVersion && event.getPlayer().hasPermission("zplugin.notifs") && Config.enableVersionChecker) {
 			new BukkitRunnable() {
 				@Override
 				public void run() {

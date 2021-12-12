@@ -1219,7 +1219,7 @@ public abstract class ZUtils extends MessageUtils {
 	protected void broadcastCenterMessage(List<String> messages) {
 		messages.stream().map(e -> e = getCenteredMessage(e)).forEach(e -> {
 			for (Player player : Bukkit.getOnlinePlayers()) {
-				message(player, e);
+				messageWO(player, e);
 			}
 		});
 	}

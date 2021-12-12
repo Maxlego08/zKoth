@@ -20,6 +20,7 @@ public class CommandKothVersion extends VCommand {
 		message(sender, "§aDiscord§7: §2http://discord.groupez.dev/");
 		message(sender, "§aBuy it for §d6€§7: §2https://groupez.dev/resources/zKoth.9");
 		message(sender, "§aGift code of §d5%§8: §fZKOTH-2021");
+		message(sender, "§aSponsor§7: §chttps://serveur-minecraft-vote.fr/?ref=345");
 
 		return CommandType.SUCCESS;
 	}

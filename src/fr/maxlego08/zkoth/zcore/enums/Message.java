@@ -12,7 +12,7 @@ import fr.maxlego08.zkoth.zcore.utils.nms.NMSUtils;
 
 public enum Message {
 
-	PREFIX("§8(§fzKoth§8)"),
+	PREFIX("§8(§fzKoth§8) "),
 	
 	TELEPORT_MOVE("§cVous ne devez pas bouger !", false),
 	TELEPORT_MESSAGE("§7Téléportatio dans §3%s §7secondes !", false),

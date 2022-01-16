@@ -1114,6 +1114,12 @@ public abstract class ZUtils extends MessageUtils {
 	 */
 	protected void title(Player player, String title, String subtitle, int fadeInTime, int showTime, int fadeOutTime) {
 		try {
+			
+			if (NMSUtils.isNewVersion()){
+				player.sendTitle(title, subtitle, fadeInTime, showTime, fadeOutTime);
+				return;
+			}
+			
 			Object chatTitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class)
 					.invoke(null, "{\"text\": \"" + papi(title, player) + "\"}");
 			Constructor<?> titleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(

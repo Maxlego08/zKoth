@@ -12,6 +12,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import fr.maxlego08.zkoth.api.enums.MessageType;
 import fr.maxlego08.zkoth.zcore.enums.Message;
+import fr.maxlego08.zkoth.zcore.logger.Logger;
+import fr.maxlego08.zkoth.zcore.logger.Logger.LogType;
 import fr.maxlego08.zkoth.zcore.utils.storage.Persist;
 import fr.maxlego08.zkoth.zcore.utils.storage.Saveable;
 import fr.maxlego08.zkoth.zcore.utils.yaml.YamlUtils;
@@ -97,6 +99,8 @@ public class MessageLoader extends YamlUtils implements Saveable {
 
 		}
 
+		Logger.info(file.getAbsolutePath() + " successfully saved !", LogType.SUCCESS);
+		
 		// Pour avoir directs les news paramètres
 		this.save(null);
 	}

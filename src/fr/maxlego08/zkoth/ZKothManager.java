@@ -198,6 +198,8 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		koths.add((ZKoth) koth);
 		message(sender, Message.ZKOTH_CREATE_SUCCESS.replace("%name%", name));
+
+		this.save(this.plugin.getPersist());
 	}
 
 	@Override
@@ -266,8 +268,9 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 	@Override
 	protected void onQuit(PlayerQuitEvent event, Player player) {
-		if (Config.enableScoreboard)
-			manager.delete(player);
+		if (Config.enableScoreboard) {
+			this.manager.delete(player);
+		}
 	}
 
 	@Override
@@ -282,6 +285,8 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		ZKoth koth = (ZKoth) optional.get();
 		koths.remove(koth);
 		message(sender, Message.ZKOTH_DELETE_SUCCESS.replace("%name%", name));
+
+		this.save(this.plugin.getPersist());
 	}
 
 	@Override
@@ -303,6 +308,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		koth.move(minLocation, maxLocation);
 		message(sender, Message.ZKOTH_MOVE_SUCCESS.replace("%name%", name));
 
+		this.save(this.plugin.getPersist());
 	}
 
 	@Override
@@ -319,9 +325,10 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		if (Config.enableScoreboard) {
 
-			manager.setLinesAndSchedule(koth.onScoreboard());
-			for (Player player : Bukkit.getOnlinePlayers())
-				manager.createBoard(player, Config.scoreboardTitle);
+			this.manager.setLinesAndSchedule(koth.onScoreboard());
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				this.manager.createBoard(player, Config.scoreboardTitle);
+			}
 
 		}
 	}
@@ -480,6 +487,8 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		Koth koth = optional.get();
 		koth.addCommand(command);
 		message(sender, "§fYou have just added the command §8\"§7" + command + "§8\"");
+		
+		this.save(this.plugin.getPersist());
 	}
 
 	@Override
@@ -494,7 +503,8 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		Koth koth = optional.get();
 		koth.removeCommand(id);
 		message(sender, "§7You have just deleted a command.");
-
+		
+		this.save(this.plugin.getPersist());
 	}
 
 	@Override
@@ -509,6 +519,8 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		Koth koth = optional.get();
 		koth.setLootType(type);
 		message(sender, "§7You have just set the type to §f%s§7.", type.name().toLowerCase());
+		
+		this.save(this.plugin.getPersist());
 	}
 
 	@Override
@@ -523,11 +535,11 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		Koth koth = optional.get();
 		Inventory inventory = Bukkit.createInventory(null, 54, "§8Loots: " + name);
 		int slot = 0;
-		for (ItemStack itemStack : koth.getItemStacks())
+		for (ItemStack itemStack : koth.getItemStacks()) {
 			inventory.setItem(slot++, itemStack);
+		}
 
 		player.openInventory(inventory);
-
 	}
 
 	@Override
@@ -569,6 +581,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		Koth koth = optional.get();
 		koth.stop(sender);
 
+		this.save(this.plugin.getPersist());
 	}
 
 	@Override
@@ -584,6 +597,8 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		koth.setCapture(second);
 		message(sender, "§aYou have just modified the capture time of the koth §n%s§a to §f%s§a.", koth.getName(),
 				TimerBuilder.getStringTime(second));
+		
+		this.save(this.plugin.getPersist());
 	}
 
 	@Override

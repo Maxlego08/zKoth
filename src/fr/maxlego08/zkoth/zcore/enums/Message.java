@@ -224,6 +224,7 @@ public enum Message {
 
 	public void setTitles(Map<String, Object> titles) {
 		this.titles = titles;
+		this.type = MessageType.TITLE;
 	}
 
 	public String getSubTitle() {

@@ -509,7 +509,7 @@ public class ZKoth extends ZUtils implements Koth {
 
 	@Override
 	public void setItemStacks(List<ItemStack> itemStacks) {
-		this.itemStacks = itemStacks.stream().map(e -> encode(e)).collect(Collectors.toList());
+		this.itemStacks = itemStacks.stream().filter(e -> e != null).map(e -> encode(e)).collect(Collectors.toList());
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import fr.maxlego08.zkoth.api.Scoreboard;
 import fr.maxlego08.zkoth.save.Config;
 import fr.maxlego08.zkoth.zcore.utils.ZUtils;
 import fr.maxlego08.zkoth.zcore.utils.interfaces.CollectionConsumer;
+import fr.mrmicky.fastboard.FastBoard;
 
 public class ScoreBoardManager extends ZUtils {
 

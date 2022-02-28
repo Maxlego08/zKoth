@@ -17,7 +17,7 @@ public class Config implements Saveable {
 	public static boolean useNoFactionHook = false;
 	public static boolean enableStartCapMessage = true;
 	public static boolean enableLooseCapMessage = true;
-	public static String scoreboardTitle = "�fzKoth";
+	public static String scoreboardTitle = "§f§l⌈ §7§ozKoth §f§l⌋";
 	public static List<String> scoreboard = new ArrayList<String>();
 	public static List<String> scoreboardCooldown = new ArrayList<String>();
 	public static long schedulerMillisecond = 1000;
@@ -26,21 +26,21 @@ public class Config implements Saveable {
 
 	static {
 
-		scoreboard.add("�r");
-		scoreboard.add("�fKoth: �b%name%");
-		scoreboard.add("�fCoordinate: �b%x% %y% %z%");
-		scoreboard.add("�fFaction: �b%faction%");
-		scoreboard.add("�0");
-		scoreboard.add("�fTime: �d%capture%");
-		scoreboard.add("�1");
-		scoreboard.add("�fhttps://groupez.dev");
+		scoreboard.add("§r");
+		scoreboard.add("§6§l⟣ §fKoth: §b%name%");
+		scoreboard.add("§6§l⟣ §fCoordinate: §b%x% %y% %z%");
+		scoreboard.add("§6§l⟣ §fFaction: §b%faction%");
+		scoreboard.add("§0");
+		scoreboard.add("§6§l⟣ §fTime: §d%capture%");
+		scoreboard.add("§1");
+		scoreboard.add("§6§l⟣ §fhttps://groupez.dev");
 		
-		scoreboardCooldown.add("�r");
-		scoreboardCooldown.add("�fKoth: �b%name%");
-		scoreboardCooldown.add("�fCoordinate: �b%x% %y% %z%");
-		scoreboardCooldown.add("�fStarts in: �d%capture%");
-		scoreboardCooldown.add("�1");
-		scoreboardCooldown.add("�fhttps://groupez.dev");
+		scoreboardCooldown.add("§r");
+		scoreboardCooldown.add("§6§l⟣ §fKoth: §b%name%");
+		scoreboardCooldown.add("§6§l⟣ §fCoordinate: §b%x% %y% %z%");
+		scoreboardCooldown.add("§6§l⟣ §fStarts in: §d%capture%");
+		scoreboardCooldown.add("§1");
+		scoreboardCooldown.add("§6§l⟣ §fhttps://groupez.dev");
 		
 	}
 

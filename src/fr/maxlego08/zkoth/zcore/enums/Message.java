@@ -12,7 +12,7 @@ import fr.maxlego08.zkoth.zcore.utils.nms.NMSUtils;
 
 public enum Message {
 
-	PREFIX("§8(§fzKoth§8) "),
+	PREFIX("§8(§6zKoth§8) "),
 	
 	INVENTORY_NULL("§cImpossible de trouver l'inventaire avec l'id §6%id%§c.", false),
 	INVENTORY_CLONE_NULL("§cLe clone de l'inventaire est null !", false),
@@ -42,10 +42,10 @@ public enum Message {
 	ZKOTH_CREATE_SUCCESS("§7You just created the koth §f%name%§7."), 
 	ZKOTH_DELETE_SUCCESS("§7You just deleted the koth §f%name%§7."), 
 	ZKOTH_MOVE_SUCCESS("§7You have just moved the koth §f%name%§7."),
-	ZKOTH_CREATE_ERROR_SELECTION("§cYou must select a zone with the command §f/zkoth axe§c."), 
+	ZKOTH_CREATE_ERROR_SELECTION("§cYou must select a zone with the command §b/zkoth axe§c."), 
 	
 	
-	ZKOTH_SPAWN_ERROR("§cImpossible to spawn the koth, positions do not work. You have to do §f/zkoth move <name>§c."), 
+	ZKOTH_SPAWN_ERROR("§cImpossible to spawn the koth, positions do not work. You have to do §b/zkoth move §8<§aname§8>§c."), 
 	ZKOTH_SPAWN_COOLDOWN("§cthe countdown to the appearance of the koth is already underway"),
 	ZKOTH_SPAWN_ALREADY("§cThe koth is running."),
 	
@@ -91,7 +91,7 @@ public enum Message {
 	ZKOTH_SCHEDULER_REMOVE_HOVER("§7Click to delete the scheduler"),
 	ZKOTH_SCHEDULER_LIST("§6%totemName%§7, §f%type%§7, §e%day%§7, §e%hour%§7, §e%minute%"),
 	ZKOTH_SCHEDULER_LIST_REPEAT("§6%totemName%§7, §f%type%§7, §e%timer%"),
-	ZKOTH_SCHEDULER_REMOVE_ERROR("§cYou must make /koth scheduler list and then click on one of the koths to be able to delete it"),
+	ZKOTH_SCHEDULER_REMOVE_ERROR("§cYou must make §b/koth scheduler list §cand then click on one of the koths to be able to delete it"),
 	ZKOTH_SCHEDULER_REMOVE_SUCCESS("§eYou have just deleted the scheduler"),	
 	ZKOTH_SCHEDULER_ERROR("§cImpossible to find the day §f%day%§c."),
 	
@@ -107,7 +107,7 @@ public enum Message {
 			"",
 			"§f§l» §7Allows you to select a zone to create a koth",
 			" §7§oYou must select an area with the right click",
-			" §7§oand left then do the command /koth create <name>",
+			" §7§oand left then do the command §b/koth create §8<§aname§8>",
 			"",
 			"§8§m-+------------------------------+-"),
 	

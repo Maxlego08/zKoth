@@ -12,18 +12,13 @@ import fr.maxlego08.zkoth.zcore.utils.nms.NMSUtils;
 
 public enum Message {
 
-	PREFIX("§8(§fzKoth§8) "),
+	PREFIX("Â§8(Â§fzKothÂ§8) "),
 	
-	TELEPORT_MOVE("§cVous ne devez pas bouger !", false),
-	TELEPORT_MESSAGE("§7Téléportatio dans §3%s §7secondes !", false),
-	TELEPORT_ERROR("§cVous avez déjà une téléportation en cours !", false),
-	TELEPORT_SUCCESS("§7Téléportation effectué !", false),
-	
-	INVENTORY_NULL("§cImpossible de trouver l'inventaire avec l'id §6%id%§c.", false),
-	INVENTORY_CLONE_NULL("§cLe clone de l'inventaire est null !", false),
-	INVENTORY_OPEN_ERROR("§cUne erreur est survenu avec l'ouverture de l'inventaire §6%id%§c.", false),
-	INVENTORY_BUTTON_PREVIOUS("§f» §7Page précédente", false),
-	INVENTORY_BUTTON_NEXT("§f» §7Page suivante", false),
+	INVENTORY_NULL("Â§cImpossible de trouver l'inventaire avec l'id Â§6%id%Â§c.", false),
+	INVENTORY_CLONE_NULL("Â§cLe clone de l'inventaire est null !", false),
+	INVENTORY_OPEN_ERROR("Â§cUne erreur est survenu avec l'ouverture de l'inventaire Â§6%id%Â§c.", false),
+	INVENTORY_BUTTON_PREVIOUS("Â§fÂ» Â§7Page prÃ©cÃ©dente", false),
+	INVENTORY_BUTTON_NEXT("Â§fÂ» Â§7Page suivante", false),
 	
 	TIME_DAY("%02dd %02dh %02dm %02ds"),
 	TIME_HOUR("%02dh %02dm %02ds"),
@@ -31,79 +26,95 @@ public enum Message {
 	TIME_MINUTE("%02dm %02ds"),
 	TIME_SECOND("%02ds"),
 	
-	COMMAND_SYNTAXE_ERROR("§cYou have to execute the command like this§7: §2%s"),
-	COMMAND_NO_PERMISSION("§cYou do not have permission to execute this command.."),
-	COMMAND_NO_CONSOLE("§cOnly a player can execute this command."),
-	COMMAND_NO_ARG("§cImpossible to find the command with its arguments."),
-	COMMAND_SYNTAXE_HELP("§f%command% §8» §7%description%"), 
+	COMMAND_SYNTAXE_ERROR("Â§cYou have to execute the command like thisÂ§7: Â§2%syntax%"),
+	COMMAND_NO_PERMISSION("Â§cYou do not have permission to execute this command.."),
+	COMMAND_NO_CONSOLE("Â§cOnly a player can execute this command."),
+	COMMAND_NO_ARG("Â§cImpossible to find the command with its arguments."),
+	COMMAND_SYNTAXE_HELP("Â§f%command% Â§8Â» Â§7%description%"), 
 	
 	
-	ZKOTH_AXE_RECEIVE("§7You have just received the axe for zone selection."), 
-	ZKOTH_AXE_POS1("§7You have just put the first position in §f%world%§7, §f%x%§7, §f%y%§7, §f%z%§7."),
-	ZKOTH_AXE_POS2("§7You have just put the second position in §f%world%§7, §f%x%§7, §f%y%§7, §f%z%§7."), 
-	ZKOTH_ALREADY_EXIST("§cThe koth §f%name% §calready exists."),
-	ZKOTH_DOESNT_EXIST("§cThe koth §f%name% §cdoesnt exists."),
+	ZKOTH_AXE_RECEIVE("Â§7You have just received the axe for zone selection."), 
+	ZKOTH_AXE_POS1("Â§7You have just put the first position in Â§f%world%Â§7, Â§f%x%Â§7, Â§f%y%Â§7, Â§f%z%Â§7."),
+	ZKOTH_AXE_POS2("Â§7You have just put the second position in Â§f%world%Â§7, Â§f%x%Â§7, Â§f%y%Â§7, Â§f%z%Â§7."), 
+	ZKOTH_ALREADY_EXIST("Â§cThe koth Â§f%name% Â§calready exists."),
+	ZKOTH_DOESNT_EXIST("Â§cThe koth Â§f%name% Â§cdoesnt exists."),
 	
-	ZKOTH_CREATE_SUCCESS("§7You just created the koth §f%name%§7."), 
-	ZKOTH_DELETE_SUCCESS("§7You just deleted the koth §f%name%§7."), 
-	ZKOTH_MOVE_SUCCESS("§7You have just moved the koth §f%name%§7."),
-	ZKOTH_CREATE_ERROR_SELECTION("§cYou must select a zone with the command §f/zkoth axe§c."), 
+	ZKOTH_CREATE_SUCCESS("Â§7You just created the koth Â§f%name%Â§7."), 
+	ZKOTH_DELETE_SUCCESS("Â§7You just deleted the koth Â§f%name%Â§7."), 
+	ZKOTH_MOVE_SUCCESS("Â§7You have just moved the koth Â§f%name%Â§7."),
+	ZKOTH_CREATE_ERROR_SELECTION("Â§cYou must select a zone with the command Â§f/zkoth axeÂ§c."), 
 	
 	
-	ZKOTH_SPAWN_ERROR("§cImpossible to spawn the koth, positions do not work. You have to do §f/zkoth move <name>§c."), 
-	ZKOTH_SPAWN_COOLDOWN("§cthe countdown to the appearance of the koth is already underway"),
-	ZKOTH_SPAWN_ALREADY("§cThe koth is running."),
+	ZKOTH_SPAWN_ERROR("Â§cImpossible to spawn the koth, positions do not work. You have to do Â§f/zkoth move <name>Â§c."), 
+	ZKOTH_SPAWN_COOLDOWN("Â§cthe countdown to the appearance of the koth is already underway"),
+	ZKOTH_SPAWN_ALREADY("Â§cThe koth is running."),
 	
 	ZKOTH_EVENT_START(MessageType.CENTER, 
-			"§8§m-+------------------------------+-",
+			"Â§8Â§m-+------------------------------+-",
 			"",
-			"§fThe koth §b%name% §has just appeared!",
-			"§fCoordinate§8: §7%x%, %y%, %z%.",
+			"Â§fThe koth Â§b%name% Â§has just appeared!",
+			"Â§fCoordinateÂ§8: Â§7%x%, %y%, %z%.",
 			"",
-			"§8§m-+------------------------------+-"
+			"Â§8Â§m-+------------------------------+-"
 			),
 	
 	ZKOTH_EVENT_WIN(MessageType.CENTER, 
-			"§8§m-+------------------------------+-",
+			"Â§8Â§m-+------------------------------+-",
 			"",
-			"§d%player% §fof faction §7%faction% §fhas just captured",
-			"§fthe koth, and §nwins§f the event!",
+			"Â§d%player% Â§fof faction Â§7%faction% Â§fhas just captured",
+			"Â§fthe koth, and Â§nwinsÂ§f the event!",
 			"",
-			"§8§m-+------------------------------+-"
+			"Â§8Â§m-+------------------------------+-"
 			),
 	
 	ZKOTH_EVENT_COOLDOWN(MessageType.CENTER, 
-			"§8§m-+------------------------------+-",
+			"Â§8Â§m-+------------------------------+-",
 			"",
-			"§fThe koth §n%name%§f will appear in §d%capture%",
-			"§fCoordinate§8: §7%x%, %y%, %z%.",
+			"Â§fThe koth Â§n%name%Â§f will appear in Â§d%capture%",
+			"Â§fCoordinateÂ§8: Â§7%x%, %y%, %z%.",
 			"",
-			"§8§m-+------------------------------+-"
+			"Â§8Â§m-+------------------------------+-"
 			),
 	
-	ZKOHT_EVENT_STOP(MessageType.CENTER, "§8§m-+------------------------------+-", "", "§fkoth §n%name%§f has just been stopped.", "", "§8§m-+------------------------------+-"),
+	ZKOHT_EVENT_STOP(MessageType.CENTER, "Â§8Â§m-+------------------------------+-", "", "Â§fkoth Â§n%name%Â§f has just been stopped.", "", "Â§8Â§m-+------------------------------+-"),
 	
-	ZKOHT_EVENT_CATCH(MessageType.ACTION, "§d%player% §fjust started capturing the koth §n%name%§f. §8(§7%x%, %y%, %z%§8)"),
-	ZKOHT_EVENT_LOOSE(MessageType.ACTION, "§d%player% §fjust loose koth §n%name%§f. §8(§7%x%, %y%, %z%§8)"),
-	ZKOHT_EVENT_TIMER(MessageType.ACTION, "§fAnother §b%capture% §fbefore §d%player% §fwins the koth §n%name%§e. §8(§7%x%, %y%, %z%§8)"),
+	ZKOHT_EVENT_CATCH(MessageType.ACTION, "Â§d%player% Â§fjust started capturing the koth Â§n%name%Â§f. Â§8(Â§7%x%, %y%, %z%Â§8)"),
+	ZKOHT_EVENT_LOOSE(MessageType.ACTION, "Â§d%player% Â§fjust loose koth Â§n%name%Â§f. Â§8(Â§7%x%, %y%, %z%Â§8)"),
+	ZKOHT_EVENT_TIMER(MessageType.ACTION, "Â§fAnother Â§b%capture% Â§fbefore Â§d%player% Â§fwins the koth Â§n%name%Â§e. Â§8(Â§7%x%, %y%, %z%Â§8)"),
 	
 	ZKOHT_EVENT_FACION("No faction"),
 	ZKOHT_EVENT_PLAYER("Person"), 
-	ZKOTH_EVENT_DISABLE("§cThe event is not enable."),
+	ZKOTH_EVENT_DISABLE("Â§cThe event is not enable."),
 	
-	ZKOTH_SCHEDULER_CREATE("§eYou have just created a scheduler for the koth §6%s§e."),
-	ZKOTH_SCHEDULER_EMPTY("§cNo scheduler available"),
-	ZKOTH_SCHEDULER_REMOVE_HOVER("§7Click to delete the scheduler"),
-	ZKOTH_SCHEDULER_LIST("§6%totemName%§7, §f%type%§7, §e%day%§7, §e%hour%§7, §e%minute%"),
-	ZKOTH_SCHEDULER_LIST_REPEAT("§6%totemName%§7, §f%type%§7, §e%timer%"),
-	ZKOTH_SCHEDULER_REMOVE_ERROR("§cYou must make /koth scheduler list and then click on one of the koths to be able to delete it"),
-	ZKOTH_SCHEDULER_REMOVE_SUCCESS("§eYou have just deleted the scheduler"),
+	ZKOTH_SCHEDULER_CREATE("Â§eYou have just created a scheduler for the koth Â§6%sÂ§e."),
+	ZKOTH_SCHEDULER_EMPTY("Â§cNo scheduler available"),
+	ZKOTH_SCHEDULER_REMOVE_HOVER("Â§7Click to delete the scheduler"),
+	ZKOTH_SCHEDULER_LIST("Â§6%totemName%Â§7, Â§f%type%Â§7, Â§e%day%Â§7, Â§e%hour%Â§7, Â§e%minute%"),
+	ZKOTH_SCHEDULER_LIST_REPEAT("Â§6%totemName%Â§7, Â§f%type%Â§7, Â§e%timer%"),
+	ZKOTH_SCHEDULER_REMOVE_ERROR("Â§cYou must make /koth scheduler list and then click on one of the koths to be able to delete it"),
+	ZKOTH_SCHEDULER_REMOVE_SUCCESS("Â§eYou have just deleted the scheduler"),	
+	ZKOTH_SCHEDULER_ERROR("Â§cImpossible to find the day Â§f%day%Â§c."),
+	
+	ZKOTH_COMMAND_CREATE("Â§7You have just added the command Â§8\"Â§f%command%Â§8\""),
+	ZKOTH_COMMAND_DELETE("Â§aYou have just deleted a command."),
+	ZKOTH_LOOT_EDIT("Â§aYou have just set the type to Â§f%type%Â§a."),
+	ZKOTH_LOOT_INVENTORY("Â§7Loots Â§b%name%"),
+	ZKOTH_LOOT_CHANGE("Â§aYou have just modified the loots of the koth Â§2%name%Â§a."),
+	ZKOTH_CAPUTRE_EDIT("Â§aYou have just modified the capture time of the koth Â§n%name%Â§a to Â§f%seconds%Â§a."),
+	ZKOTH_LIST_CONSOLE("Â§fKothsÂ§8: Â§f%koth%"),
+	ZKOTH_AXE_NAME("Â§6âœ¤ Â§ezKoth axe Â§6âœ¤"),
+	ZKOTH_AXE_DESCRIPTION("Â§8Â§m-+------------------------------+-", "",
+			"",
+			"Â§fÂ§lÂ» Â§7Allows you to select a zone to create a koth",
+			" Â§7Â§oYou must select an area with the right click",
+			" Â§7Â§oand left then do the command /koth create <name>",
+			"",
+			"Â§8Â§m-+------------------------------+-"),
 	
 	DESCRIPTION_SCHEDULER("Show scheduler commands"),
 	DESCRIPTION_SCHEDULER_LIST("Show scheduler list"),
 	DESCRIPTION_SCHEDULER_ADD("Add a scheduler"),
 	DESCRIPTION_SCHEDULER_REMOVE("Remove a scheduler"), 
-	KOTH_SCHEDULER_ERROR("§cImpossible to find the day §f%s§c."),
 	
 	;
 
@@ -203,7 +214,7 @@ public enum Message {
 	}
 
 	public List<String> getMessages() {
-		return messages == null ? Arrays.asList(message) : messages;
+		return this.messages == null ? Arrays.asList(this.message) : this.messages;
 	}
 
 	public void setMessages(List<String> messages) {

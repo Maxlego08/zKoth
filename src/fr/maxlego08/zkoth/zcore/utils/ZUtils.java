@@ -1,6 +1,5 @@
 package fr.maxlego08.zkoth.zcore.utils;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -18,13 +17,10 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -55,7 +51,6 @@ import fr.maxlego08.zkoth.ZKothPlugin;
 import fr.maxlego08.zkoth.api.enums.DefaultFontInfo;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
 import fr.maxlego08.zkoth.zcore.enums.EnumInventory;
-import fr.maxlego08.zkoth.zcore.enums.Message;
 import fr.maxlego08.zkoth.zcore.enums.Permission;
 import fr.maxlego08.zkoth.zcore.utils.builder.CooldownBuilder;
 import fr.maxlego08.zkoth.zcore.utils.builder.TimerBuilder;
@@ -71,7 +66,6 @@ import net.md_5.bungee.api.chat.TextComponent;
 @SuppressWarnings("deprecation")
 public abstract class ZUtils extends MessageUtils {
 
-	private static transient List<String> teleportPlayers = new ArrayList<String>();
 	protected transient ZKothPlugin plugin = (ZKothPlugin) ZPlugin.z();
 
 	/**
@@ -221,70 +215,6 @@ public abstract class ZUtils extends MessageUtils {
 	protected boolean same(Location l, Location l2) {
 		return (l.getBlockX() == l2.getBlockX()) && (l.getBlockY() == l2.getBlockY())
 				&& (l.getBlockZ() == l2.getBlockZ()) && l.getWorld().getName().equals(l2.getWorld().getName());
-	}
-
-	/**
-	 * Teleport a player to a given location with a given delay
-	 * 
-	 * @param player
-	 *            who will be teleported
-	 * @param delay
-	 *            before the teleportation of the player
-	 * @param location
-	 *            where the player will be teleported
-	 */
-	protected void teleport(Player player, int delay, Location location) {
-		teleport(player, delay, location, null);
-	}
-
-	/**
-	 * Teleport a player to a given location with a given delay
-	 * 
-	 * @param player
-	 *            who will be teleported
-	 * @param delay
-	 *            before the teleportation of the player
-	 * @param location
-	 *            where the player will be teleported
-	 * @param code
-	 *            executed when the player is teleported or not
-	 */
-	protected void teleport(Player player, int delay, Location location, Consumer<Boolean> cmd) {
-		if (teleportPlayers.contains(player.getName())) {
-			message(player, Message.TELEPORT_ERROR);
-			return;
-		}
-		ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
-		Location playerLocation = player.getLocation();
-		AtomicInteger verif = new AtomicInteger(delay);
-		teleportPlayers.add(player.getName());
-		if (!location.getChunk().isLoaded())
-			location.getChunk().load();
-		ses.scheduleWithFixedDelay(() -> {
-			if (!same(playerLocation, player.getLocation())) {
-				message(player, Message.TELEPORT_MOVE);
-				ses.shutdown();
-				teleportPlayers.remove(player.getName());
-				if (cmd != null)
-					cmd.accept(false);
-				return;
-			}
-			int currentSecond = verif.getAndDecrement();
-			if (!player.isOnline()) {
-				ses.shutdown();
-				teleportPlayers.remove(player.getName());
-				return;
-			}
-			if (currentSecond == 0) {
-				ses.shutdown();
-				teleportPlayers.remove(player.getName());
-				player.teleport(location);
-				message(player, Message.TELEPORT_SUCCESS);
-				if (cmd != null)
-					cmd.accept(true);
-			} else
-				message(player, Message.TELEPORT_MESSAGE, currentSecond);
-		}, 0, 1, TimeUnit.SECONDS);
 	}
 
 	/**
@@ -577,6 +507,21 @@ public abstract class ZUtils extends MessageUtils {
 	 * @return
 	 */
 	protected String color(String message) {
+		
+		if (message == null) {
+			return null;
+		}
+			
+		if (NMSUtils.isHexColor()) {
+			Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
+			Matcher matcher = pattern.matcher(message);
+			while (matcher.find()) {
+				String color = message.substring(matcher.start(), matcher.end());
+				message = message.replace(color, net.md_5.bungee.api.ChatColor.of(color) + "");
+				matcher = pattern.matcher(message);
+			}
+		}
+		
 		return message.replace("&", "§");
 	}
 
@@ -1074,75 +1019,6 @@ public abstract class ZUtils extends MessageUtils {
 		if (NMSUtils.isNewVersion())
 			return material.equals(Material.PLAYER_HEAD);
 		return (material.equals(getMaterial(397))) && (itemStack.getDurability() == 3);
-	}
-
-	/**
-	 * 
-	 * NMS
-	 * 
-	 */
-
-	protected final void sendPacket(Player player, Object packet) {
-		try {
-			Object handle = player.getClass().getMethod("getHandle").invoke(player);
-			Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
-			playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	protected final Class<?> getNMSClass(String name) {
-		try {
-			return Class.forName("net.minecraft.server."
-					+ Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3] + "." + name);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	/**
-	 * Send title to player
-	 * 
-	 * @param player
-	 * @param title
-	 * @param subtitle
-	 * @param fadeInTime
-	 * @param showTime
-	 * @param fadeOutTime
-	 */
-	protected void title(Player player, String title, String subtitle, int fadeInTime, int showTime, int fadeOutTime) {
-		try {
-			
-			if (NMSUtils.isNewVersion()){
-				player.sendTitle(title, subtitle, fadeInTime, showTime, fadeOutTime);
-				return;
-			}
-			
-			Object chatTitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class)
-					.invoke(null, "{\"text\": \"" + papi(title, player) + "\"}");
-			Constructor<?> titleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(
-					getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"),
-					int.class, int.class, int.class);
-			Object packet = titleConstructor.newInstance(
-					getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("TITLE").get(null), chatTitle,
-					fadeInTime, showTime, fadeOutTime);
-
-			Object chatsTitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class)
-					.invoke(null, "{\"text\": \"" + papi(subtitle, player) + "\"}");
-			Constructor<?> timingTitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(
-					getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"),
-					int.class, int.class, int.class);
-			Object timingPacket = timingTitleConstructor.newInstance(
-					getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("SUBTITLE").get(null),
-					chatsTitle, fadeInTime, showTime, fadeOutTime);
-
-			sendPacket(player, packet);
-			sendPacket(player, timingPacket);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	protected Object getPrivateField(Object object, String field)

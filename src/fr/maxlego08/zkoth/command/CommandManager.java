@@ -167,15 +167,16 @@ public class CommandManager extends ZUtils implements CommandExecutor, TabComple
 			if (command.runAsync) {
 				super.runAsync(() -> {
 					CommandType returnType = command.prePerform(main, sender, strings);
-					if (returnType == CommandType.SYNTAX_ERROR)
-						message(sender, Message.COMMAND_SYNTAXE_ERROR, command.getSyntaxe());
+					if (returnType == CommandType.SYNTAX_ERROR) {
+						message(sender, Message.COMMAND_SYNTAXE_ERROR, "%syntax%", command.getSyntaxe());
+					}
 				});
 				return CommandType.DEFAULT;
 			}
 
 			CommandType returnType = command.prePerform(main, sender, strings);
 			if (returnType == CommandType.SYNTAX_ERROR) {
-				message(sender, Message.COMMAND_SYNTAXE_ERROR, command.getSyntaxe());
+				message(sender, Message.COMMAND_SYNTAXE_ERROR, "%syntax%", command.getSyntaxe());
 			}
 			return returnType;
 		}
@@ -196,10 +197,10 @@ public class CommandManager extends ZUtils implements CommandExecutor, TabComple
 	 * @param sender
 	 */
 	public void sendHelp(String commandString, CommandSender sender) {
-		commands.forEach(command -> {
+		this.commands.forEach(command -> {
 			if (isValid(command, commandString)
 					&& (command.getPermission() == null || hasPermission(sender, command.getPermission()))) {
-				message(sender, Message.COMMAND_SYNTAXE_HELP, command.getSyntaxe(), command.getDescription());
+				message(sender, Message.COMMAND_SYNTAXE_HELP, "%syntax%", command.getSyntaxe(), "%description%", command.getDescription());
 			}
 		});
 	}
@@ -218,7 +219,7 @@ public class CommandManager extends ZUtils implements CommandExecutor, TabComple
 	 * Check if your order is ready for use
 	 */
 	private void commandChecking() {
-		commands.forEach(command -> {
+		this.commands.forEach(command -> {
 			if (command.sameSubCommands()) {
 				Logger.info(command.toString() + " command to an argument similar to its parent command !",
 						LogType.ERROR);
@@ -263,7 +264,7 @@ public class CommandManager extends ZUtils implements CommandExecutor, TabComple
 			String startWith = args[args.length - 1];
 
 			List<String> tabCompleter = new ArrayList<>();
-			for (VCommand vCommand : commands) {
+			for (VCommand vCommand : this.commands) {
 				if ((vCommand.getParent() != null && vCommand.getParent() == command)) {
 					String cmd = vCommand.getSubCommands().get(0);
 					if (vCommand.getPermission() == null || sender.hasPermission(vCommand.getPermission()))
@@ -274,7 +275,7 @@ public class CommandManager extends ZUtils implements CommandExecutor, TabComple
 			return tabCompleter.size() == 0 ? null : tabCompleter;
 
 		} else if (type.equals(CommandType.SUCCESS))
-			return command.toTab(plugin, sender, args);
+			return command.toTab(this.plugin, sender, args);
 
 		return null;
 	}

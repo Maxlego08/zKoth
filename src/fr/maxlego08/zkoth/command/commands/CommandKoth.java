@@ -35,12 +35,8 @@ public class CommandKoth extends VCommand {
 	protected CommandType perform(ZKothPlugin main) {
 
 		this.subVCommands.forEach(command -> {
-
-			String message = Message.COMMAND_SYNTAXE_HELP.getMessage();
-			message = message.replace("%command%", command.getSyntaxe());
-			message = message.replace("%description%", command.getDescription());
-			messageWO(sender, message);
-
+			messageWO(this.sender, Message.COMMAND_SYNTAXE_HELP, "%command%", command.getSyntaxe(), "%description%",
+					command.getDescription());
 		});
 
 		return CommandType.SUCCESS;

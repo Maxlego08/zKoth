@@ -146,10 +146,11 @@ public class ZKoth extends ZUtils implements Koth {
 		} else if (this.isEnable) {
 			message(sender, Message.ZKOTH_SPAWN_ALREADY);
 		} else {
-			if (now)
+			if (now) {
 				spawnNow();
-			else
+			} else {
 				spawn();
+			}
 		}
 
 	}
@@ -164,14 +165,18 @@ public class ZKoth extends ZUtils implements Koth {
 		} else if (this.isEnable) {
 			return;
 		} else {
-			if (now)
+			if (now) {
 				spawnNow();
-			else
+			} else {
 				spawn();
+			}
 		}
 
 	}
 
+	/**
+	 * Permet de faire spawn le Koth avec un cooldown
+	 */
 	private void spawn() {
 
 		this.isCooldown = true;
@@ -201,8 +206,9 @@ public class ZKoth extends ZUtils implements Koth {
 			int tmpCapture = this.currentCaptureSeconds.get();
 
 			// Si on doit avetir
-			if (Config.displayMessageCooldown.contains(tmpCapture))
+			if (Config.displayMessageCooldown.contains(tmpCapture)) {
 				broadcast(Message.ZKOTH_EVENT_COOLDOWN);
+			}
 
 			if (tmpCapture <= 0) {
 				this.isCooldown = false;
@@ -215,13 +221,17 @@ public class ZKoth extends ZUtils implements Koth {
 
 	}
 
+	/**
+	 * Permet de faire spawn le koth maintenant
+	 */
 	private void spawnNow() {
 
 		KothSpawnEvent event = new KothSpawnEvent(this);
 		event.callEvent();
 
-		if (event.isCancelled())
+		if (event.isCancelled()) {
 			return;
+		}
 
 		this.isCooldown = false;
 		this.isEnable = true;
@@ -247,9 +257,11 @@ public class ZKoth extends ZUtils implements Koth {
 			if (message.getMessages().size() == 0) {
 				String realMessage = replaceMessage(message.getMessage());
 				broadcastCenterMessage(Arrays.asList(realMessage));
-			} else
-				broadcastCenterMessage(
-						message.getMessages().stream().map(e -> replaceMessage(e)).collect(Collectors.toList()));
+			} else {
+				broadcastCenterMessage(message.getMessages().stream().map(e -> {
+					return replaceMessage(e);
+				}).collect(Collectors.toList()));
+			}
 			break;
 		}
 		case TCHAT: {
@@ -270,8 +282,9 @@ public class ZKoth extends ZUtils implements Koth {
 			int fadeInTime = message.getStart();
 			int showTime = message.getTime();
 			int fadeOutTime = message.getEnd();
-			for (Player player : Bukkit.getOnlinePlayers())
+			for (Player player : Bukkit.getOnlinePlayers()) {
 				this.title(player, title, subTitle, fadeInTime, showTime, fadeOutTime);
+			}
 			break;
 		}
 		case NONE:
@@ -281,6 +294,7 @@ public class ZKoth extends ZUtils implements Koth {
 	}
 
 	/**
+	 * Permet de remplacer les messages
 	 * 
 	 * @param message
 	 * @return string
@@ -289,17 +303,22 @@ public class ZKoth extends ZUtils implements Koth {
 
 		Cuboid cuboid = getCuboid();
 		Location center = cuboid.getCenter();
+
 		if (center != null) {
 			message = message.replace("%x%", String.valueOf(center.getBlockX()));
 			message = message.replace("%y%", String.valueOf(center.getBlockY()));
 			message = message.replace("%z%", String.valueOf(center.getBlockZ()));
 		}
-		message = message.replace("%capture%", TimerBuilder
-				.getStringTime(this.currentCaptureSeconds == null ? this.captureSeconds : currentCaptureSeconds.get()));
+
+		int seconds = this.currentCaptureSeconds == null ? this.captureSeconds : currentCaptureSeconds.get();
+		message = message.replace("%capture%", TimerBuilder.getStringTime(seconds));
 		message = message.replace("%world%", center.getWorld().getName());
 		message = message.replace("%name%", this.name);
-		message = message.replace("%player%",
-				this.currentPlayer == null ? Message.ZKOHT_EVENT_PLAYER.getMessage() : this.currentPlayer.getName());
+
+		String player = this.currentPlayer == null ? Message.ZKOHT_EVENT_PLAYER.getMessage()
+				: this.currentPlayer.getName();
+		message = message.replace("%player%", player);
+
 		String faction = this.currentPlayer == null ? Message.ZKOHT_EVENT_FACION.getMessage()
 				: this.factionListener.getFactionTag(this.currentPlayer);
 		message = message.replace("%faction%", faction);
@@ -310,8 +329,9 @@ public class ZKoth extends ZUtils implements Koth {
 	@Override
 	public void playerMove(Player player, FactionListener factionListener) {
 
-		if (!this.isEnable)
+		if (!this.isEnable) {
 			return;
+		}
 
 		this.factionListener = factionListener;
 		Cuboid cuboid = this.getCuboid();
@@ -326,13 +346,15 @@ public class ZKoth extends ZUtils implements Koth {
 			KothLooseEvent event = new KothLooseEvent(this.currentPlayer, this);
 			event.callEvent();
 
-			if (event.isCancelled())
+			if (event.isCancelled()) {
 				return;
+			}
 
 			broadcast(Message.ZKOHT_EVENT_LOOSE);
 
-			if (this.timerTask != null)
+			if (this.timerTask != null) {
 				this.timerTask.cancel();
+			}
 
 			this.timerTask = null;
 			this.currentPlayer = null;
@@ -357,8 +379,9 @@ public class ZKoth extends ZUtils implements Koth {
 			return;
 		}
 
-		if (Config.enableStartCapMessage)
+		if (Config.enableStartCapMessage) {
 			broadcast(Message.ZKOHT_EVENT_CATCH);
+		}
 
 		int captureSeconds = event.getCaptureSeconds();
 		captureSeconds = captureSeconds < 0 ? 30 : captureSeconds;
@@ -392,8 +415,9 @@ public class ZKoth extends ZUtils implements Koth {
 				KothLooseEvent kothLooseEvent = new KothLooseEvent(this.currentPlayer, this);
 				kothLooseEvent.callEvent();
 
-				if (kothLooseEvent.isCancelled())
+				if (kothLooseEvent.isCancelled()) {
 					return;
+				}
 
 				if (this.timerTask != null)
 					this.timerTask.cancel();
@@ -401,21 +425,25 @@ public class ZKoth extends ZUtils implements Koth {
 				this.timerTask = null;
 				this.currentPlayer = null;
 
-				if (Config.enableLooseCapMessage)
+				if (Config.enableLooseCapMessage) {
 					broadcast(Message.ZKOHT_EVENT_LOOSE);
+				}
 				return;
 
 			}
-			if (Config.displayMessageKothCap.contains(tmpCapture))
+			
+			if (Config.displayMessageKothCap.contains(tmpCapture)) {
 				broadcast(Message.ZKOHT_EVENT_TIMER);
+			}
 
 			if (tmpCapture <= 0) {
 
 				KothWinEvent kothWinEvent = new KothWinEvent(this, this.currentPlayer);
 				kothWinEvent.callEvent();
 
-				if (kothWinEvent.isCancelled())
+				if (kothWinEvent.isCancelled()) {
 					return;
+				}
 
 				task.cancel();
 				broadcast(Message.ZKOTH_EVENT_WIN);
@@ -429,8 +457,10 @@ public class ZKoth extends ZUtils implements Koth {
 
 				Location center = cuboid.getCenter();
 				World world = center.getWorld();
-				while (center.getBlock().getRelative(BlockFace.DOWN).getType().equals(Material.AIR))
+				while (center.getBlock().getRelative(BlockFace.DOWN).getType().equals(Material.AIR)) {
 					center = center.getBlock().getRelative(BlockFace.DOWN).getLocation();
+				}
+				
 				Location location = center;
 
 				if (this.itemStacks.size() != 0)
@@ -516,7 +546,7 @@ public class ZKoth extends ZUtils implements Koth {
 	@Override
 	public void stop(CommandSender sender) {
 
-		if (!isEnable) {
+		if (!this.isEnable) {
 			message(sender, Message.ZKOTH_EVENT_DISABLE);
 			return;
 		}
@@ -524,13 +554,16 @@ public class ZKoth extends ZUtils implements Koth {
 		KothStopEvent event = new KothStopEvent(this);
 		event.callEvent();
 
-		if (event.isCancelled())
+		if (event.isCancelled()) {
 			return;
+		}
 
 		broadcast(Message.ZKOHT_EVENT_STOP);
 
-		if (this.timerTask != null)
+		if (this.timerTask != null) {
 			this.timerTask.cancel();
+		}
+		
 		this.timerTask = null;
 		this.isEnable = false;
 		this.isCooldown = false;

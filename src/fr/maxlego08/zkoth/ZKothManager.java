@@ -20,7 +20,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -65,10 +64,10 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 	private static List<ZKoth> koths = new ArrayList<ZKoth>();
 
 	private final transient ScoreBoardManager manager;
-	private final transient String itemName = "§6✤ §ezKoth axe §6✤";
 	private final transient Map<UUID, Selection> selections = new HashMap<UUID, Selection>();
 	private transient FactionListener factionListener;
 	private transient long playerMoveEventCooldown = 0;
+	private transient final Map<Inventory, String> lootInventories = new HashMap<>();
 
 	/**
 	 * @param plugin
@@ -95,37 +94,37 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 			if (pluginManager.isPluginEnabled("FactionsX")) {
 
-				factionListener = new FactionsXHook();
+				this.factionListener = new FactionsXHook();
 				Logger.info("FactionsX plugin detected successfully.", LogType.SUCCESS);
 
 			} else if (pluginManager.isPluginEnabled("SuperiorSkyblock2")) {
 
-				factionListener = new SuperiorSkyblock2Hook();
+				this.factionListener = new SuperiorSkyblock2Hook();
 				Logger.info("SuperiorSkyblock2 plugin detected successfully.", LogType.SUCCESS);
 
 			} else if (pluginManager.isPluginEnabled("Clans")) {
 
-				factionListener = new ClanHook();
+				this.factionListener = new ClanHook();
 				Logger.info("Clans plugin detected successfully.", LogType.SUCCESS);
 
 			} else if (pluginManager.isPluginEnabled("GangsPlus")) {
 
-				factionListener = new GangsHook();
+				this.factionListener = new GangsHook();
 				Logger.info("GangsPlus plugin detected successfully.", LogType.SUCCESS);
 
 			} else if (pluginManager.isPluginEnabled("UltimateFactions")) {
 
-				factionListener = new UltimateFaction();
+				this.factionListener = new UltimateFaction();
 				Logger.info("UltimateFactions plugin detected successfully.", LogType.SUCCESS);
 
 			} else if (pluginManager.isPluginEnabled("Guilds")) {
 
-				factionListener = new GuildsHook();
+				this.factionListener = new GuildsHook();
 				Logger.info("Guilds plugin detected successfully.", LogType.SUCCESS);
 
 			} else if (pluginManager.isPluginEnabled("LegacyFactions")) {
 
-				factionListener = new FactionLegacyHook();
+				this.factionListener = new FactionLegacyHook();
 				Logger.info("LegacyFactions plugin detected successfully.", LogType.SUCCESS);
 
 			} else if (pluginManager.isPluginEnabled("Factions")) {
@@ -135,41 +134,39 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 				if (authors.contains("Cayorion") && pluginManager.isPluginEnabled("MassiveCore")) {
 
-					factionListener = new FactionMassiveHook();
+					this.factionListener = new FactionMassiveHook();
 					Logger.info("MassiveCraft plugin detected successfully.", LogType.SUCCESS);
 
 				} else if (authors.contains("Savag3life")) {
 
-					factionListener = new FactionsHook();
+					this.factionListener = new FactionsHook();
 					Logger.info("SavageFaction plugin detected successfully.", LogType.SUCCESS);
 
 				} else if (authors.contains("Driftay")) {
 
-					factionListener = new FactionsHook();
+					this.factionListener = new FactionsHook();
 					Logger.info("SaberFaction plugin detected successfully.", LogType.SUCCESS);
 
 				} else if (authors.contains("drtshock")) {
 
-					factionListener = new FactionsHook();
+					this.factionListener = new FactionsHook();
 					Logger.info("FactionUUID plugin detected successfully.", LogType.SUCCESS);
 
 				}
 
-			} else
-
-			{
-				factionListener = new DefaultHook();
+			} else {
+				this.factionListener = new DefaultHook();
 				Logger.info("No plugin was detected.", LogType.SUCCESS);
 			}
 		} else {
-			factionListener = new DefaultHook();
+			this.factionListener = new DefaultHook();
 			Logger.info("No plugin was detected.", LogType.SUCCESS);
 		}
 
 		KothHookEvent event = new KothHookEvent(factionListener);
 		event.callEvent();
 
-		factionListener = event.getFactionListener();
+		this.factionListener = event.getFactionListener();
 	}
 
 	@Override
@@ -184,7 +181,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		Optional<Koth> optional = getKoth(name);
 		if (optional.isPresent()) {
-			message(sender, Message.ZKOTH_ALREADY_EXIST.replace("%name%", name));
+			message(sender, Message.ZKOTH_ALREADY_EXIST, "%name%", name);
 			return;
 		}
 
@@ -193,25 +190,20 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		KothCreateEvent event = new KothCreateEvent(koth);
 		event.callEvent();
 
-		if (event.isCancelled())
+		if (event.isCancelled()) {
 			return;
+		}
 
 		koths.add((ZKoth) koth);
-		message(sender, Message.ZKOTH_CREATE_SUCCESS.replace("%name%", name));
+		message(sender, Message.ZKOTH_CREATE_SUCCESS, "%name%", name);
 
 		this.save(this.plugin.getPersist());
 	}
 
 	@Override
 	public ItemStack getKothAxe() {
-		ItemBuilder builder = new ItemBuilder(Material.STONE_AXE, itemName);
-		builder.addLine("§8§m-+------------------------------+-");
-		builder.addLine("");
-		builder.addLine("§f§l» §7Allows you to select a zone to create a koth");
-		builder.addLine(" §7§oYou must select an area with the right click");
-		builder.addLine(" §7§oand left then do the command /koth create <name>");
-		builder.addLine("");
-		builder.addLine("§8§m-+------------------------------+-");
+		ItemBuilder builder = new ItemBuilder(Material.STONE_AXE, Message.ZKOTH_AXE_NAME.getMessage());
+		Message.ZKOTH_AXE_DESCRIPTION.getMessages().forEach(e -> builder.addLine(e));
 		return builder.build();
 	}
 
@@ -219,48 +211,51 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 	protected void onInteract(PlayerInteractEvent event, Player player) {
 		@SuppressWarnings("deprecation")
 		ItemStack itemStack = player.getItemInHand();
-		if (itemStack != null && event.getClickedBlock() != null && same(itemStack, itemName)) {
+		if (itemStack != null && event.getClickedBlock() != null
+				&& same(itemStack, Message.ZKOTH_AXE_NAME.getMessage())) {
 
 			event.setCancelled(true);
 			Optional<Selection> optional = getSelection(player.getUniqueId());
 			Selection selection = null;
+
 			if (!optional.isPresent()) {
 				selection = new ZSelection();
 				this.selections.put(player.getUniqueId(), selection);
-			} else
+			} else {
 				selection = optional.get();
+			}
 
 			Location location = event.getClickedBlock().getLocation();
 			org.bukkit.event.block.Action action = event.getAction();
 			selection.action(action, location);
-			String message = (action.equals(org.bukkit.event.block.Action.LEFT_CLICK_BLOCK) ? Message.ZKOTH_AXE_POS1
-					: Message.ZKOTH_AXE_POS2).getMessage();
-			message = message.replace("%x%", String.valueOf(location.getBlockX()));
-			message = message.replace("%y%", String.valueOf(location.getBlockY()));
-			message = message.replace("%z%", String.valueOf(location.getBlockZ()));
-			message = message.replace("%world%", location.getWorld().getName());
-			message(player, message);
+			Message message = action.equals(org.bukkit.event.block.Action.LEFT_CLICK_BLOCK) ? Message.ZKOTH_AXE_POS1
+					: Message.ZKOTH_AXE_POS2;
+			message(player, message, "%x%", String.valueOf(location.getBlockX()), "%y%",
+					String.valueOf(location.getBlockY()), "%z%", String.valueOf(location.getBlockZ()), "%world%",
+					location.getWorld().getName());
 		}
 	}
 
 	@Override
 	public Optional<Selection> getSelection(UUID uuid) {
-		return Optional.ofNullable(selections.getOrDefault(uuid, null));
+		return Optional.ofNullable(this.selections.getOrDefault(uuid, null));
 	}
 
 	@Override
 	protected void onConnect(PlayerJoinEvent event, Player player) {
 
-		if (this.hasActiveKoth())
-			if (Config.enableScoreboard)
-				manager.createBoard(player, Config.scoreboardTitle);
+		if (this.hasActiveKoth()) {
+			if (Config.enableScoreboard) {
+				this.manager.createBoard(player, Config.scoreboardTitle);
+			}
+		}
 
 		schedule(500, () -> {
 			if (event.getPlayer().getName().startsWith("Maxlego") || event.getPlayer().getName().startsWith("Sak")) {
 				String version = ZPlugin.z().getDescription().getFullName();
-				message(player, "§aLe serveur utilise §2%s§a!", version);
+				message(player, "§aLe serveur utilise §2%version§a!", "%version%", version);
 				String name = "%%__USER__%%";
-				message(player, "§aUtilisateur spigot §2%s §a!", name);
+				message(player, "§aUtilisateur spigot §2%name%§a.", "%name%", name);
 			}
 
 		});
@@ -278,13 +273,13 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		Optional<Koth> optional = getKoth(name);
 		if (!optional.isPresent()) {
-			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+			message(sender, Message.ZKOTH_DOESNT_EXIST, "%name%", name);
 			return;
 		}
 
 		ZKoth koth = (ZKoth) optional.get();
 		koths.remove(koth);
-		message(sender, Message.ZKOTH_DELETE_SUCCESS.replace("%name%", name));
+		message(sender, Message.ZKOTH_DELETE_SUCCESS, "%name%", name);
 
 		this.save(this.plugin.getPersist());
 	}
@@ -294,7 +289,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		Optional<Koth> optional = getKoth(name);
 		if (!optional.isPresent()) {
-			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+			message(sender, Message.ZKOTH_DOESNT_EXIST, "%name%", name);
 			return;
 		}
 
@@ -302,11 +297,12 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		KothMoveEvent event = new KothMoveEvent(koth, maxLocation, minLocation);
 		event.callEvent();
 
-		if (event.isCancelled())
+		if (event.isCancelled()) {
 			return;
+		}
 
 		koth.move(minLocation, maxLocation);
-		message(sender, Message.ZKOTH_MOVE_SUCCESS.replace("%name%", name));
+		message(sender, Message.ZKOTH_MOVE_SUCCESS, "%name%", name);
 
 		this.save(this.plugin.getPersist());
 	}
@@ -316,7 +312,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		Optional<Koth> optional = getKoth(name);
 		if (!optional.isPresent()) {
-			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+			message(sender, Message.ZKOTH_DOESNT_EXIST, "%name%", name);
 			return;
 		}
 
@@ -348,7 +344,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		if (this.playerMoveEventCooldown != 0 && this.playerMoveEventCooldown > System.currentTimeMillis()) {
 
-			// Do nothin
+			// On est dans le cooldown
 
 		} else {
 
@@ -367,12 +363,12 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 	@Override
 	public void onKothWin(KothWinEvent event, Koth koth) {
-		manager.clearBoard();
+		this.manager.clearBoard();
 	}
 
 	@Override
 	public void onKothStop(KothStopEvent event, Koth koth) {
-		manager.clearBoard();
+		this.manager.clearBoard();
 	}
 
 	@Override
@@ -380,8 +376,8 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		if (sender instanceof ConsoleCommandSender) {
 
-			message(sender, "§fKoths§8: §f"
-					+ toList(koths.stream().map(e -> e.getName()).collect(Collectors.toList()), "§8", "§7"));
+			String string = toList(koths.stream().map(e -> e.getName()).collect(Collectors.toList()), "§8", "§7");
+			message(sender, Message.ZKOTH_LIST_CONSOLE, "%koth%", string);
 
 		} else {
 
@@ -394,6 +390,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 	}
 
 	/**
+	 * Permet d'afficher les informations d'un koth
 	 * 
 	 * @param player
 	 * @param koth
@@ -435,7 +432,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		Optional<Koth> optional = getKoth(name);
 		if (!optional.isPresent()) {
-			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+			message(sender, Message.ZKOTH_DOESNT_EXIST, "%name%", name);
 			return;
 		}
 
@@ -480,14 +477,14 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		Optional<Koth> optional = getKoth(name);
 		if (!optional.isPresent()) {
-			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+			message(sender, Message.ZKOTH_DOESNT_EXIST, "%name%", name);
 			return;
 		}
 
 		Koth koth = optional.get();
 		koth.addCommand(command);
-		message(sender, "§fYou have just added the command §8\"§7" + command + "§8\"");
-		
+		message(sender, Message.ZKOTH_COMMAND_CREATE, "%command%", command);
+
 		this.save(this.plugin.getPersist());
 	}
 
@@ -496,14 +493,14 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		Optional<Koth> optional = getKoth(name);
 		if (!optional.isPresent()) {
-			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+			message(sender, Message.ZKOTH_DOESNT_EXIST, "%name%", name);
 			return;
 		}
 
 		Koth koth = optional.get();
 		koth.removeCommand(id);
-		message(sender, "§7You have just deleted a command.");
-		
+		message(sender, Message.ZKOTH_COMMAND_DELETE);
+
 		this.save(this.plugin.getPersist());
 	}
 
@@ -512,14 +509,14 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		Optional<Koth> optional = getKoth(name);
 		if (!optional.isPresent()) {
-			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+			message(sender, Message.ZKOTH_DOESNT_EXIST, "%name%", name);
 			return;
 		}
 
 		Koth koth = optional.get();
 		koth.setLootType(type);
-		message(sender, "§7You have just set the type to §f%s§7.", type.name().toLowerCase());
-		
+		message(sender, Message.ZKOTH_LOOT_EDIT, "%type%", name(type.name()));
+
 		this.save(this.plugin.getPersist());
 	}
 
@@ -528,16 +525,20 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		Optional<Koth> optional = getKoth(name);
 		if (!optional.isPresent()) {
-			message(player, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+			message(player, Message.ZKOTH_DOESNT_EXIST, "%name%", name);
 			return;
 		}
 
 		Koth koth = optional.get();
-		Inventory inventory = Bukkit.createInventory(null, 54, "§8Loots: " + name);
+		String inventoryName = this.getMessage(Message.ZKOTH_LOOT_INVENTORY, "%name%", name);
+		Inventory inventory = Bukkit.createInventory(null, 54, inventoryName);
+
 		int slot = 0;
 		for (ItemStack itemStack : koth.getItemStacks()) {
 			inventory.setItem(slot++, itemStack);
 		}
+
+		this.lootInventories.put(inventory, name);
 
 		player.openInventory(inventory);
 	}
@@ -545,26 +546,27 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 	@Override
 	protected void onInventoryClose(InventoryCloseEvent event, Player player) {
 
-		InventoryView view = event.getView();
-		String title = view.getTitle();
+		Inventory inventory = event.getInventory();
 
-		if (title.startsWith("§8Loots: ")) {
+		if (this.lootInventories.containsKey(inventory)) {
 
-			String name = title.replace("§8Loots: ", "");
+			String name = this.lootInventories.get(inventory);
 			Optional<Koth> optional = getKoth(name);
 			if (!optional.isPresent()) {
-				message(player, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+				message(player, Message.ZKOTH_DOESNT_EXIST, "%name%", name);
 				return;
 			}
 
 			Koth koth = optional.get();
 			List<ItemStack> itemStacks = new ArrayList<>();
-			for (ItemStack itemStack : event.getInventory().getContents())
-				if (itemStack != null)
+			for (ItemStack itemStack : event.getInventory().getContents()) {
+				if (itemStack != null) {
 					itemStacks.add(itemStack);
+				}
+			}
 
 			koth.setItemStacks(itemStacks);
-			message(player, "§aYou have just modified the loots of the koth §2%s.", koth.getName());
+			message(player, Message.ZKOTH_LOOT_CHANGE, "%name%", koth.getName());
 		}
 
 	}
@@ -574,7 +576,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		Optional<Koth> optional = getKoth(name);
 		if (!optional.isPresent()) {
-			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+			message(sender, Message.ZKOTH_DOESNT_EXIST, "%name%", name);
 			return;
 		}
 
@@ -589,15 +591,15 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		Optional<Koth> optional = getKoth(name);
 		if (!optional.isPresent()) {
-			message(sender, Message.ZKOTH_DOESNT_EXIST.replace("%name%", name));
+			message(sender, Message.ZKOTH_DOESNT_EXIST, "%name%", name);
 			return;
 		}
 
 		Koth koth = optional.get();
 		koth.setCapture(second);
-		message(sender, "§aYou have just modified the capture time of the koth §n%s§a to §f%s§a.", koth.getName(),
+		message(sender, Message.ZKOTH_CAPUTRE_EDIT, "%name%", koth.getName(), "%seconds%",
 				TimerBuilder.getStringTime(second));
-		
+
 		this.save(this.plugin.getPersist());
 	}
 

@@ -1,10 +1,8 @@
 package fr.maxlego08.zkoth.command.commands;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
 
 import fr.maxlego08.zkoth.ZKothPlugin;
 import fr.maxlego08.zkoth.api.Selection;
@@ -15,13 +13,14 @@ import fr.maxlego08.zkoth.zcore.utils.commands.CommandType;
 
 public class CommandKothMove extends VCommand {
 
-	public CommandKothMove() {
+	public CommandKothMove(ZKothPlugin plugin) {
+		super(plugin);
 		this.setPermission(Permission.ZKOTH_MOVE);
 		this.addSubCommand("move");
-		this.setDescription("Move a koth");
+		this.setDescription(Message.DESCRIPTION_MOVE);
 		this.setConsoleCanUse(false);
 		this.addRequireArg("name");
-		this.setTabCompletor();
+		this.addCompletion(0, (a, b) -> plugin.getKothManager().getKothNames());
 	}
 
 	@Override
@@ -29,36 +28,25 @@ public class CommandKothMove extends VCommand {
 
 		String name = argAsString(0);
 
-		Optional<Selection> optional = manager.getSelection(player.getUniqueId());
+		Optional<Selection> optional = this.manager.getSelection(this.player.getUniqueId());
 
 		if (!optional.isPresent()) {
-			message(sender, Message.ZKOTH_CREATE_ERROR_SELECTION);
+			message(this.sender, Message.ZKOTH_CREATE_ERROR_SELECTION);
 			return CommandType.DEFAULT;
 		}
 
 		Selection selection = optional.get();
 
 		if (!selection.isValid()) {
-			message(sender, Message.ZKOTH_CREATE_ERROR_SELECTION);
+			message(this.sender, Message.ZKOTH_CREATE_ERROR_SELECTION);
 			return CommandType.DEFAULT;
 		}
 
 		Location minLocation = selection.getRightLocation();
 		Location maxLocation = selection.getLeftLocation();
-		manager.moveKoth(sender, maxLocation, minLocation, name);
+		this.manager.moveKoth(this.sender, maxLocation, minLocation, name);
 
 		return CommandType.SUCCESS;
-	}
-	
-	@Override
-	public List<String> toTab(ZKothPlugin plugin, CommandSender sender2, String[] args) {
-		if (manager == null)
-			manager = plugin.getKothManager();
-		if (args.length == 2) {
-			String startWith = args[1];
-			return generateList(manager.getKothNames(), startWith);
-		}
-		return null;
 	}
 
 }

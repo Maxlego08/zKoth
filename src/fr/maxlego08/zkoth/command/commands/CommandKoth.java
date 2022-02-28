@@ -9,33 +9,35 @@ import fr.maxlego08.zkoth.zcore.utils.commands.CommandType;
 
 public class CommandKoth extends VCommand {
 
-	public CommandKoth() {
+	public CommandKoth(ZKothPlugin plugin) {
+		super(plugin);
 		this.setPermission(Permission.ZKOTH_USE);
 
-		this.addSubCommand(new CommandKothCreate());
-		this.addSubCommand(new CommandKothDelete());
-		this.addSubCommand(new CommandKothMove());
-		this.addSubCommand(new CommandKothNow());
-		this.addSubCommand(new CommandKothSpawn());
-		this.addSubCommand(new CommandKothStop());
-		this.addSubCommand(new CommandKothReload());
-		this.addSubCommand(new CommandKothList());
-		this.addSubCommand(new CommandKothInfo());
-		this.addSubCommand(new CommandKothAdd());
-		this.addSubCommand(new CommandKothRemove());
-		this.addSubCommand(new CommandKothSetType());
-		this.addSubCommand(new CommandKothLoot());
-		this.addSubCommand(new CommandKothSetCapture());
-		this.addSubCommand(new CommandKothAxe());
-		this.addSubCommand(new CommandKothVersion());
-		this.addSubCommand(new CommandKothScheduler());
+		this.addSubCommand(new CommandKothCreate(plugin));
+		this.addSubCommand(new CommandKothDelete(plugin));
+		this.addSubCommand(new CommandKothMove(plugin));
+		this.addSubCommand(new CommandKothNow(plugin));
+		this.addSubCommand(new CommandKothSpawn(plugin));
+		this.addSubCommand(new CommandKothStop(plugin));
+		this.addSubCommand(new CommandKothReload(plugin));
+		this.addSubCommand(new CommandKothList(plugin));
+		this.addSubCommand(new CommandKothInfo(plugin));
+		this.addSubCommand(new CommandKothAdd(plugin));
+		this.addSubCommand(new CommandKothRemove(plugin));
+		this.addSubCommand(new CommandKothSetType(plugin));
+		this.addSubCommand(new CommandKothLoot(plugin));
+		this.addSubCommand(new CommandKothSetCapture(plugin));
+		this.addSubCommand(new CommandKothAxe(plugin));
+		this.addSubCommand(new CommandKothVersion(plugin));
+		this.addSubCommand(new CommandKothScheduler(plugin));
 	}
 
 	@Override
 	protected CommandType perform(ZKothPlugin main) {
 
+		message(this.sender, Message.COMMAND_HELP_HEADER);
 		this.subVCommands.forEach(command -> {
-			messageWO(this.sender, Message.COMMAND_SYNTAXE_HELP, "%command%", command.getSyntaxe(), "%description%",
+			messageWO(this.sender, Message.COMMAND_SYNTAXE_HELP, "%command%", command.getSyntax(), "%description%",
 					command.getDescription());
 		});
 

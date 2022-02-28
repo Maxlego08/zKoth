@@ -253,7 +253,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		schedule(500, () -> {
 			if (event.getPlayer().getName().startsWith("Maxlego") || event.getPlayer().getName().startsWith("Sak")) {
 				String version = ZPlugin.z().getDescription().getFullName();
-				message(player, "§aLe serveur utilise §2%version§a!", "%version%", version);
+				message(player, "§aLe serveur utilise §2%version%§a!", "%version%", version);
 				String name = "%%__USER__%%";
 				message(player, "§aUtilisateur spigot §2%name%§a.", "%name%", name);
 			}

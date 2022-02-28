@@ -10,19 +10,20 @@ import fr.maxlego08.zkoth.zcore.utils.commands.CommandType;
 
 public class CommandKothAxe extends VCommand {
 
-	public CommandKothAxe() {
+	public CommandKothAxe(ZKothPlugin plugin) {
+		super(plugin);
 		this.setPermission(Permission.ZKOTH_AXE);
 		this.addSubCommand("axe", "wand");
-		this.setDescription("Getting the selection axe");
+		this.setDescription(Message.DESCRIPTION_AXE);
 		this.setConsoleCanUse(false);
 	}
 
 	@Override
 	protected CommandType perform(ZKothPlugin plugin) {
 
-		ItemStack itemStack = manager.getKothAxe();
-		player.getInventory().addItem(itemStack);
-		message(sender, Message.ZKOTH_AXE_RECEIVE);
+		ItemStack itemStack = this.manager.getKothAxe();
+		this.player.getInventory().addItem(itemStack);
+		message(this.sender, Message.ZKOTH_AXE_RECEIVE);
 		
 		return CommandType.SUCCESS;
 	}

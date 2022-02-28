@@ -10,7 +10,8 @@ import fr.maxlego08.zkoth.zcore.utils.commands.CommandType;
 
 public class CommandKothSchedulerRemove extends VCommand {
 
-	public CommandKothSchedulerRemove() {
+	public CommandKothSchedulerRemove(ZKothPlugin plugin) {
+		super(plugin);
 		this.setPermission(Permission.ZKOTH_SCHEDULER);
 		this.setDescription(Message.DESCRIPTION_SCHEDULER_REMOVE);
 		this.addSubCommand("remove");

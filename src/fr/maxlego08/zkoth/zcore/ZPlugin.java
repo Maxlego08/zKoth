@@ -2,6 +2,7 @@ package fr.maxlego08.zkoth.zcore;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -71,8 +72,9 @@ public abstract class ZPlugin extends JavaPlugin {
 		if (inventoryManager != null)
 			inventoryManager.sendLog();
 
-		if (commandManager != null)
-			commandManager.registerCommands();
+		if (commandManager != null) {
+			commandManager.validCommands();
+		}
 
 		log.log("=== ENABLE DONE <&>7(<&>6" + Math.abs(enableTime - System.currentTimeMillis()) + "ms<&>7) <&>e===");
 
@@ -239,7 +241,7 @@ public abstract class ZPlugin extends JavaPlugin {
 	 * @param aliases
 	 */
 	protected void registerCommand(String command, VCommand vCommand, String... aliases) {
-		commandManager.registerCommand(command, vCommand, aliases);
+		commandManager.registerCommand(command, vCommand, Arrays.asList(aliases));
 	}
 
 	/**

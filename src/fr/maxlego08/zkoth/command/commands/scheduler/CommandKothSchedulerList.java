@@ -8,17 +8,16 @@ import fr.maxlego08.zkoth.zcore.utils.commands.CommandType;
 
 public class CommandKothSchedulerList extends VCommand {
 
-	public CommandKothSchedulerList() {
+	public CommandKothSchedulerList(ZKothPlugin plugin) {
+		super(plugin);
 		this.setPermission(Permission.ZKOTH_SCHEDULER);
 		this.setDescription(Message.DESCRIPTION_SCHEDULER_LIST);
 		this.addSubCommand("list");
 	}
 
 	@Override
-	protected CommandType perform(ZKothPlugin main) {
-		
-		main.getSchedulerManager().show(sender);
-		
+	protected CommandType perform(ZKothPlugin plugin) {
+		plugin.getSchedulerManager().show(sender);
 		return CommandType.SUCCESS;
 	}
 

@@ -8,7 +8,8 @@ import fr.maxlego08.zkoth.zcore.utils.commands.CommandType;
 
 public class CommandKothReload extends VCommand {
 
-	public CommandKothReload() {
+	public CommandKothReload(ZKothPlugin plugin) {
+		super(plugin);
 		this.setPermission(Permission.ZKOTH_RELOAD);
 		this.addSubCommand("reload", "rl");
 		this.setDescription("Reload configuration file");
@@ -19,7 +20,7 @@ public class CommandKothReload extends VCommand {
 
 		Config.getInstance().load(plugin.getPersist());
 		plugin.getMessageLoader().load(plugin.getPersist());
-		message(sender, "§2Reload !");
+		message(this.sender, "§2Reload !");
 
 		return CommandType.SUCCESS;
 	}

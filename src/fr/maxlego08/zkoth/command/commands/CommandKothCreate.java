@@ -13,10 +13,11 @@ import fr.maxlego08.zkoth.zcore.utils.commands.CommandType;
 
 public class CommandKothCreate extends VCommand {
 
-	public CommandKothCreate() {
+	public CommandKothCreate(ZKothPlugin plugin) {
+		super(plugin);
 		this.setPermission(Permission.ZKOTH_CREATE);
 		this.addSubCommand("create");
-		this.setDescription("Create a koth");
+		this.setDescription(Message.DESCRIPTION_CREATE);
 		this.setConsoleCanUse(false);
 		this.addRequireArg("name");
 		this.addOptionalArg("captureSeconds");
@@ -28,10 +29,10 @@ public class CommandKothCreate extends VCommand {
 		String name = argAsString(0);
 		int captureSeconds = argAsInteger(1, 30);
 
-		Optional<Selection> optional = manager.getSelection(player.getUniqueId());
+		Optional<Selection> optional = this.manager.getSelection(this.player.getUniqueId());
 
 		if (!optional.isPresent()) {
-			message(sender, Message.ZKOTH_CREATE_ERROR_SELECTION);
+			message(this.sender, Message.ZKOTH_CREATE_ERROR_SELECTION);
 			return CommandType.DEFAULT;
 		}
 
@@ -44,7 +45,7 @@ public class CommandKothCreate extends VCommand {
 
 		Location minLocation = selection.getRightLocation();
 		Location maxLocation = selection.getLeftLocation();
-		manager.createKoth(sender, name, minLocation, maxLocation, captureSeconds);
+		this.manager.createKoth(this.sender, name, minLocation, maxLocation, captureSeconds);
 
 		return CommandType.SUCCESS;
 	}

@@ -17,7 +17,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import fr.maxlego08.zkoth.ZKothPlugin;
-import fr.maxlego08.zkoth.zcore.ZPlugin;
 import fr.maxlego08.zkoth.zcore.enums.Message;
 import fr.maxlego08.zkoth.zcore.logger.Logger;
 import fr.maxlego08.zkoth.zcore.logger.Logger.LogType;
@@ -26,21 +25,33 @@ import fr.maxlego08.zkoth.zcore.utils.commands.CommandType;
 
 public class CommandManager extends ZUtils implements CommandExecutor, TabCompleter {
 
-	private final ZKothPlugin main;
+	private final ZKothPlugin plugin;
 	private final List<VCommand> commands = new ArrayList<VCommand>();
 
-	public CommandManager(ZKothPlugin template) {
-		this.main = template;
+	/**
+	 * F
+	 * 
+	 * @param ZKothPlugin
+	 */
+	public CommandManager(ZKothPlugin ZKothPlugin) {
+		this.plugin = ZKothPlugin;
 	}
 
-	public void registerCommands() {
-
-		main.getLog().log("Loading " + getUniqueCommand() + " commands", LogType.SUCCESS);
+	/**
+	 * Valid commands
+	 */
+	public void validCommands() {
+		this.plugin.getLog().log("Loading " + getUniqueCommand() + " commands", LogType.SUCCESS);
 		this.commandChecking();
 	}
 
-	public VCommand addCommand(VCommand command) {
-		commands.add(command);
+	/**
+	 * 
+	 * @param command
+	 * @return
+	 */
+	public VCommand registerCommand(VCommand command) {
+		this.commands.add(command);
 		return command;
 	}
 
@@ -49,52 +60,16 @@ public class CommandManager extends ZUtils implements CommandExecutor, TabComple
 	 * @param command
 	 * @return
 	 */
-	public VCommand addCommand(String string, VCommand command) {
+	public VCommand registerCommand(String string, VCommand command) {
 		commands.add(command.addSubCommand(string));
-		ZPlugin.z().getCommand(string).setExecutor(this);
-		ZPlugin.z().getCommand(string).setTabCompleter(this);
+		this.plugin.getCommand(string).setExecutor(this);
+		this.plugin.getCommand(string).setTabCompleter(this);
 		return command;
-	}
-
-	/**
-	 * Register command whitout plugin.yml
-	 * 
-	 * @param string
-	 * @param vCommand
-	 * @param aliases
-	 */
-	public void registerCommand(String string, VCommand vCommand, String... aliases) {
-		try {
-			Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-			bukkitCommandMap.setAccessible(true);
-
-			CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
-
-			Class<? extends PluginCommand> class1 = PluginCommand.class;
-			Constructor<? extends PluginCommand> constructor = class1.getDeclaredConstructor(String.class,
-					Plugin.class);
-			constructor.setAccessible(true);
-
-			List<String> lists = Arrays.asList(aliases);
-
-			PluginCommand command = constructor.newInstance(string, ZPlugin.z());
-			command.setExecutor(this);
-			command.setTabCompleter(this);
-			command.setAliases(lists);
-
-			commands.add(vCommand.addSubCommand(string));
-			vCommand.addSubCommand(aliases);
-
-			commandMap.register(command.getName(), ZPlugin.z().getDescription().getName(), command);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		for (VCommand command : commands) {
+		for (VCommand command : this.commands) {
 			if (command.getSubCommands().contains(cmd.getName().toLowerCase())) {
 				if ((args.length == 0 || command.isIgnoreParent()) && command.getParent() == null) {
 					CommandType type = processRequirements(command, sender, args);
@@ -151,10 +126,17 @@ public class CommandManager extends ZUtils implements CommandExecutor, TabComple
 	}
 
 	/**
+	 * Allows you to process an order. First we check if the sender has the
+	 * permission or if the command has a permission. If yes then we execute the
+	 * command otherwise we send the message for the permission
+	 *
 	 * @param command
+	 *            - Object that contains the command
 	 * @param sender
+	 *            - Person who executes the command
 	 * @param strings
-	 * @return
+	 *            - Argument of the command
+	 * @return CommandType - Return of the command
 	 */
 	private CommandType processRequirements(VCommand command, CommandSender sender, String[] strings) {
 
@@ -164,19 +146,9 @@ public class CommandManager extends ZUtils implements CommandExecutor, TabComple
 		}
 		if (command.getPermission() == null || hasPermission(sender, command.getPermission())) {
 
-			if (command.runAsync) {
-				super.runAsync(() -> {
-					CommandType returnType = command.prePerform(main, sender, strings);
-					if (returnType == CommandType.SYNTAX_ERROR) {
-						message(sender, Message.COMMAND_SYNTAXE_ERROR, "%syntax%", command.getSyntaxe());
-					}
-				});
-				return CommandType.DEFAULT;
-			}
-
-			CommandType returnType = command.prePerform(main, sender, strings);
+			CommandType returnType = command.prePerform(this.plugin, sender, strings);
 			if (returnType == CommandType.SYNTAX_ERROR) {
-				message(sender, Message.COMMAND_SYNTAXE_ERROR, "%syntax%", command.getSyntaxe());
+				message(sender, Message.COMMAND_SYNTAXE_ERROR, "%syntax%", command.getSyntax());
 			}
 			return returnType;
 		}
@@ -185,11 +157,11 @@ public class CommandManager extends ZUtils implements CommandExecutor, TabComple
 	}
 
 	public List<VCommand> getCommands() {
-		return commands;
+		return this.commands;
 	}
 
 	private int getUniqueCommand() {
-		return (int) commands.stream().filter(command -> command.getParent() == null).count();
+		return (int) this.commands.stream().filter(command -> command.getParent() == null).count();
 	}
 
 	/**
@@ -200,7 +172,8 @@ public class CommandManager extends ZUtils implements CommandExecutor, TabComple
 		this.commands.forEach(command -> {
 			if (isValid(command, commandString)
 					&& (command.getPermission() == null || hasPermission(sender, command.getPermission()))) {
-				message(sender, Message.COMMAND_SYNTAXE_HELP, "%syntax%", command.getSyntaxe(), "%description%", command.getDescription());
+				message(sender, Message.COMMAND_SYNTAXE_HELP, "%syntax%", command.getSyntax(), "%description%",
+						command.getDescription());
 			}
 		});
 	}
@@ -216,14 +189,15 @@ public class CommandManager extends ZUtils implements CommandExecutor, TabComple
 	}
 
 	/**
-	 * Check if your order is ready for use
+	 * Allows you to check if all commands are correct If an command does not
+	 * have
 	 */
 	private void commandChecking() {
 		this.commands.forEach(command -> {
 			if (command.sameSubCommands()) {
 				Logger.info(command.toString() + " command to an argument similar to its parent command !",
 						LogType.ERROR);
-				ZPlugin.z().getPluginLoader().disablePlugin(ZPlugin.z());
+				this.plugin.getPluginLoader().disablePlugin(this.plugin);
 			}
 		});
 	}
@@ -250,6 +224,7 @@ public class CommandManager extends ZUtils implements CommandExecutor, TabComple
 	}
 
 	/**
+	 * Allows to execute the tab completion
 	 * 
 	 * @param sender
 	 * @param command
@@ -267,17 +242,59 @@ public class CommandManager extends ZUtils implements CommandExecutor, TabComple
 			for (VCommand vCommand : this.commands) {
 				if ((vCommand.getParent() != null && vCommand.getParent() == command)) {
 					String cmd = vCommand.getSubCommands().get(0);
-					if (vCommand.getPermission() == null || sender.hasPermission(vCommand.getPermission()))
-						if (startWith.length() == 0 || cmd.startsWith(startWith))
+					if (vCommand.getPermission() == null || sender.hasPermission(vCommand.getPermission())) {
+						if (startWith.length() == 0 || cmd.startsWith(startWith)) {
 							tabCompleter.add(cmd);
+						}
+					}
 				}
 			}
 			return tabCompleter.size() == 0 ? null : tabCompleter;
 
-		} else if (type.equals(CommandType.SUCCESS))
+		} else if (type.equals(CommandType.SUCCESS)) {
 			return command.toTab(this.plugin, sender, args);
+		}
 
 		return null;
+	}
+
+	/**
+	 * Enregistrer la commande whitout plugin.yml This method will allow to
+	 * register a command in the spigot without using the plugin.yml This saves
+	 * time and understanding, the plugin.yml file is clearer
+	 * 
+	 * @param string
+	 *            - Main command
+	 * @param vCommand
+	 *            - Command object
+	 * @param aliases
+	 *            - Command aliases
+	 */
+	public void registerCommand(String string, VCommand vCommand, List<String> aliases) {
+		try {
+			Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+			bukkitCommandMap.setAccessible(true);
+
+			CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
+
+			Class<? extends PluginCommand> class1 = PluginCommand.class;
+			Constructor<? extends PluginCommand> constructor = class1.getDeclaredConstructor(String.class,
+					Plugin.class);
+			constructor.setAccessible(true);
+
+			PluginCommand command = constructor.newInstance(string, this.plugin);
+			command.setExecutor(this);
+			command.setTabCompleter(this);
+			command.setAliases(aliases);
+
+			commands.add(vCommand.addSubCommand(string));
+			vCommand.addSubCommand(aliases);
+
+			commandMap.register(command.getName(), this.plugin.getDescription().getName(), command);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

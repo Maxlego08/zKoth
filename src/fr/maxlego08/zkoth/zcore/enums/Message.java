@@ -31,7 +31,7 @@ public enum Message {
 	COMMAND_NO_CONSOLE("§cOnly a player can execute this command."),
 	COMMAND_NO_ARG("§cImpossible to find the command with its arguments."),
 	COMMAND_SYNTAXE_HELP("§f%command% §8» §7%description%"), 
-	
+	COMMAND_HELP_HEADER("§7Commands informations§8:"),
 	
 	ZKOTH_AXE_RECEIVE("§7You have just received the axe for zone selection."), 
 	ZKOTH_AXE_POS1("§7You have just put the first position in §f%world%§7, §f%x%§7, §f%y%§7, §f%z%§7."),
@@ -114,7 +114,22 @@ public enum Message {
 	DESCRIPTION_SCHEDULER("Show scheduler commands"),
 	DESCRIPTION_SCHEDULER_LIST("Show scheduler list"),
 	DESCRIPTION_SCHEDULER_ADD("Add a scheduler"),
-	DESCRIPTION_SCHEDULER_REMOVE("Remove a scheduler"), 
+	DESCRIPTION_SCHEDULER_REMOVE("Remove a scheduler"),
+	DESCRIPTION_VERSION("Show plugin version"),
+	DESCRIPTION_ADDCOMMAND("Allows you to add a command to a koth"),
+	DESCRIPTION_REMOVECOMMAND("Allows you to remove a command to a koth"),
+	DESCRIPTION_AXE("Getting the selection axe"),
+	DESCRIPTION_CREATE("Create new koth"),
+	DESCRIPTION_DELETE("Delete a koth"),
+	DESCRIPTION_INFO("Show information about a koth"),
+	DESCRIPTION_LIST("Get koth list"),
+	DESCRIPTION_LOOT("Change loot for a koth"),
+	DESCRIPTION_MOVE("Move a koth"),
+	DESCRIPTION_NOW("Spawn a koth without cooldown"),
+	DESCRIPTION_STOP("Stop a koth"),
+	DESCRIPTION_SPAWN("Spawn a koth with cooldown"),
+	DESCRIPTION_CAPTURE("Set capture time for a koth"),
+	DESCRIPTION_TYPE("Set loot type for a koth"),
 	
 	;
 

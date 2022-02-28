@@ -1,5 +1,6 @@
 package fr.maxlego08.zkoth.command.commands.scheduler;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import fr.maxlego08.zkoth.ZKothPlugin;
@@ -13,7 +14,8 @@ import fr.maxlego08.zkoth.zcore.utils.commands.CommandType;
 
 public class CommandKothSchedulerAdd extends VCommand {
 
-	public CommandKothSchedulerAdd() {
+	public CommandKothSchedulerAdd(ZKothPlugin plugin) {
+		super(plugin);
 		this.setPermission(Permission.ZKOTH_SCHEDULER);
 		this.setDescription(Message.DESCRIPTION_SCHEDULER_ADD);
 		this.addSubCommand("add");
@@ -22,16 +24,19 @@ public class CommandKothSchedulerAdd extends VCommand {
 		this.addOptionalArg("day");
 		this.addOptionalArg("hour");
 		this.addOptionalArg("minute");
+		this.addCompletion(0, (a, b) -> Arrays.asList("delay", "repeat"));
+		this.addCompletion(1, (a, b) -> plugin.getKothManager().getKothNames());
+		this.addCompletion(2, (a, b) -> Arrays.asList("MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"));
 	}
 
 	@Override
 	protected CommandType perform(ZKothPlugin main) {
 
-		SchedulerType type = SchedulerType.valueOf(argAsString(0).toUpperCase());
-		Optional<Koth> optional = main.getKothManager().getKoth(argAsString(1));
+		SchedulerType type = SchedulerType.valueOf(this.argAsString(0).toUpperCase());
+		Optional<Koth> optional = main.getKothManager().getKoth(this.argAsString(1));
 
 		if (!optional.isPresent()) {
-			message(sender, Message.ZKOTH_DOESNT_EXIST);
+			message(sender, Message.ZKOTH_DOESNT_EXIST, "%name%", this.argAsString(1));
 			return CommandType.DEFAULT;
 		}
 
@@ -40,22 +45,22 @@ public class CommandKothSchedulerAdd extends VCommand {
 		switch (type) {
 		case DELAY:
 
-			String day = argAsString(2);
+			String day = this.argAsString(2);
 
 			if (!isDay(day)) {
 				message(sender, Message.ZKOTH_SCHEDULER_ERROR, day);
 				return CommandType.SUCCESS;
 			}
 
-			int hour = argAsInteger(3);
-			int minute = argAsInteger(4);
+			int hour = this.argAsInteger(3);
+			int minute = this.argAsInteger(4);
 
 			scheduler = new Scheduler(type, day, hour, minute, totem.getName());
 
 			break;
 		case REPEAT:
 
-			minute = argAsInteger(2);
+			minute = this.argAsInteger(2);
 			scheduler = new Scheduler(type, minute, totem.getName());
 
 			break;

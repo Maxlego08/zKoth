@@ -50,7 +50,7 @@ public class ZKothPlugin extends ZPlugin {
 
 		/* Commands */
 
-		this.registerCommand("zkoth", new CommandKoth(), "koth");
+		this.registerCommand("zkoth", new CommandKoth(this), "koth");
 
 		/* Add Listener */
 

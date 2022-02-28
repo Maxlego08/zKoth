@@ -174,8 +174,9 @@ public class CommandManager extends ZUtils implements CommandExecutor, TabComple
 			}
 
 			CommandType returnType = command.prePerform(main, sender, strings);
-			if (returnType == CommandType.SYNTAX_ERROR)
+			if (returnType == CommandType.SYNTAX_ERROR) {
 				message(sender, Message.COMMAND_SYNTAXE_ERROR, command.getSyntaxe());
+			}
 			return returnType;
 		}
 		message(sender, Message.COMMAND_NO_PERMISSION);

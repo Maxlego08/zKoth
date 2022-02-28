@@ -487,11 +487,12 @@ public class ZKoth extends ZUtils implements Koth {
 
 	@Override
 	public CollectionConsumer<Player> onScoreboard() {
-		if (isCooldown)
+		if (this.isCooldown) {
 			return p -> Config.scoreboardCooldown.stream().map(e -> papi(replaceMessage(e), p))
 					.collect(Collectors.toList());
-		else
+		} else {
 			return p -> Config.scoreboard.stream().map(e -> papi(replaceMessage(e), p)).collect(Collectors.toList());
+		}
 	}
 
 	@Override

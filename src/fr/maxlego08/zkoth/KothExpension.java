@@ -47,25 +47,27 @@ public class KothExpension extends PlaceholderExpansion {
 		if (koths.size() >= 1) {
 
 			Koth koth = koths.get(0);
-			if (params.equals("name"))
+			if (params.equals("name")) {
 				return koth.getName();
-			else if (params.equals("capture"))
+			} else if (params.equals("capture")) {
 				return String.valueOf(koth.getCurrentSecond());
-			else if (params.equals("x"))
+			} else if (params.equals("x")) {
 				return String.valueOf(koth.getCenter().getBlockX());
-			else if (params.equals("y"))
+			} else if (params.equals("y")) {
 				return String.valueOf(koth.getCenter().getBlockY());
-			else if (params.equals("z"))
+			} else if (params.equals("z")) {
 				return String.valueOf(koth.getCenter().getBlockZ());
-			else if (params.equals("faction"))
+			} else if (params.equals("faction")) {
 				return String.valueOf(koth.getCurrentFaction());
-			else if (params.equals("player"))
+			} else if (params.equals("player")) {
 				return koth.getCurrentPlayer();
+			}
 
 		}
 
-		if (!params.contains("_"))
+		if (!params.contains("_")) {
 			return null;
+		}
 
 		String[] args = params.split("_");
 
@@ -91,7 +93,7 @@ public class KothExpension extends PlaceholderExpansion {
 			else if (string.equals("z"))
 				return String.valueOf(koth.getCenter().getBlockZ());
 			else if (string.equals("faction"))
-				return String.valueOf(koth.getCurrentFaction());			
+				return String.valueOf(koth.getCurrentFaction());
 			else if (string.equals("player"))
 				return koth.getCurrentPlayer();
 

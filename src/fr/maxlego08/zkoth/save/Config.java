@@ -48,6 +48,7 @@ public class Config implements Saveable {
 	 * static Singleton instance.
 	 */
 	private static volatile Config instance;
+	public static boolean enableDebug;
 
 	/**
 	 * Private constructor for singleton.

@@ -12,7 +12,7 @@ public class CommandKothRemove extends VCommand {
 		super(plugin);
 		this.addCompletion(0, (a, b) -> plugin.getKothManager().getKothNames());
 		this.setPermission(Permission.ZKOTH_COMMAND_REMOVE);
-		this.addSubCommand("removec");
+		this.addSubCommand("removecommand", "removec");
 		this.setDescription(Message.DESCRIPTION_REMOVECOMMAND);
 		this.addRequireArg("name");
 		this.addRequireArg("id");
@@ -21,8 +21,8 @@ public class CommandKothRemove extends VCommand {
 	@Override
 	protected CommandType perform(ZKothPlugin plugin) {
 
-		String name = argAsString(0);
-		int id = argAsInteger(1);
+		String name = this.argAsString(0);
+		int id = this.argAsInteger(1);
 		
 		this.manager.removeCommand(sender, name, id);
 

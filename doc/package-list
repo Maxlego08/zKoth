@@ -1,4 +1,4 @@
-fr.maxlego08.koth
-fr.maxlego08.koth.event
-fr.maxlego08.koth.factions
-fr.maxlego08.koth.scheduler
+fr.maxlego08.zkoth.api
+fr.maxlego08.zkoth.api.enums
+fr.maxlego08.zkoth.api.event
+fr.maxlego08.zkoth.api.event.events

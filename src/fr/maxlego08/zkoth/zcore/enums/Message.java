@@ -99,6 +99,8 @@ public enum Message {
 	ZKOTH_COMMAND_DELETE("§aYou have just deleted a command."),
 	ZKOTH_LOOT_EDIT("§aYou have just set the loot type to §f%type%§a."),
 	ZKOTH_TYPE_EDIT("§aYou have just set the type to §f%type%§a."),
+	ZKOTH_POINTS_EDIT("§aYou have just set the points to §f%points%§a."),
+	ZKOTH_TIMER_EDIT("§aYou have just set the timer to §f%seconds%§a."),
 	ZKOTH_LOOT_INVENTORY("§7Loots §b%name%"),
 	ZKOTH_LOOT_CHANGE("§aYou have just modified the loots of the koth §2%name%§a."),
 	ZKOTH_CAPUTRE_EDIT("§aYou have just modified the capture time of the koth §n%name%§a to §f%seconds%§a."),
@@ -131,6 +133,8 @@ public enum Message {
 	DESCRIPTION_SPAWN("Spawn a koth with cooldown"),
 	DESCRIPTION_CAPTURE("Set capture time for a koth"),
 	DESCRIPTION_TYPE("Set koth type (classic, point, timer)"),
+	DESCRIPTION_TIMER("Set koth max second for timer type"),
+	DESCRIPTION_POINTS("Set koth max point for point type"),
 	DESCRIPTION_LOOTTYPE("Set loot type for a koth"),
 	
 	;

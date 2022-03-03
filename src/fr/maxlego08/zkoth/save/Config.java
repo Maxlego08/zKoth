@@ -23,6 +23,10 @@ public class Config implements Saveable {
 	public static long schedulerMillisecond = 1000;
 	public static int cooldownInSecond = 300;
 	public static int removeChestSec = 120;
+	public static String percentPrecision = "#.#";
+	public static ProgressBar progressBarPoints = new ProgressBar(10, '|', "§b", "§7");
+	public static ProgressBar progressBarTimer = new ProgressBar(10, '|', "§b", "§7");
+	public static ProgressBar progressBarClassic = new ProgressBar(10, '|', "§b", "§7");
 
 	static {
 
@@ -32,16 +36,22 @@ public class Config implements Saveable {
 		scoreboard.add("§6§l⟣ §fFaction: §b%faction%");
 		scoreboard.add("§0");
 		scoreboard.add("§6§l⟣ §fTime: §d%capture%");
+		scoreboard.add("§b");
+		scoreboard.add("§6§l⟣ §fPoints: §b%points%§f/§a%maxPoints%");
+		scoreboard.add("§6§l⟣ §fPercent: §b%pointsPercent%§7%");
+		scoreboard.add("§6§l⟣ §fTimer: §b%timer%");
+		scoreboard.add("§6§l⟣ §fTimer: §b%timerSeconds%§f/§a%maxTimerSeconds%");
+		scoreboard.add("§6§l⟣ §fPercent: §b%timerPercent%§7%");
 		scoreboard.add("§1");
 		scoreboard.add("§6§l⟣ §fhttps://groupez.dev");
-		
+
 		scoreboardCooldown.add("§r");
 		scoreboardCooldown.add("§6§l⟣ §fKoth: §b%name%");
 		scoreboardCooldown.add("§6§l⟣ §fCoordinate: §b%x% %y% %z%");
 		scoreboardCooldown.add("§6§l⟣ §fStarts in: §d%capture%");
 		scoreboardCooldown.add("§1");
 		scoreboardCooldown.add("§6§l⟣ §fhttps://groupez.dev");
-		
+
 	}
 
 	/**

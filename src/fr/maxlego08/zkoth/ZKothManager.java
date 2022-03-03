@@ -446,10 +446,12 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		String location = center.getWorld().getName() + ", " + center.getBlockX() + ", " + center.getBlockY() + ", "
 				+ center.getBlockZ();
 
-		message(sender, "§fName: §b%s", koth.getName());
-		message(sender, "§fCoordinate: §b%s", location);
-		message(sender, "§fType: §b%s", koth.getType().name());
-		message(sender, "§fLoot type: §b%s", koth.getLootType().name());
+		message(sender, "§fName: §b%name%", "%name%", koth.getName());
+		message(sender, "§fCoordinate: §b%location%", "%location%", location);
+		message(sender, "§fType: §b%type%", "%type%", name(koth.getType().name()));
+		message(sender, "§fMax points: §b%points%", "%points%", koth.getMaxPoints());
+		message(sender, "§fMax timer seconds: §b%timer%", "%timer%", koth.getMaxSecondsCap());
+		message(sender, "§fLoot type: §b%lootType%", "%lootType%", name(koth.getLootType().name()));
 		message(sender, "§fCommands §8(§7" + koth.getCommands().size() + "§8):");
 		if (sender instanceof ConsoleCommandSender) {
 			koth.getCommands().forEach(command -> messageWO(sender, " §7" + command));
@@ -540,7 +542,38 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		this.save(this.plugin.getPersist());
 	}
+	
+	@Override
+	public void setKothPoints(CommandSender sender, String name, int points) {
+		
+		Optional<Koth> optional = getKoth(name);
+		if (!optional.isPresent()) {
+			message(sender, Message.ZKOTH_DOESNT_EXIST, "%name%", name);
+			return;
+		}
 
+		Koth koth = optional.get();
+		koth.setMaxPoints(points);
+		message(sender, Message.ZKOTH_POINTS_EDIT, "%points%", points, "%name%", koth.getName());
+
+		this.save(this.plugin.getPersist());
+	}
+
+	@Override
+	public void setKothTimerSeconds(CommandSender sender, String name, int seconds) {
+		Optional<Koth> optional = getKoth(name);
+		if (!optional.isPresent()) {
+			message(sender, Message.ZKOTH_DOESNT_EXIST, "%name%", name);
+			return;
+		}
+
+		Koth koth = optional.get();
+		koth.setMaxSecondsCap(seconds);
+		message(sender, Message.ZKOTH_TIMER_EDIT, "%seconds%", seconds, "%name%", koth.getName());
+
+		this.save(this.plugin.getPersist());
+	}
+	
 	@Override
 	public void updateLoots(Player player, String name) {
 

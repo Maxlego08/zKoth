@@ -77,7 +77,7 @@ public interface KothManager extends Saveable {
 	 * @return
 	 */
 	public List<Koth> getActiveKoths();
-	
+
 	public List<Koth> getEnableKoths();
 
 	/**
@@ -147,7 +147,7 @@ public interface KothManager extends Saveable {
 	 * @param second
 	 */
 	public void setCaptureSeconds(CommandSender sender, String name, int second);
-	
+
 	/**
 	 * 
 	 * @return
@@ -161,5 +161,21 @@ public interface KothManager extends Saveable {
 	 * @param kothType
 	 */
 	public void setKothType(CommandSender sender, String name, KothType kothType);
+
+	/**
+	 * 
+	 * @param sender
+	 * @param name
+	 * @param seconds
+	 */
+	public void setKothTimerSeconds(CommandSender sender, String name, int seconds);
+
+	/**
+	 * 
+	 * @param sender
+	 * @param name
+	 * @param points
+	 */
+	public void setKothPoints(CommandSender sender, String name, int points);
 
 }

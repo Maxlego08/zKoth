@@ -79,6 +79,9 @@ public class ZKoth extends ZUtils implements Koth {
 		this.kothType = KothType.CLASSIC;
 		this.maxPoints = 60;
 		this.maxSecondsCap = 60;
+		if (this.playersValues == null) {
+			this.playersValues = new HashMap<>();
+		}
 	}
 
 	@Override
@@ -156,6 +159,10 @@ public class ZKoth extends ZUtils implements Koth {
 	@Override
 	public void spawn(CommandSender sender, boolean now) {
 
+		if (this.playersValues == null) {
+			this.playersValues = new HashMap<>();
+		}
+
 		if (this.minLocation == null || this.maxLocation == null) {
 			message(sender, Message.ZKOTH_SPAWN_ERROR);
 		} else if (this.isCooldown) {
@@ -174,6 +181,10 @@ public class ZKoth extends ZUtils implements Koth {
 
 	@Override
 	public void spawn(boolean now) {
+
+		if (this.playersValues == null) {
+			this.playersValues = new HashMap<>();
+		}
 
 		if (this.minLocation == null || this.maxLocation == null) {
 			return;
@@ -195,6 +206,10 @@ public class ZKoth extends ZUtils implements Koth {
 	 * Permet de faire spawn le Koth avec un cooldown
 	 */
 	private void spawn() {
+
+		if (this.playersValues == null) {
+			this.playersValues = new HashMap<>();
+		}
 
 		this.isCooldown = true;
 		this.isEnable = true;
@@ -242,6 +257,10 @@ public class ZKoth extends ZUtils implements Koth {
 	 * Permet de faire spawn le koth maintenant
 	 */
 	private void spawnNow() {
+
+		if (this.playersValues == null) {
+			this.playersValues = new HashMap<>();
+		}
 
 		KothSpawnEvent event = new KothSpawnEvent(this);
 		event.callEvent();
@@ -327,7 +346,7 @@ public class ZKoth extends ZUtils implements Koth {
 			message = message.replace("%z%", String.valueOf(center.getBlockZ()));
 		}
 
-		int seconds = this.currentCaptureSeconds == null ? this.captureSeconds : currentCaptureSeconds.get();
+		int seconds = this.currentCaptureSeconds == null ? this.captureSeconds : this.currentCaptureSeconds.get();
 		message = message.replace("%capture%", TimerBuilder.getStringTime(seconds));
 		message = message.replace("%world%", center.getWorld().getName());
 		message = message.replace("%name%", this.name);
@@ -335,6 +354,25 @@ public class ZKoth extends ZUtils implements Koth {
 		String player = this.currentPlayer == null ? Message.ZKOHT_EVENT_PLAYER.getMessage()
 				: this.currentPlayer.getName();
 		message = message.replace("%player%", player);
+
+		int value = (int) this.getValue(this.currentPlayer);
+		message = message.replace("%points%", String.valueOf(value));
+		message = message.replace("%maxPoints%", String.valueOf(this.maxPoints));
+		message = message.replace("%pointsPercent%",
+				String.valueOf(this.format(this.percent(value, this.maxPoints), Config.percentPrecision)));
+
+		message = message.replace("%timer%", TimerBuilder.getStringTime(value));
+		message = message.replace("%maxTimer%", TimerBuilder.getStringTime(this.maxSecondsCap));
+
+		message = message.replace("%timerSeconds%", String.valueOf(value));
+		message = message.replace("%maxTimerSeconds%", String.valueOf(this.maxSecondsCap));
+
+		message = message.replace("%timerPercent%",
+				String.valueOf(this.format(this.percent(value, this.maxSecondsCap), Config.percentPrecision)));
+
+		message = message.replace("%timerProgress%", this.getProgressBar(value, this.maxSecondsCap, Config.progressBarTimer));
+		message = message.replace("%pointsProgress%", this.getProgressBar(value, this.maxPoints, Config.progressBarPoints));
+		message = message.replace("%classicProgress%", this.getProgressBar(this.captureSeconds - seconds, this.captureSeconds, Config.progressBarClassic));
 
 		String faction = this.currentPlayer == null ? Message.ZKOHT_EVENT_FACION.getMessage()
 				: this.factionListener.getFactionTag(this.currentPlayer);
@@ -455,7 +493,7 @@ public class ZKoth extends ZUtils implements Koth {
 				broadcast(Message.ZKOHT_EVENT_TIMER);
 			}
 
-			if (tmpCapture <= 0) {
+			if (this.hasWin()) {
 
 				this.endKoth(task, cuboid, player);
 
@@ -465,7 +503,16 @@ public class ZKoth extends ZUtils implements Koth {
 						this.factionListener.getFactionTag(player));
 				capEvent.callEvent();
 
-				this.currentCaptureSeconds.decrementAndGet();
+				switch (this.getType()) {
+				case CLASSIC:
+				default:
+					this.currentCaptureSeconds.decrementAndGet();
+					break;
+				case POINT:
+				case TIMER:
+					this.playersValues.put(this.currentPlayer, this.getValue(this.currentPlayer) + 1);
+					break;
+				}
 			}
 		});
 	}
@@ -475,11 +522,11 @@ public class ZKoth extends ZUtils implements Koth {
 
 		switch (this.getType()) {
 		case CLASSIC:
-			return this.currentCaptureSeconds != null && this.currentCaptureSeconds.get() <= 0;
+			return this.currentCaptureSeconds == null && this.currentCaptureSeconds.get() <= 0;
 		case POINT:
-			return this.currentPlayer != null ? false : this.getValue(this.currentPlayer) >= this.maxPoints;
+			return this.currentPlayer == null ? false : this.getValue(this.currentPlayer) >= this.maxPoints;
 		case TIMER:
-			return this.currentPlayer != null ? false : this.getValue(this.currentPlayer) >= this.maxSecondsCap;
+			return this.currentPlayer == null ? false : this.getValue(this.currentPlayer) >= this.maxSecondsCap;
 		default:
 			return false;
 		}
@@ -663,12 +710,18 @@ public class ZKoth extends ZUtils implements Koth {
 
 	@Override
 	public Map<Player, Long> getValues() {
+		if (this.playersValues == null) {
+			this.playersValues = new HashMap<>();
+		}
 		return this.playersValues;
 	}
 
 	@Override
 	public long getValue(Player player) {
-		return this.playersValues.getOrDefault(player, 0l);
+		if (this.playersValues == null) {
+			this.playersValues = new HashMap<>();
+		}
+		return player == null ? 0l : this.playersValues.getOrDefault(player, 0l);
 	}
 
 	@Override

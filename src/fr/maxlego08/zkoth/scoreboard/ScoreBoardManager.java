@@ -55,7 +55,9 @@ public class ScoreBoardManager extends ZUtils {
 				}
 			}
 
-			this.boards.forEach((player, board) -> board.updateLines(this.lines.accept(player)));
+			this.boards.forEach((player, board) -> {
+				board.updateLines(this.lines.accept(player));
+			});
 
 		});
 	}

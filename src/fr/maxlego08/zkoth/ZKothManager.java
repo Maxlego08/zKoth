@@ -28,6 +28,7 @@ import fr.maxlego08.zkoth.api.FactionListener;
 import fr.maxlego08.zkoth.api.Koth;
 import fr.maxlego08.zkoth.api.KothManager;
 import fr.maxlego08.zkoth.api.Selection;
+import fr.maxlego08.zkoth.api.enums.KothType;
 import fr.maxlego08.zkoth.api.enums.LootType;
 import fr.maxlego08.zkoth.api.event.events.KothCreateEvent;
 import fr.maxlego08.zkoth.api.event.events.KothHookEvent;
@@ -266,6 +267,9 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		if (Config.enableScoreboard) {
 			this.manager.delete(player);
 		}
+
+		List<Koth> koths = this.getActiveKoths();
+		koths.forEach(koth -> koth.onPlayerLeave(player));
 	}
 
 	@Override
@@ -444,6 +448,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		message(sender, "§fName: §b%s", koth.getName());
 		message(sender, "§fCoordinate: §b%s", location);
+		message(sender, "§fType: §b%s", koth.getType().name());
 		message(sender, "§fLoot type: §b%s", koth.getLootType().name());
 		message(sender, "§fCommands §8(§7" + koth.getCommands().size() + "§8):");
 		if (sender instanceof ConsoleCommandSender) {
@@ -515,7 +520,23 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		Koth koth = optional.get();
 		koth.setLootType(type);
-		message(sender, Message.ZKOTH_LOOT_EDIT, "%type%", name(type.name()));
+		message(sender, Message.ZKOTH_LOOT_EDIT, "%type%", name(type.name()), "%name%", koth.getName());
+
+		this.save(this.plugin.getPersist());
+	}
+
+	@Override
+	public void setKothType(CommandSender sender, String name, KothType kothType) {
+
+		Optional<Koth> optional = getKoth(name);
+		if (!optional.isPresent()) {
+			message(sender, Message.ZKOTH_DOESNT_EXIST, "%name%", name);
+			return;
+		}
+
+		Koth koth = optional.get();
+		koth.setType(kothType);
+		message(sender, Message.ZKOTH_TYPE_EDIT, "%type%", name(kothType.name()), "%name%", koth.getName());
 
 		this.save(this.plugin.getPersist());
 	}

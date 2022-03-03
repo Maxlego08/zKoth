@@ -25,6 +25,7 @@ public class CommandKoth extends VCommand {
 		this.addSubCommand(new CommandKothAdd(plugin));
 		this.addSubCommand(new CommandKothRemove(plugin));
 		this.addSubCommand(new CommandKothSetType(plugin));
+		this.addSubCommand(new CommandKothSetLootType(plugin));
 		this.addSubCommand(new CommandKothLoot(plugin));
 		this.addSubCommand(new CommandKothSetCapture(plugin));
 		this.addSubCommand(new CommandKothAxe(plugin));

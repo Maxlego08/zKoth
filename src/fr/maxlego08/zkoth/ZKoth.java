@@ -2,7 +2,9 @@ package fr.maxlego08.zkoth;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -21,6 +23,7 @@ import org.bukkit.util.Vector;
 
 import fr.maxlego08.zkoth.api.FactionListener;
 import fr.maxlego08.zkoth.api.Koth;
+import fr.maxlego08.zkoth.api.enums.KothType;
 import fr.maxlego08.zkoth.api.enums.LootType;
 import fr.maxlego08.zkoth.api.event.events.KothCapEvent;
 import fr.maxlego08.zkoth.api.event.events.KothCatchEvent;
@@ -40,6 +43,7 @@ import fr.maxlego08.zkoth.zcore.utils.interfaces.CollectionConsumer;
 public class ZKoth extends ZUtils implements Koth {
 
 	private final String name;
+	private KothType kothType;
 	private int captureSeconds;
 	private Location minLocation;
 	private Location maxLocation;
@@ -47,12 +51,17 @@ public class ZKoth extends ZUtils implements Koth {
 	private List<String> commands = new ArrayList<String>();
 	private List<String> itemStacks = new ArrayList<String>();
 
+	private int maxSecondsCap;
+	private int maxPoints;
+
 	private transient boolean isEnable = false;
 	private transient boolean isCooldown = false;
 	private transient TimerTask timerTask;
 	private transient Player currentPlayer;
 	private transient FactionListener factionListener;
 	private transient AtomicInteger currentCaptureSeconds;
+
+	private transient Map<Player, Long> playersValues = new HashMap<Player, Long>();
 
 	/**
 	 * @param name
@@ -67,6 +76,14 @@ public class ZKoth extends ZUtils implements Koth {
 		this.minLocation = minLocation;
 		this.maxLocation = maxLocation;
 		this.type = LootType.NONE;
+		this.kothType = KothType.CLASSIC;
+		this.maxPoints = 60;
+		this.maxSecondsCap = 60;
+	}
+
+	@Override
+	public void setType(KothType type) {
+		this.kothType = type;
 	}
 
 	@Override
@@ -406,8 +423,9 @@ public class ZKoth extends ZUtils implements Koth {
 
 			if (this.currentPlayer != null) {
 				if (!this.currentPlayer.isValid() || !this.currentPlayer.isOnline()
-						|| !cuboid.contains(this.currentPlayer.getLocation()))
+						|| !cuboid.contains(this.currentPlayer.getLocation())) {
 					this.currentPlayer = null;
+				}
 			}
 
 			if (this.currentPlayer == null) {
@@ -419,8 +437,9 @@ public class ZKoth extends ZUtils implements Koth {
 					return;
 				}
 
-				if (this.timerTask != null)
+				if (this.timerTask != null) {
 					this.timerTask.cancel();
+				}
 
 				this.timerTask = null;
 				this.currentPlayer = null;
@@ -431,79 +450,15 @@ public class ZKoth extends ZUtils implements Koth {
 				return;
 
 			}
-			
+
 			if (Config.displayMessageKothCap.contains(tmpCapture)) {
 				broadcast(Message.ZKOHT_EVENT_TIMER);
 			}
 
 			if (tmpCapture <= 0) {
 
-				KothWinEvent kothWinEvent = new KothWinEvent(this, this.currentPlayer);
-				kothWinEvent.callEvent();
+				this.endKoth(task, cuboid, player);
 
-				if (kothWinEvent.isCancelled()) {
-					return;
-				}
-
-				task.cancel();
-				broadcast(Message.ZKOTH_EVENT_WIN);
-
-				/* Gestion des loots */
-
-				this.commands.forEach(command -> {
-					command = replaceMessage(command);
-					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), papi(command, player));
-				});
-
-				Location center = cuboid.getCenter();
-				World world = center.getWorld();
-				while (center.getBlock().getRelative(BlockFace.DOWN).getType().equals(Material.AIR)) {
-					center = center.getBlock().getRelative(BlockFace.DOWN).getLocation();
-				}
-				
-				Location location = center;
-
-				if (this.itemStacks.size() != 0)
-					switch (this.type) {
-					case CHEST:
-						location.getBlock().setType(Material.CHEST);
-						Chest chest = (Chest) location.getBlock().getState();
-
-						this.getItemStacks().forEach(itemStack -> chest.getInventory().addItem(itemStack));
-
-						Bukkit.getScheduler().runTaskLater(ZPlugin.z(), () -> {
-							location.getBlock().setType(Material.AIR);
-						}, 20 * Config.removeChestSec);
-						break;
-					case DROP:
-						location.add(0.5, 0.3, 0.5);
-						this.getItemStacks().forEach(itemStack -> {
-
-							Item item = world.dropItem(location, itemStack);
-							Vector vector = item.getVelocity();
-							vector.setZ(0);
-							vector.setY(0.5);
-							vector.setX(0);
-							item.setVelocity(vector);
-
-						});
-						break;
-					case INVENTORY:
-						this.getItemStacks().forEach(itemStack -> give(this.currentPlayer, itemStack));
-						break;
-					case NONE:
-						break;
-					default:
-						break;
-					}
-
-				/* FIN Gestion des loots */
-
-				this.isEnable = false;
-				this.isCooldown = false;
-				this.currentPlayer = null;
-				this.timerTask = null;
-				this.currentCaptureSeconds = null;
 			} else {
 
 				KothCapEvent capEvent = new KothCapEvent(this, player, this.currentCaptureSeconds.get(),
@@ -513,6 +468,93 @@ public class ZKoth extends ZUtils implements Koth {
 				this.currentCaptureSeconds.decrementAndGet();
 			}
 		});
+	}
+
+	@Override
+	public boolean hasWin() {
+
+		switch (this.getType()) {
+		case CLASSIC:
+			return this.currentCaptureSeconds != null && this.currentCaptureSeconds.get() <= 0;
+		case POINT:
+			return this.currentPlayer != null ? false : this.getValue(this.currentPlayer) >= this.maxPoints;
+		case TIMER:
+			return this.currentPlayer != null ? false : this.getValue(this.currentPlayer) >= this.maxSecondsCap;
+		default:
+			return false;
+		}
+
+	}
+
+	@Override
+	public void endKoth(TimerTask task, Cuboid cuboid, Player player) {
+		KothWinEvent kothWinEvent = new KothWinEvent(this, this.currentPlayer);
+		kothWinEvent.callEvent();
+
+		if (kothWinEvent.isCancelled()) {
+			return;
+		}
+
+		task.cancel();
+		broadcast(Message.ZKOTH_EVENT_WIN);
+
+		/* Gestion des loots */
+
+		this.commands.forEach(command -> {
+			command = replaceMessage(command);
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), papi(command, player));
+		});
+
+		Location center = cuboid.getCenter();
+		World world = center.getWorld();
+		while (center.getBlock().getRelative(BlockFace.DOWN).getType().equals(Material.AIR)) {
+			center = center.getBlock().getRelative(BlockFace.DOWN).getLocation();
+		}
+
+		Location location = center;
+
+		if (this.itemStacks.size() != 0)
+			switch (this.type) {
+			case CHEST:
+				location.getBlock().setType(Material.CHEST);
+				Chest chest = (Chest) location.getBlock().getState();
+
+				this.getItemStacks().forEach(itemStack -> chest.getInventory().addItem(itemStack));
+
+				Bukkit.getScheduler().runTaskLater(ZPlugin.z(), () -> {
+					location.getBlock().setType(Material.AIR);
+				}, 20 * Config.removeChestSec);
+				break;
+			case DROP:
+				location.add(0.5, 0.3, 0.5);
+				this.getItemStacks().forEach(itemStack -> {
+
+					Item item = world.dropItem(location, itemStack);
+					Vector vector = item.getVelocity();
+					vector.setZ(0);
+					vector.setY(0.5);
+					vector.setX(0);
+					item.setVelocity(vector);
+
+				});
+				break;
+			case INVENTORY:
+				this.getItemStacks().forEach(itemStack -> give(this.currentPlayer, itemStack));
+				break;
+			case NONE:
+				break;
+			default:
+				break;
+			}
+
+		/* FIN Gestion des loots */
+
+		this.isEnable = false;
+		this.isCooldown = false;
+		this.currentPlayer = null;
+		this.timerTask = null;
+		this.currentCaptureSeconds = null;
+		this.playersValues.clear();
 	}
 
 	@Override
@@ -563,14 +605,14 @@ public class ZKoth extends ZUtils implements Koth {
 		if (this.timerTask != null) {
 			this.timerTask.cancel();
 		}
-		
+
 		this.timerTask = null;
 		this.isEnable = false;
 		this.isCooldown = false;
 		this.currentPlayer = null;
 		this.timerTask = null;
 		this.currentCaptureSeconds = null;
-
+		this.playersValues.clear();
 	}
 
 	@Override
@@ -592,6 +634,46 @@ public class ZKoth extends ZUtils implements Koth {
 	public String getCurrentFaction() {
 		return this.currentPlayer == null ? Message.ZKOHT_EVENT_FACION.getMessage()
 				: this.factionListener.getFactionTag(this.currentPlayer);
+	}
+
+	@Override
+	public KothType getType() {
+		return this.kothType == null ? this.kothType = KothType.CLASSIC : this.kothType;
+	}
+
+	@Override
+	public int getMaxSecondsCap() {
+		return this.maxSecondsCap;
+	}
+
+	@Override
+	public void setMaxSecondsCap(int seconds) {
+		this.maxSecondsCap = seconds;
+	}
+
+	@Override
+	public int getMaxPoints() {
+		return this.maxPoints;
+	}
+
+	@Override
+	public void setMaxPoints(int points) {
+		this.maxPoints = points;
+	}
+
+	@Override
+	public Map<Player, Long> getValues() {
+		return this.playersValues;
+	}
+
+	@Override
+	public long getValue(Player player) {
+		return this.playersValues.getOrDefault(player, 0l);
+	}
+
+	@Override
+	public void onPlayerLeave(Player player) {
+		this.playersValues.remove(player);
 	}
 
 }

@@ -214,14 +214,14 @@ public interface Koth {
 	 * 
 	 * @return
 	 */
-	public Map<Player, Long> getValues();
+	public Map<Player, Integer> getValues();
 
 	/**
 	 * 
 	 * @param player
 	 * @return
 	 */
-	public long getValue(Player player);
+	public int getValue(Player player);
 
 	/**
 	 * 
@@ -236,5 +236,32 @@ public interface Koth {
 	 * @return
 	 */
 	public boolean hasWin();
+
+	/**
+	 * 
+	 * @param position
+	 * @return
+	 */
+	public int getPointsAt(int position);
+
+	public int getTimerAt(int position);
+
+	public String getPointsPercentAt(int position);
+	
+	public String getTimerPercentAt(int position);
+	
+	public String getTimerFormatAt(int position);
+	
+	public String getMaxTimerFormat();
+	
+	public String getPointsProgressBarAt(int position);
+	
+	public String getTimerProgressBarAt(int position);
+	
+	public String getClassicProgressBar();
+
+	public String getTimerNameAt(int position);
+	
+	public String getPointsNameAt(int position);
 
 }

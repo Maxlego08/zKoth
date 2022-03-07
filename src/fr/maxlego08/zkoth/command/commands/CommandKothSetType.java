@@ -20,6 +20,7 @@ public class CommandKothSetType extends VCommand {
 		this.setPermission(Permission.ZKOTH_TYPE);
 		this.addSubCommand("settype");
 		this.setDescription(Message.DESCRIPTION_TYPE);
+		this.addRequireArg("koth");
 		this.addRequireArg("type");
 		this.setTabCompletor();
 	}

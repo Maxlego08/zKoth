@@ -81,6 +81,7 @@ public enum Message {
 	ZKOHT_EVENT_CATCH(MessageType.ACTION, "§d%player% §fjust started capturing the koth §n%name%§f. §8(§7%x%, %y%, %z%§8)"),
 	ZKOHT_EVENT_LOOSE(MessageType.ACTION, "§d%player% §fjust loose koth §n%name%§f. §8(§7%x%, %y%, %z%§8)"),
 	ZKOHT_EVENT_TIMER(MessageType.ACTION, "§fAnother §b%capture% §fbefore §d%player% §fwins the koth §n%name%§e. §8(§7%x%, %y%, %z%§8)"),
+	ZKOHT_EVENT_EVERYSECONDS(MessageType.ACTION, "§d%player% §7- §8[§f%classicProgress%§8] §7- §b%classicPercent%§f%"),
 	
 	ZKOHT_EVENT_FACION("No faction"),
 	ZKOHT_EVENT_PLAYER("Person"), 

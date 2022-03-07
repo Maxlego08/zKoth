@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -61,7 +62,7 @@ public class ZKoth extends ZUtils implements Koth {
 	private transient FactionListener factionListener;
 	private transient AtomicInteger currentCaptureSeconds;
 
-	private transient Map<Player, Long> playersValues = new HashMap<Player, Long>();
+	private transient Map<Player, Integer> playersValues = new HashMap<Player, Integer>();
 
 	/**
 	 * @param name
@@ -370,9 +371,15 @@ public class ZKoth extends ZUtils implements Koth {
 		message = message.replace("%timerPercent%",
 				String.valueOf(this.format(this.percent(value, this.maxSecondsCap), Config.percentPrecision)));
 
-		message = message.replace("%timerProgress%", this.getProgressBar(value, this.maxSecondsCap, Config.progressBarTimer));
-		message = message.replace("%pointsProgress%", this.getProgressBar(value, this.maxPoints, Config.progressBarPoints));
-		message = message.replace("%classicProgress%", this.getProgressBar(this.captureSeconds - seconds, this.captureSeconds, Config.progressBarClassic));
+		message = message.replace("%timerProgress%",
+				this.getProgressBar(value, this.maxSecondsCap, Config.progressBarTimer));
+		message = message.replace("%pointsProgress%",
+				this.getProgressBar(value, this.maxPoints, Config.progressBarPoints));
+		
+		message = message.replace("%classicProgress%",
+				this.getProgressBar(this.captureSeconds - seconds, this.captureSeconds, Config.progressBarClassic));
+		message = message.replace("%classicPercent%",
+				String.valueOf(this.format(this.percent(this.captureSeconds - seconds, this.captureSeconds), Config.percentPrecision)));		
 
 		String faction = this.currentPlayer == null ? Message.ZKOHT_EVENT_FACION.getMessage()
 				: this.factionListener.getFactionTag(this.currentPlayer);
@@ -491,6 +498,8 @@ public class ZKoth extends ZUtils implements Koth {
 
 			if (Config.displayMessageKothCap.contains(tmpCapture)) {
 				broadcast(Message.ZKOHT_EVENT_TIMER);
+			} else if (Config.enableEverySecondsCapMessage) {
+				broadcast(Message.ZKOHT_EVENT_EVERYSECONDS);
 			}
 
 			if (this.hasWin()) {
@@ -522,7 +531,7 @@ public class ZKoth extends ZUtils implements Koth {
 
 		switch (this.getType()) {
 		case CLASSIC:
-			return this.currentCaptureSeconds == null && this.currentCaptureSeconds.get() <= 0;
+			return this.currentCaptureSeconds != null && this.currentCaptureSeconds.get() <= 0;
 		case POINT:
 			return this.currentPlayer == null ? false : this.getValue(this.currentPlayer) >= this.maxPoints;
 		case TIMER:
@@ -709,7 +718,7 @@ public class ZKoth extends ZUtils implements Koth {
 	}
 
 	@Override
-	public Map<Player, Long> getValues() {
+	public Map<Player, Integer> getValues() {
 		if (this.playersValues == null) {
 			this.playersValues = new HashMap<>();
 		}
@@ -717,16 +726,117 @@ public class ZKoth extends ZUtils implements Koth {
 	}
 
 	@Override
-	public long getValue(Player player) {
+	public int getValue(Player player) {
 		if (this.playersValues == null) {
 			this.playersValues = new HashMap<>();
 		}
-		return player == null ? 0l : this.playersValues.getOrDefault(player, 0l);
+		return player == null ? 0 : this.playersValues.getOrDefault(player, 0);
 	}
 
 	@Override
 	public void onPlayerLeave(Player player) {
 		this.playersValues.remove(player);
+	}
+
+	private Entry<Player, Integer> getEntryAt(int position) {
+		try {
+			return this.playersValues.entrySet().stream().sorted(Map.Entry.comparingByValue())
+					.collect(Collectors.toList()).get(position);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@Override
+	public int getPointsAt(int position) {
+		Entry<Player, Integer> entry = this.getEntryAt(position);
+		if (entry == null) {
+			return 0;
+		}
+		return entry.getValue();
+	}
+
+	@Override
+	public int getTimerAt(int position) {
+		Entry<Player, Integer> entry = this.getEntryAt(position);
+		if (entry == null) {
+			return 0;
+		}
+		return entry.getValue();
+	}
+
+	@Override
+	public String getPointsPercentAt(int position) {
+		Entry<Player, Integer> entry = this.getEntryAt(position);
+		if (entry == null) {
+			return "0";
+		}
+		return this.format(this.percent(entry.getValue(), this.maxPoints), Config.percentPrecision);
+	}
+
+	@Override
+	public String getTimerPercentAt(int position) {
+		Entry<Player, Integer> entry = this.getEntryAt(position);
+		if (entry == null) {
+			return "0";
+		}
+		return this.format(this.percent(entry.getValue(), this.maxSecondsCap), Config.percentPrecision);
+	}
+
+	@Override
+	public String getTimerFormatAt(int position) {
+		Entry<Player, Integer> entry = this.getEntryAt(position);
+		if (entry == null) {
+			return "0s";
+		}
+		return TimerBuilder.getStringTime(entry.getValue());
+	}
+
+	@Override
+	public String getMaxTimerFormat() {
+		return TimerBuilder.getStringTime(this.maxSecondsCap);
+	}
+
+	@Override
+	public String getPointsProgressBarAt(int position) {
+		Entry<Player, Integer> entry = this.getEntryAt(position);
+		if (entry == null) {
+			return "";
+		}
+		return this.getProgressBar(entry.getValue(), this.maxPoints, Config.progressBarPoints);
+	}
+
+	@Override
+	public String getTimerProgressBarAt(int position) {
+		Entry<Player, Integer> entry = this.getEntryAt(position);
+		if (entry == null) {
+			return "";
+		}
+		return this.getProgressBar(entry.getValue(), this.maxSecondsCap, Config.progressBarTimer);
+	}
+
+	@Override
+	public String getClassicProgressBar() {
+		return this.getProgressBar(this.captureSeconds - this.currentCaptureSeconds.get(), this.captureSeconds,
+				Config.progressBarClassic);
+	}
+
+	@Override
+	public String getTimerNameAt(int position) {
+		Entry<Player, Integer> entry = this.getEntryAt(position);
+		if (entry == null) {
+			return "";
+		}
+		return entry.getKey().getName();
+	}
+
+	@Override
+	public String getPointsNameAt(int position) {
+		Entry<Player, Integer> entry = this.getEntryAt(position);
+		if (entry == null) {
+			return "";
+		}
+		return entry.getKey().getName();
 	}
 
 }

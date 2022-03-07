@@ -17,6 +17,7 @@ public class Config implements Saveable {
 	public static boolean useNoFactionHook = false;
 	public static boolean enableStartCapMessage = true;
 	public static boolean enableLooseCapMessage = true;
+	public static boolean enableEverySecondsCapMessage = false;
 	public static String scoreboardTitle = "§f§l⌈ §7§ozKoth §f§l⌋";
 	public static List<String> scoreboard = new ArrayList<String>();
 	public static List<String> scoreboardCooldown = new ArrayList<String>();

@@ -2,6 +2,7 @@ package fr.maxlego08.zkoth;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -375,11 +376,11 @@ public class ZKoth extends ZUtils implements Koth {
 				this.getProgressBar(value, this.maxSecondsCap, Config.progressBarTimer));
 		message = message.replace("%pointsProgress%",
 				this.getProgressBar(value, this.maxPoints, Config.progressBarPoints));
-		
+
 		message = message.replace("%classicProgress%",
 				this.getProgressBar(this.captureSeconds - seconds, this.captureSeconds, Config.progressBarClassic));
-		message = message.replace("%classicPercent%",
-				String.valueOf(this.format(this.percent(this.captureSeconds - seconds, this.captureSeconds), Config.percentPrecision)));		
+		message = message.replace("%classicPercent%", String.valueOf(this
+				.format(this.percent(this.captureSeconds - seconds, this.captureSeconds), Config.percentPrecision)));
 
 		String faction = this.currentPlayer == null ? Message.ZKOHT_EVENT_FACION.getMessage()
 				: this.factionListener.getFactionTag(this.currentPlayer);
@@ -739,9 +740,9 @@ public class ZKoth extends ZUtils implements Koth {
 	}
 
 	private Entry<Player, Integer> getEntryAt(int position) {
-		try {
-			return this.playersValues.entrySet().stream().sorted(Map.Entry.comparingByValue())
-					.collect(Collectors.toList()).get(position);
+		try {			
+			return this.playersValues.entrySet().stream().sorted((f1, f2) -> Integer.compare(f2.getValue(), f1.getValue()))
+					.collect(Collectors.toList()).get(position - 1);
 		} catch (Exception e) {
 			return null;
 		}
@@ -825,7 +826,7 @@ public class ZKoth extends ZUtils implements Koth {
 	public String getTimerNameAt(int position) {
 		Entry<Player, Integer> entry = this.getEntryAt(position);
 		if (entry == null) {
-			return "";
+			return Message.ZKOHT_EVENT_PLAYER.getMessage();
 		}
 		return entry.getKey().getName();
 	}
@@ -834,7 +835,7 @@ public class ZKoth extends ZUtils implements Koth {
 	public String getPointsNameAt(int position) {
 		Entry<Player, Integer> entry = this.getEntryAt(position);
 		if (entry == null) {
-			return "";
+			return Message.ZKOHT_EVENT_PLAYER.getMessage();
 		}
 		return entry.getKey().getName();
 	}

@@ -1,6 +1,5 @@
 package fr.maxlego08.zkoth.command.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 import fr.maxlego08.zkoth.ZKothPlugin;
@@ -26,9 +25,9 @@ public class CommandKothAxe extends VCommand {
 		this.player.getInventory().addItem(itemStack);
 		message(this.sender, Message.ZKOTH_AXE_RECEIVE);
 
-		for (int a = 0; a != 200; a++) {
+		/*for (int a = 0; a != 200; a++) {
 			Bukkit.broadcastMessage("");
-		}
+		}*/
 
 		return CommandType.SUCCESS;
 	}

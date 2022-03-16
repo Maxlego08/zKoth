@@ -28,6 +28,9 @@ public class Config implements Saveable {
 	public static ProgressBar progressBarPoints = new ProgressBar(10, '|', "§b", "§7");
 	public static ProgressBar progressBarTimer = new ProgressBar(10, '|', "§b", "§7");
 	public static ProgressBar progressBarClassic = new ProgressBar(10, '|', "§b", "§7");
+	
+	public static ReplaceConfig replaceNoFaction = new ReplaceConfig("§2Wilderness", "§3NoFaction");
+	public static boolean enableReplaceNoFaction = false;
 
 	static {
 

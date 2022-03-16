@@ -34,6 +34,7 @@ import fr.maxlego08.zkoth.api.event.events.KothStartEvent;
 import fr.maxlego08.zkoth.api.event.events.KothStopEvent;
 import fr.maxlego08.zkoth.api.event.events.KothWinEvent;
 import fr.maxlego08.zkoth.save.Config;
+import fr.maxlego08.zkoth.save.ReplaceConfig;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
 import fr.maxlego08.zkoth.zcore.enums.Message;
 import fr.maxlego08.zkoth.zcore.utils.Cuboid;
@@ -386,6 +387,13 @@ public class ZKoth extends ZUtils implements Koth {
 				: this.factionListener.getFactionTag(this.currentPlayer);
 		message = message.replace("%faction%", faction);
 
+		if (Config.replaceNoFaction != null && Config.enableReplaceNoFaction) {
+			
+			ReplaceConfig config = Config.replaceNoFaction;
+			message = message.replace(config.getFrom(), config.getTo());
+			
+		}
+		
 		return message;
 	}
 

@@ -222,7 +222,7 @@ public class ZKoth extends ZUtils implements Koth {
 		if (event.isCancelled())
 			return;
 
-		scheduleFix(0, 1000, (task, isCancelled) -> {
+		scheduleFix(0, Config.enableDebug ? 10 : 1000, (task, isCancelled) -> {
 
 			this.timerTask = task;
 
@@ -247,6 +247,7 @@ public class ZKoth extends ZUtils implements Koth {
 				this.isCooldown = false;
 				this.timerTask.cancel();
 				this.spawnNow();
+				return;
 			}
 
 			this.currentCaptureSeconds.decrementAndGet();
@@ -569,7 +570,7 @@ public class ZKoth extends ZUtils implements Koth {
 
 		Location location = center;
 
-		if (this.itemStacks.size() != 0)
+		if (this.itemStacks.size() != 0) {
 			switch (this.type) {
 			case CHEST:
 				location.getBlock().setType(Material.CHEST);
@@ -602,6 +603,7 @@ public class ZKoth extends ZUtils implements Koth {
 			default:
 				break;
 			}
+		}
 
 		/* FIN Gestion des loots */
 
@@ -615,12 +617,14 @@ public class ZKoth extends ZUtils implements Koth {
 
 	@Override
 	public CollectionConsumer<Player> onScoreboard() {
-		if (this.isCooldown) {
-			return p -> Config.scoreboardCooldown.stream().map(e -> papi(replaceMessage(e), p))
-					.collect(Collectors.toList());
-		} else {
-			return p -> Config.scoreboard.stream().map(e -> papi(replaceMessage(e), p)).collect(Collectors.toList());
-		}
+		return p -> {
+			if (this.isCooldown) {
+				return Config.scoreboardCooldown.stream().map(e -> papi(replaceMessage(e), p))
+						.collect(Collectors.toList());
+			} else {
+				return Config.scoreboard.stream().map(e -> papi(replaceMessage(e), p)).collect(Collectors.toList());
+			}
+		};
 	}
 
 	@Override
@@ -739,9 +743,10 @@ public class ZKoth extends ZUtils implements Koth {
 	}
 
 	private Entry<Player, Integer> getEntryAt(int position) {
-		try {			
-			return this.playersValues.entrySet().stream().sorted((f1, f2) -> Integer.compare(f2.getValue(), f1.getValue()))
-					.collect(Collectors.toList()).get(position - 1);
+		try {
+			return this.playersValues.entrySet().stream()
+					.sorted((f1, f2) -> Integer.compare(f2.getValue(), f1.getValue())).collect(Collectors.toList())
+					.get(position - 1);
 		} catch (Exception e) {
 			return null;
 		}

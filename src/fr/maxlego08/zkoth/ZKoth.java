@@ -388,12 +388,12 @@ public class ZKoth extends ZUtils implements Koth {
 		message = message.replace("%faction%", faction);
 
 		if (Config.replaceNoFaction != null && Config.enableReplaceNoFaction) {
-			
+
 			ReplaceConfig config = Config.replaceNoFaction;
 			message = message.replace(config.getFrom(), config.getTo());
-			
+
 		}
-		
+
 		return message;
 	}
 

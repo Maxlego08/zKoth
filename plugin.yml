@@ -1,7 +1,7 @@
 name: zKoth
 author: Maxlego08
 main: fr.maxlego08.zkoth.ZKothPlugin
-version: 2.1.0.2
+version: 2.1.0.3
 softdepend: [PlaceholderAPI, Guilds, Factions, FactionsX, SuperiorSkyblock2, LegacyFactions, FeatherBoard, TAB, TitleManager, UltimateFactions, Multiverse-Core]
 commands:
 api-version: 1.13

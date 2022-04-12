@@ -76,7 +76,12 @@ public enum Message {
 			"§8§m-+------------------------------+-"
 			),
 	
-	ZKOHT_EVENT_STOP(MessageType.CENTER, "§8§m-+------------------------------+-", "", "§fkoth §n%name%§f has just been stopped.", "", "§8§m-+------------------------------+-"),
+	ZKOHT_EVENT_STOP(MessageType.CENTER, 
+			"§8§m-+------------------------------+-", 
+			"", 
+			"§fkoth §n%name%§f has just been stopped.",
+			"", 
+			"§8§m-+------------------------------+-"),
 	
 	ZKOHT_EVENT_CATCH(MessageType.ACTION, "§d%player% §fjust started capturing the koth §n%name%§f. §8(§7%x%, %y%, %z%§8)"),
 	ZKOHT_EVENT_LOOSE(MessageType.ACTION, "§d%player% §fjust loose koth §n%name%§f. §8(§7%x%, %y%, %z%§8)"),

@@ -43,6 +43,7 @@ import fr.maxlego08.zkoth.hooks.FactionsHook;
 import fr.maxlego08.zkoth.hooks.FactionsXHook;
 import fr.maxlego08.zkoth.hooks.GangsHook;
 import fr.maxlego08.zkoth.hooks.GuildsHook;
+import fr.maxlego08.zkoth.hooks.SimpleClanHook;
 import fr.maxlego08.zkoth.hooks.SuperiorSkyblock2Hook;
 import fr.maxlego08.zkoth.hooks.UltimateFaction;
 import fr.maxlego08.zkoth.listener.ListenerAdapter;
@@ -97,6 +98,12 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 				this.factionListener = new FactionsXHook();
 				Logger.info("FactionsX plugin detected successfully.", LogType.SUCCESS);
+
+			} else if (pluginManager.isPluginEnabled("SimpleClans")) {
+
+				Plugin plugin = this.plugin.getServer().getPluginManager().getPlugin("SimpleClans");
+				this.factionListener = new SimpleClanHook(plugin);
+				Logger.info("SimpleClans plugin detected successfully.", LogType.SUCCESS);
 
 			} else if (pluginManager.isPluginEnabled("SuperiorSkyblock2")) {
 
@@ -542,10 +549,10 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		this.save(this.plugin.getPersist());
 	}
-	
+
 	@Override
 	public void setKothPoints(CommandSender sender, String name, int points) {
-		
+
 		Optional<Koth> optional = getKoth(name);
 		if (!optional.isPresent()) {
 			message(sender, Message.ZKOTH_DOESNT_EXIST, "%name%", name);
@@ -573,7 +580,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		this.save(this.plugin.getPersist());
 	}
-	
+
 	@Override
 	public void updateLoots(Player player, String name) {
 

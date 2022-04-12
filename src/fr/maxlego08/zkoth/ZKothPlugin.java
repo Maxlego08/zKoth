@@ -71,22 +71,20 @@ public class ZKothPlugin extends ZPlugin {
 			this.scoreboardManager.setScoreboard(new FeatherBoardHook());
 		}
 
-		try {
-			if (this.isEnable(Plugins.TAB) && Class.forName("me/neznamy/tab/api/TABAPI") != null) {
-				this.scoreboardManager.setScoreboard(new TabPremiumHook());
-			}
-		} catch (ClassNotFoundException e) {
+		if (this.isEnable(Plugins.TAB)) {
+			System.out.println("ici !");
+			this.scoreboardManager.setScoreboard(new TabPremiumHook());
 		}
 
 		if (this.isEnable(Plugins.TITLEMANAGER)) {
 			this.scoreboardManager.setScoreboard(new TitleManagerHook());
 		}
-		
+
 		if (this.isEnable(Plugins.STERNALBOARD)) {
 			Plugin plugin = this.getServer().getPluginManager().getPlugin("SternalBoard");
 			this.scoreboardManager.setScoreboard(new SternalBoardHook(plugin));
 		}
-		
+
 		this.scoreboardManager.setDefaultScoreboard();
 		Logger.info("Load " + this.scoreboardManager.getScoreboard().getClass().getName() + " scoreboard manager");
 
@@ -102,7 +100,7 @@ public class ZKothPlugin extends ZPlugin {
 
 		VersionChecker checker = new VersionChecker(this, 9);
 		checker.useLastVersion();
-		
+
 		postEnable();
 	}
 
@@ -129,5 +127,5 @@ public class ZKothPlugin extends ZPlugin {
 	public SchedulerManager getSchedulerManager() {
 		return scheduler;
 	}
-	
+
 }

@@ -15,16 +15,17 @@ public class TabPremiumHook implements Scoreboard {
 	@Override
 	public void toggle(Player player, Consumer<Player> after) {
 		TabPlayer tabPlayer = TABAPI.getPlayer(player.getUniqueId());
-		if (tabPlayer != null && !tabPlayer.isScoreboardVisible())
+		if (tabPlayer != null && !tabPlayer.isScoreboardVisible()) {
 			tabPlayer.toggleScoreboard(false);
+		}
 	}
 
 	@Override
 	public void hide(Player player, Consumer<Player> after) {
 		TabPlayer tabPlayer = TABAPI.getPlayer(player.getUniqueId());
-		if (tabPlayer != null && tabPlayer.isScoreboardVisible())
+		if (tabPlayer != null && tabPlayer.isScoreboardVisible()) {
 			tabPlayer.toggleScoreboard(false);
-		else
+		} else {
 			Bukkit.getScheduler().runTaskLater(ZPlugin.z(), () -> {
 				final TabPlayer tabPlayer2 = TABAPI.getPlayer(player.getUniqueId());
 				if (tabPlayer2 != null && tabPlayer2.isScoreboardVisible()) {
@@ -33,6 +34,7 @@ public class TabPremiumHook implements Scoreboard {
 						after.accept(player);
 				}
 			}, 20);
+		}
 	}
 
 }

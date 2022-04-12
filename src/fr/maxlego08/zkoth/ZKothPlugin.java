@@ -1,5 +1,6 @@
 package fr.maxlego08.zkoth;
 
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
 
 import fr.maxlego08.zkoth.api.KothManager;
@@ -12,6 +13,7 @@ import fr.maxlego08.zkoth.save.MessageLoader;
 import fr.maxlego08.zkoth.scheduler.SchedulerManager;
 import fr.maxlego08.zkoth.scoreboard.ScoreBoardManager;
 import fr.maxlego08.zkoth.scoreboard.implementations.FeatherBoardHook;
+import fr.maxlego08.zkoth.scoreboard.implementations.SternalBoardHook;
 import fr.maxlego08.zkoth.scoreboard.implementations.TabPremiumHook;
 import fr.maxlego08.zkoth.scoreboard.implementations.TitleManagerHook;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
@@ -79,6 +81,12 @@ public class ZKothPlugin extends ZPlugin {
 		if (this.isEnable(Plugins.TITLEMANAGER)) {
 			this.scoreboardManager.setScoreboard(new TitleManagerHook());
 		}
+		
+		if (this.isEnable(Plugins.STERNALBOARD)) {
+			Plugin plugin = this.getServer().getPluginManager().getPlugin("SternalBoard");
+			this.scoreboardManager.setScoreboard(new SternalBoardHook(plugin));
+		}
+		
 		this.scoreboardManager.setDefaultScoreboard();
 		Logger.info("Load " + this.scoreboardManager.getScoreboard().getClass().getName() + " scoreboard manager");
 

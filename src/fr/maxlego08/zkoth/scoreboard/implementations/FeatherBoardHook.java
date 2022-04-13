@@ -16,15 +16,17 @@ public class FeatherBoardHook extends ZUtils implements Scoreboard {
 
 	@Override
 	public void toggle(Player player, Consumer<Player> after) {
-		if (!FeatherBoardAPI.isToggled(player))
+		if (!FeatherBoardAPI.isToggled(player)) {
 			FeatherBoardAPI.toggle(player, true);
+		}
 //		Bukkit.dispatchCommand(player, "sb toggle");
 	}
 
 	@Override
 	public void hide(Player player, Consumer<Player> after) {
-		if (FeatherBoardAPI.isToggled(player))
+		if (FeatherBoardAPI.isToggled(player)) {
 			FeatherBoardAPI.toggle(player, false);
+		}
 	}
 
 }

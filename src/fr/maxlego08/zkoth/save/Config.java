@@ -36,7 +36,7 @@ public class Config implements Saveable {
 
 		scoreboard.add("§r");
 		scoreboard.add("§6§l⟣ §fKoth: §b%name%");
-		scoreboard.add("§6§l⟣ §fCoordinate: §b%x% %y% %z%");
+		scoreboard.add("§6§l⟣ §fCoord: §b%x% %y% %z%");
 		scoreboard.add("§6§l⟣ §fFaction: §b%faction%");
 		scoreboard.add("§0");
 		scoreboard.add("§6§l⟣ §fTime: §d%capture%");

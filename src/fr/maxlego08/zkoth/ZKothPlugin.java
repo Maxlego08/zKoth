@@ -63,7 +63,7 @@ public class ZKothPlugin extends ZPlugin {
 		/* Add Saver */
 
 		addSave(Config.getInstance());
-		addSave((ZKothManager) kothManager);
+		// addSave((ZKothManager) kothManager);
 		addSave(messageLoader);
 		addSave(scheduler);
 

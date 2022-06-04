@@ -171,7 +171,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 			Logger.info("No plugin was detected.", LogType.SUCCESS);
 		}
 
-		KothHookEvent event = new KothHookEvent(factionListener);
+		KothHookEvent event = new KothHookEvent(this.factionListener);
 		event.callEvent();
 
 		this.factionListener = event.getFactionListener();

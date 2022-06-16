@@ -30,8 +30,9 @@ public class ItemStackUtils {
 		if (paramItemStack == null)
 			return "null";
 
-		if (itemstackSerialized.containsKey(paramItemStack))
+		if (itemstackSerialized.containsKey(paramItemStack)) {
 			return itemstackSerialized.get(paramItemStack);
+		}
 
 		ByteArrayOutputStream localByteArrayOutputStream = null;
 		try {
@@ -42,20 +43,19 @@ public class ItemStackUtils {
 					.getMethod("asNMSCopy", new Class[] { ItemStack.class })
 					.invoke(null, new Object[] { paramItemStack });
 
-			if (NMS_VERSION == 1.18) {
+			if (NMS_VERSION == 1.18 || NMS_VERSION == 1.19) {
 				EnumReflectionItemStack.ITEMSTACK.getClassz().getMethod("b", new Class[] { localClass })
 						.invoke(localObject2, new Object[] { localObject1 });
 			} else {
 				EnumReflectionItemStack.ITEMSTACK.getClassz().getMethod("save", new Class[] { localClass })
 						.invoke(localObject2, new Object[] { localObject1 });
 			}
-
 			localByteArrayOutputStream = new ByteArrayOutputStream();
 			EnumReflectionItemStack.NBTCOMPRESSEDSTREAMTOOLS.getClassz()
 					.getMethod("a", new Class[] { localClass, OutputStream.class })
 					.invoke(null, new Object[] { localObject1, localByteArrayOutputStream });
+
 		} catch (Exception localException) {
-			// localException.printStackTrace();
 		}
 		String string = Base64.encode(localByteArrayOutputStream.toByteArray());
 		itemstackSerialized.put(paramItemStack, string);
@@ -73,7 +73,7 @@ public class ItemStackUtils {
 
 		if (paramString.equals("null"))
 			return null;
-		
+
 		ByteArrayInputStream localByteArrayInputStream = null;
 		try {
 			localByteArrayInputStream = new ByteArrayInputStream(Base64.decode(paramString));
@@ -103,7 +103,6 @@ public class ItemStackUtils {
 			localItemStack = (ItemStack) EnumReflectionItemStack.CRAFTITEMSTACK.getClassz()
 					.getMethod("asBukkitCopy", new Class[] { localClass2 }).invoke(null, new Object[] { localObject2 });
 		} catch (Exception localException) {
-			// localException.printStackTrace();
 		}
 		if (localItemStack != null && !itemstackSerialized.containsKey(localItemStack))
 			itemstackSerialized.put(localItemStack, paramString);

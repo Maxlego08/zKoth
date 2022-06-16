@@ -13,6 +13,7 @@ import fr.maxlego08.zkoth.save.MessageLoader;
 import fr.maxlego08.zkoth.scheduler.SchedulerManager;
 import fr.maxlego08.zkoth.scoreboard.ScoreBoardManager;
 import fr.maxlego08.zkoth.scoreboard.implementations.FeatherBoardHook;
+import fr.maxlego08.zkoth.scoreboard.implementations.SimpleBoardHook;
 import fr.maxlego08.zkoth.scoreboard.implementations.SternalBoardHook;
 import fr.maxlego08.zkoth.scoreboard.implementations.TabPremiumHook;
 import fr.maxlego08.zkoth.scoreboard.implementations.TitleManagerHook;
@@ -83,6 +84,10 @@ public class ZKothPlugin extends ZPlugin {
 		if (this.isEnable(Plugins.STERNALBOARD)) {
 			Plugin plugin = this.getServer().getPluginManager().getPlugin("SternalBoard");
 			this.scoreboardManager.setScoreboard(new SternalBoardHook(plugin));
+		}
+		
+		if (this.isEnable(Plugins.SIMPLECORE)) {
+			this.scoreboardManager.setScoreboard(new SimpleBoardHook(this));
 		}
 
 		this.scoreboardManager.setDefaultScoreboard();

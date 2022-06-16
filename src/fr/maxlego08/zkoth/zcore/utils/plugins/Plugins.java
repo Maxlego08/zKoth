@@ -9,6 +9,7 @@ public enum Plugins {
 	PLACEHOLDERAPI("PlaceholderAPI"),
 	TITLEMANAGER("TitleManager"),
 	STERNALBOARD("SternalBoard"),
+	SIMPLECORE("SimpleScore"),
 	
 	;
 

@@ -54,7 +54,7 @@ public class CommandKothSchedulerAddDelay extends VCommand {
 		int hour = this.argAsInteger(2);
 		int minute = this.argAsInteger(3);
 
-		Scheduler scheduler = new Scheduler(SchedulerType.REPEAT, day, hour, minute, totem.getName());
+		Scheduler scheduler = new Scheduler(SchedulerType.DELAY, day, hour, minute, totem.getName());
 
 		main.getSchedulerManager().addScheduler(this.sender, scheduler);
 

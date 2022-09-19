@@ -222,8 +222,9 @@ public class ZKoth extends ZUtils implements Koth {
 		KothStartEvent event = new KothStartEvent(this);
 		event.callEvent();
 
-		if (event.isCancelled())
+		if (event.isCancelled()) {
 			return;
+		}
 
 		scheduleFix(0, Config.enableDebug ? 10 : 1000, (task, isCancelled) -> {
 

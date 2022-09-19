@@ -10,11 +10,14 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import fr.maxlego08.zkoth.api.Koth;
 import fr.maxlego08.zkoth.api.KothManager;
+import fr.maxlego08.zkoth.save.Config;
+import fr.maxlego08.zkoth.scoreboard.ScoreBoardManager;
 import fr.maxlego08.zkoth.zcore.enums.Message;
 import fr.maxlego08.zkoth.zcore.logger.Logger;
 import fr.maxlego08.zkoth.zcore.logger.Logger.LogType;
@@ -96,7 +99,18 @@ public class SchedulerManager extends ZUtils implements Saveable {
 					}
 
 					Koth koth = optional.get();
-					koth.spawn(false);
+					koth.spawn(Config.spawnKothWithSchedulerNow);
+
+					if (Config.enableScoreboard) {
+
+						ScoreBoardManager boardManager = this.plugin.getScoreboardManager();
+
+						boardManager.setLinesAndSchedule(koth.onScoreboard());
+						for (Player player : Bukkit.getOnlinePlayers()) {
+							boardManager.createBoard(player, Config.scoreboardTitle);
+						}
+
+					}
 
 				}
 

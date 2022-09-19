@@ -73,7 +73,6 @@ public class ZKothPlugin extends ZPlugin {
 		}
 
 		if (this.isEnable(Plugins.TAB)) {
-			System.out.println("ici !");
 			this.scoreboardManager.setScoreboard(new TabPremiumHook());
 		}
 

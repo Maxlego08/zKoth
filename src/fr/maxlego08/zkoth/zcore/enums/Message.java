@@ -37,6 +37,7 @@ public enum Message {
 	ZKOTH_AXE_POS1("§7You have just put the first position in §f%world%§7, §f%x%§7, §f%y%§7, §f%z%§7."),
 	ZKOTH_AXE_POS2("§7You have just put the second position in §f%world%§7, §f%x%§7, §f%y%§7, §f%z%§7."), 
 	ZKOTH_ALREADY_EXIST("§cThe koth §f%name% §calready exists."),
+	ZKOTH_SIZE("§cYour koth is too small, you can't create one that small. Then you will come on discord for support when the problem comes from you."),
 	ZKOTH_DOESNT_EXIST("§cThe koth §f%name% §cdoesnt exists."),
 	
 	ZKOTH_CREATE_SUCCESS("§7You just created the koth §f%name%§7."), 

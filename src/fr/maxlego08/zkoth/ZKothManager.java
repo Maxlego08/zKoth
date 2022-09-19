@@ -179,7 +179,11 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 	@Override
 	public Optional<Koth> getKoth(String name) {
-		Optional<ZKoth> zKoth = koths.stream().filter(koth -> koth.getName().equalsIgnoreCase(name)).findFirst();
+		if (name == null || name.isEmpty()) {
+			return Optional.empty();
+		}
+		Optional<ZKoth> zKoth = koths.stream()
+				.filter(koth -> koth.getName() != null && koth.getName().equalsIgnoreCase(name)).findFirst();
 		return zKoth.isPresent() ? Optional.of(zKoth.get()) : Optional.empty();
 	}
 
@@ -190,6 +194,12 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		Optional<Koth> optional = getKoth(name);
 		if (optional.isPresent()) {
 			message(sender, Message.ZKOTH_ALREADY_EXIST, "%name%", name);
+			return;
+		}
+
+		int distance = Math.abs(minLocation.getBlockX() - maxLocation.getBlockY());
+		if (distance <= 0) {
+			message(sender, Message.ZKOTH_SIZE);
 			return;
 		}
 

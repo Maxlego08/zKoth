@@ -59,7 +59,7 @@ public class SchedulerManager extends ZUtils implements Saveable {
 	public void addScheduler(CommandSender sender, Scheduler scheduler) {
 
 		schedulers.add(scheduler);
-		message(sender, Message.ZKOTH_SCHEDULER_CREATE, scheduler.getTotemName());
+		message(sender, Message.ZKOTH_SCHEDULER_CREATE, "%koth%", scheduler.getTotemName());
 		run();
 
 	}

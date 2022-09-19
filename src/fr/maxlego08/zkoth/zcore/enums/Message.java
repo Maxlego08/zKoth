@@ -93,7 +93,7 @@ public enum Message {
 	ZKOHT_EVENT_PLAYER("Person"), 
 	ZKOTH_EVENT_DISABLE("§cThe event is not enable."),
 	
-	ZKOTH_SCHEDULER_CREATE("§eYou have just created a scheduler for the koth §6%s§e."),
+	ZKOTH_SCHEDULER_CREATE("§aYou have just created a scheduler for the koth §f%koth%§a."),
 	ZKOTH_SCHEDULER_EMPTY("§cNo scheduler available"),
 	ZKOTH_SCHEDULER_REMOVE_HOVER("§7Click to delete the scheduler"),
 	ZKOTH_SCHEDULER_LIST("§6%totemName%§7, §f%type%§7, §e%day%§7, §e%hour%§7, §e%minute%"),

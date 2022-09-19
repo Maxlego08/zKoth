@@ -41,7 +41,7 @@ public class CommandKothSchedulerAddRepeat extends VCommand {
 		int minute = this.argAsInteger(1);
 		Scheduler scheduler = new Scheduler(SchedulerType.REPEAT, minute, totem.getName());
 
-		main.getSchedulerManager().addScheduler(sender, scheduler);
+		main.getSchedulerManager().addScheduler(this.sender, scheduler);
 
 		return CommandType.SUCCESS;
 	}

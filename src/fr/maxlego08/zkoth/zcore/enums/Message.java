@@ -146,7 +146,7 @@ public enum Message {
 	
 	ZKOTH_SCHEDULER_ADD(
 		"§f/zkoth scheduler add repeat <koth name> <hour> §8» §7Repeat koth every x hours.",
-		"§f/zkoth scheduler add delay <koth name> <day> <hour> <minute> §8» §7Start KOTH at specitif time."
+		"§f/zkoth scheduler add delay <koth name> <day> <hour> <minute> §8» §7Start koth at specitif time."
 		),
 	
 	;

@@ -144,6 +144,11 @@ public enum Message {
 	DESCRIPTION_POINTS("Set koth max point for point type"),
 	DESCRIPTION_LOOTTYPE("Set loot type for a koth"),
 	
+	ZKOTH_SCHEDULER_ADD(
+		"§f/zkoth scheduler add repeat <koth name> <hour> §8» §7Repeat koth every x hours.",
+		"§f/zkoth scheduler add delay <koth name> <day> <hour> <minute> §8» §7Start KOTH at specitif time."
+		),
+	
 	;
 
 	private List<String> messages;

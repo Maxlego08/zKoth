@@ -37,6 +37,8 @@ import fr.maxlego08.zkoth.save.Config;
 import fr.maxlego08.zkoth.save.ReplaceConfig;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
 import fr.maxlego08.zkoth.zcore.enums.Message;
+import fr.maxlego08.zkoth.zcore.logger.Logger;
+import fr.maxlego08.zkoth.zcore.logger.Logger.LogType;
 import fr.maxlego08.zkoth.zcore.utils.Cuboid;
 import fr.maxlego08.zkoth.zcore.utils.ZUtils;
 import fr.maxlego08.zkoth.zcore.utils.builder.TimerBuilder;
@@ -288,6 +290,10 @@ public class ZKoth extends ZUtils implements Koth {
 
 		switch (message.getType()) {
 		case ACTION: {
+			if (message.getMessage() == null){
+				Logger.info(message.name() + " is null, check your config plz !", LogType.ERROR);
+				return;
+			}
 			String realMessage = replaceMessage(message.getMessage());
 			this.broadcastAction(realMessage);
 			break;

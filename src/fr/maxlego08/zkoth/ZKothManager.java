@@ -28,6 +28,7 @@ import fr.maxlego08.zkoth.api.FactionListener;
 import fr.maxlego08.zkoth.api.Koth;
 import fr.maxlego08.zkoth.api.KothManager;
 import fr.maxlego08.zkoth.api.Selection;
+import fr.maxlego08.zkoth.api.enums.KothType;
 import fr.maxlego08.zkoth.api.enums.LootType;
 import fr.maxlego08.zkoth.api.event.events.KothCreateEvent;
 import fr.maxlego08.zkoth.api.event.events.KothHookEvent;
@@ -42,6 +43,7 @@ import fr.maxlego08.zkoth.hooks.FactionsHook;
 import fr.maxlego08.zkoth.hooks.FactionsXHook;
 import fr.maxlego08.zkoth.hooks.GangsHook;
 import fr.maxlego08.zkoth.hooks.GuildsHook;
+import fr.maxlego08.zkoth.hooks.SimpleClanHook;
 import fr.maxlego08.zkoth.hooks.SuperiorSkyblock2Hook;
 import fr.maxlego08.zkoth.hooks.UltimateFaction;
 import fr.maxlego08.zkoth.listener.ListenerAdapter;
@@ -96,6 +98,12 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 				this.factionListener = new FactionsXHook();
 				Logger.info("FactionsX plugin detected successfully.", LogType.SUCCESS);
+
+			} else if (pluginManager.isPluginEnabled("SimpleClans")) {
+
+				Plugin plugin = this.plugin.getServer().getPluginManager().getPlugin("SimpleClans");
+				this.factionListener = new SimpleClanHook(plugin);
+				Logger.info("SimpleClans plugin detected successfully.", LogType.SUCCESS);
 
 			} else if (pluginManager.isPluginEnabled("SuperiorSkyblock2")) {
 
@@ -163,7 +171,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 			Logger.info("No plugin was detected.", LogType.SUCCESS);
 		}
 
-		KothHookEvent event = new KothHookEvent(factionListener);
+		KothHookEvent event = new KothHookEvent(this.factionListener);
 		event.callEvent();
 
 		this.factionListener = event.getFactionListener();
@@ -171,7 +179,11 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 	@Override
 	public Optional<Koth> getKoth(String name) {
-		Optional<ZKoth> zKoth = koths.stream().filter(koth -> koth.getName().equalsIgnoreCase(name)).findFirst();
+		if (name == null || name.isEmpty()) {
+			return Optional.empty();
+		}
+		Optional<ZKoth> zKoth = koths.stream()
+				.filter(koth -> koth.getName() != null && koth.getName().equalsIgnoreCase(name)).findFirst();
 		return zKoth.isPresent() ? Optional.of(zKoth.get()) : Optional.empty();
 	}
 
@@ -182,6 +194,12 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		Optional<Koth> optional = getKoth(name);
 		if (optional.isPresent()) {
 			message(sender, Message.ZKOTH_ALREADY_EXIST, "%name%", name);
+			return;
+		}
+
+		int distance = Math.abs(minLocation.getBlockX() - maxLocation.getBlockY());
+		if (distance <= 0) {
+			message(sender, Message.ZKOTH_SIZE);
 			return;
 		}
 
@@ -266,6 +284,9 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		if (Config.enableScoreboard) {
 			this.manager.delete(player);
 		}
+
+		List<Koth> koths = this.getActiveKoths();
+		koths.forEach(koth -> koth.onPlayerLeave(player));
 	}
 
 	@Override
@@ -442,9 +463,12 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		String location = center.getWorld().getName() + ", " + center.getBlockX() + ", " + center.getBlockY() + ", "
 				+ center.getBlockZ();
 
-		message(sender, "§fName: §b%s", koth.getName());
-		message(sender, "§fCoordinate: §b%s", location);
-		message(sender, "§fLoot type: §b%s", koth.getLootType().name());
+		message(sender, "§fName: §b%name%", "%name%", koth.getName());
+		message(sender, "§fCoordinate: §b%location%", "%location%", location);
+		message(sender, "§fType: §b%type%", "%type%", name(koth.getType().name()));
+		message(sender, "§fMax points: §b%points%", "%points%", koth.getMaxPoints());
+		message(sender, "§fMax timer seconds: §b%timer%", "%timer%", koth.getMaxSecondsCap());
+		message(sender, "§fLoot type: §b%lootType%", "%lootType%", name(koth.getLootType().name()));
 		message(sender, "§fCommands §8(§7" + koth.getCommands().size() + "§8):");
 		if (sender instanceof ConsoleCommandSender) {
 			koth.getCommands().forEach(command -> messageWO(sender, " §7" + command));
@@ -515,7 +539,54 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		Koth koth = optional.get();
 		koth.setLootType(type);
-		message(sender, Message.ZKOTH_LOOT_EDIT, "%type%", name(type.name()));
+		message(sender, Message.ZKOTH_LOOT_EDIT, "%type%", name(type.name()), "%name%", koth.getName());
+
+		this.save(this.plugin.getPersist());
+	}
+
+	@Override
+	public void setKothType(CommandSender sender, String name, KothType kothType) {
+
+		Optional<Koth> optional = getKoth(name);
+		if (!optional.isPresent()) {
+			message(sender, Message.ZKOTH_DOESNT_EXIST, "%name%", name);
+			return;
+		}
+
+		Koth koth = optional.get();
+		koth.setType(kothType);
+		message(sender, Message.ZKOTH_TYPE_EDIT, "%type%", name(kothType.name()), "%name%", koth.getName());
+
+		this.save(this.plugin.getPersist());
+	}
+
+	@Override
+	public void setKothPoints(CommandSender sender, String name, int points) {
+
+		Optional<Koth> optional = getKoth(name);
+		if (!optional.isPresent()) {
+			message(sender, Message.ZKOTH_DOESNT_EXIST, "%name%", name);
+			return;
+		}
+
+		Koth koth = optional.get();
+		koth.setMaxPoints(points);
+		message(sender, Message.ZKOTH_POINTS_EDIT, "%points%", points, "%name%", koth.getName());
+
+		this.save(this.plugin.getPersist());
+	}
+
+	@Override
+	public void setKothTimerSeconds(CommandSender sender, String name, int seconds) {
+		Optional<Koth> optional = getKoth(name);
+		if (!optional.isPresent()) {
+			message(sender, Message.ZKOTH_DOESNT_EXIST, "%name%", name);
+			return;
+		}
+
+		Koth koth = optional.get();
+		koth.setMaxSecondsCap(seconds);
+		message(sender, Message.ZKOTH_TIMER_EDIT, "%seconds%", seconds, "%name%", koth.getName());
 
 		this.save(this.plugin.getPersist());
 	}

@@ -49,13 +49,18 @@ public class ScoreBoardManager extends ZUtils {
 
 			Iterator<FastBoard> iterator = this.boards.values().iterator();
 			while (iterator.hasNext()) {
-				FastBoard b = iterator.next();
-				if (b.isDeleted() || !b.getPlayer().isOnline()) {
-					this.boards.remove(b.getPlayer());
+				try {
+					FastBoard b = iterator.next();
+					if (b.isDeleted() || !b.getPlayer().isOnline()) {
+						this.boards.remove(b.getPlayer());
+					}
+				} catch (Exception ignored) {
 				}
 			}
 
-			this.boards.forEach((player, board) -> board.updateLines(this.lines.accept(player)));
+			this.boards.forEach((player, board) -> {
+				board.updateLines(this.lines.accept(player));
+			});
 
 		});
 	}

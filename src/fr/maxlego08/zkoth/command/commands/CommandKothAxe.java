@@ -21,11 +21,14 @@ public class CommandKothAxe extends VCommand {
 	@Override
 	protected CommandType perform(ZKothPlugin plugin) {
 
-		
 		ItemStack itemStack = this.manager.getKothAxe();
 		this.player.getInventory().addItem(itemStack);
-		message(this.sender, Message.ZKOTH_AXE_RECEIVE);	
-		
+		message(this.sender, Message.ZKOTH_AXE_RECEIVE);
+
+		/*for (int a = 0; a != 200; a++) {
+			Bukkit.broadcastMessage("");
+		}*/
+
 		return CommandType.SUCCESS;
 	}
 

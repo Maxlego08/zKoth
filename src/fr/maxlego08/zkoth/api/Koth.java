@@ -1,12 +1,15 @@
 package fr.maxlego08.zkoth.api;
 
 import java.util.List;
+import java.util.Map;
+import java.util.TimerTask;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import fr.maxlego08.zkoth.api.enums.KothType;
 import fr.maxlego08.zkoth.api.enums.LootType;
 import fr.maxlego08.zkoth.zcore.utils.Cuboid;
 import fr.maxlego08.zkoth.zcore.utils.interfaces.CollectionConsumer;
@@ -101,7 +104,7 @@ public interface Koth {
 	 * @param now
 	 */
 	public void spawn(CommandSender sender, boolean now);
-	
+
 	/**
 	 * 
 	 * @param now
@@ -150,22 +153,115 @@ public interface Koth {
 	 * @param second
 	 */
 	public void setCapture(int second);
-	
+
 	/**
 	 * 
 	 * @return
 	 */
 	public int getCurrentSecond();
-	
+
 	/**
 	 * 
 	 * @return
 	 */
 	public String getCurrentPlayer();
-	
+
 	/**
 	 * 
 	 * @return
 	 */
 	public String getCurrentFaction();
+
+	/**
+	 * 
+	 * @return
+	 */
+	public KothType getType();
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getMaxSecondsCap();
+
+	/**
+	 * 
+	 * @param seconds
+	 */
+	public void setMaxSecondsCap(int seconds);
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getMaxPoints();
+
+	/**
+	 * 
+	 * @param points
+	 */
+	public void setMaxPoints(int points);
+
+	/**
+	 * 
+	 * @param task
+	 * @param cuboid
+	 * @param player
+	 */
+	public void endKoth(TimerTask task, Cuboid cuboid, Player player);
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Map<Player, Integer> getValues();
+
+	/**
+	 * 
+	 * @param player
+	 * @return
+	 */
+	public int getValue(Player player);
+
+	/**
+	 * 
+	 * @param player
+	 */
+	public void onPlayerLeave(Player player);
+	
+	public void setType(KothType type);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean hasWin();
+
+	/**
+	 * 
+	 * @param position
+	 * @return
+	 */
+	public int getPointsAt(int position);
+
+	public int getTimerAt(int position);
+
+	public String getPointsPercentAt(int position);
+	
+	public String getTimerPercentAt(int position);
+	
+	public String getTimerFormatAt(int position);
+	
+	public String getMaxTimerFormat();
+	
+	public String getPointsProgressBarAt(int position);
+	
+	public String getTimerProgressBarAt(int position);
+	
+	public String getClassicProgressBar();
+
+	public String getTimerNameAt(int position);
+	
+	public String getPointsNameAt(int position);
+
 }

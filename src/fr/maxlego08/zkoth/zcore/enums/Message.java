@@ -37,6 +37,7 @@ public enum Message {
 	ZKOTH_AXE_POS1("§7You have just put the first position in §f%world%§7, §f%x%§7, §f%y%§7, §f%z%§7."),
 	ZKOTH_AXE_POS2("§7You have just put the second position in §f%world%§7, §f%x%§7, §f%y%§7, §f%z%§7."), 
 	ZKOTH_ALREADY_EXIST("§cThe koth §f%name% §calready exists."),
+	ZKOTH_SIZE("§cYour koth is too small, you can't create one that small. Then you will come on discord for support when the problem comes from you."),
 	ZKOTH_DOESNT_EXIST("§cThe koth §f%name% §cdoesnt exists."),
 	
 	ZKOTH_CREATE_SUCCESS("§7You just created the koth §f%name%§7."), 
@@ -76,17 +77,23 @@ public enum Message {
 			"§8§m-+------------------------------+-"
 			),
 	
-	ZKOHT_EVENT_STOP(MessageType.CENTER, "§8§m-+------------------------------+-", "", "§fkoth §n%name%§f has just been stopped.", "", "§8§m-+------------------------------+-"),
+	ZKOHT_EVENT_STOP(MessageType.CENTER, 
+			"§8§m-+------------------------------+-", 
+			"", 
+			"§fkoth §n%name%§f has just been stopped.",
+			"", 
+			"§8§m-+------------------------------+-"),
 	
 	ZKOHT_EVENT_CATCH(MessageType.ACTION, "§d%player% §fjust started capturing the koth §n%name%§f. §8(§7%x%, %y%, %z%§8)"),
 	ZKOHT_EVENT_LOOSE(MessageType.ACTION, "§d%player% §fjust loose koth §n%name%§f. §8(§7%x%, %y%, %z%§8)"),
 	ZKOHT_EVENT_TIMER(MessageType.ACTION, "§fAnother §b%capture% §fbefore §d%player% §fwins the koth §n%name%§e. §8(§7%x%, %y%, %z%§8)"),
+	ZKOHT_EVENT_EVERYSECONDS(MessageType.ACTION, "§d%player% §7- §8[§f%classicProgress%§8] §7- §b%classicPercent%§f%"),
 	
 	ZKOHT_EVENT_FACION("No faction"),
 	ZKOHT_EVENT_PLAYER("Person"), 
 	ZKOTH_EVENT_DISABLE("§cThe event is not enable."),
 	
-	ZKOTH_SCHEDULER_CREATE("§eYou have just created a scheduler for the koth §6%s§e."),
+	ZKOTH_SCHEDULER_CREATE("§aYou have just created a scheduler for the koth §f%koth%§a."),
 	ZKOTH_SCHEDULER_EMPTY("§cNo scheduler available"),
 	ZKOTH_SCHEDULER_REMOVE_HOVER("§7Click to delete the scheduler"),
 	ZKOTH_SCHEDULER_LIST("§6%totemName%§7, §f%type%§7, §e%day%§7, §e%hour%§7, §e%minute%"),
@@ -97,7 +104,10 @@ public enum Message {
 	
 	ZKOTH_COMMAND_CREATE("§7You have just added the command §8\"§f%command%§8\""),
 	ZKOTH_COMMAND_DELETE("§aYou have just deleted a command."),
-	ZKOTH_LOOT_EDIT("§aYou have just set the type to §f%type%§a."),
+	ZKOTH_LOOT_EDIT("§aYou have just set the loot type to §f%type%§a."),
+	ZKOTH_TYPE_EDIT("§aYou have just set the type to §f%type%§a."),
+	ZKOTH_POINTS_EDIT("§aYou have just set the points to §f%points%§a."),
+	ZKOTH_TIMER_EDIT("§aYou have just set the timer to §f%seconds%§a."),
 	ZKOTH_LOOT_INVENTORY("§7Loots §b%name%"),
 	ZKOTH_LOOT_CHANGE("§aYou have just modified the loots of the koth §2%name%§a."),
 	ZKOTH_CAPUTRE_EDIT("§aYou have just modified the capture time of the koth §n%name%§a to §f%seconds%§a."),
@@ -129,7 +139,15 @@ public enum Message {
 	DESCRIPTION_STOP("Stop a koth"),
 	DESCRIPTION_SPAWN("Spawn a koth with cooldown"),
 	DESCRIPTION_CAPTURE("Set capture time for a koth"),
-	DESCRIPTION_TYPE("Set loot type for a koth"),
+	DESCRIPTION_TYPE("Set koth type (classic, point, timer)"),
+	DESCRIPTION_TIMER("Set koth max second for timer type"),
+	DESCRIPTION_POINTS("Set koth max point for point type"),
+	DESCRIPTION_LOOTTYPE("Set loot type for a koth"),
+	
+	ZKOTH_SCHEDULER_ADD(
+		"§f/zkoth scheduler add repeat <koth name> <hour> §8» §7Repeat koth every x hours.",
+		"§f/zkoth scheduler add delay <koth name> <day> <hour> <minute> §8» §7Start KOTH at specitif time."
+		),
 	
 	;
 

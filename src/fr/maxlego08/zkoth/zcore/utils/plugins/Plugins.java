@@ -8,6 +8,8 @@ public enum Plugins {
 	TAB("TAB"),
 	PLACEHOLDERAPI("PlaceholderAPI"),
 	TITLEMANAGER("TitleManager"),
+	STERNALBOARD("SternalBoard"),
+	SIMPLECORE("SimpleScore"),
 	
 	;
 

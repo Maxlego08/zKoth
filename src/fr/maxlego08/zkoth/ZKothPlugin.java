@@ -1,5 +1,6 @@
 package fr.maxlego08.zkoth;
 
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
 
 import fr.maxlego08.zkoth.api.KothManager;
@@ -12,6 +13,8 @@ import fr.maxlego08.zkoth.save.MessageLoader;
 import fr.maxlego08.zkoth.scheduler.SchedulerManager;
 import fr.maxlego08.zkoth.scoreboard.ScoreBoardManager;
 import fr.maxlego08.zkoth.scoreboard.implementations.FeatherBoardHook;
+import fr.maxlego08.zkoth.scoreboard.implementations.SimpleBoardHook;
+import fr.maxlego08.zkoth.scoreboard.implementations.SternalBoardHook;
 import fr.maxlego08.zkoth.scoreboard.implementations.TabPremiumHook;
 import fr.maxlego08.zkoth.scoreboard.implementations.TitleManagerHook;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
@@ -61,7 +64,7 @@ public class ZKothPlugin extends ZPlugin {
 		/* Add Saver */
 
 		addSave(Config.getInstance());
-		addSave((ZKothManager) kothManager);
+		// addSave((ZKothManager) kothManager);
 		addSave(messageLoader);
 		addSave(scheduler);
 
@@ -69,16 +72,23 @@ public class ZKothPlugin extends ZPlugin {
 			this.scoreboardManager.setScoreboard(new FeatherBoardHook());
 		}
 
-		try {
-			if (this.isEnable(Plugins.TAB) && Class.forName("me/neznamy/tab/api/TABAPI") != null) {
-				this.scoreboardManager.setScoreboard(new TabPremiumHook());
-			}
-		} catch (ClassNotFoundException e) {
+		if (this.isEnable(Plugins.TAB)) {
+			this.scoreboardManager.setScoreboard(new TabPremiumHook());
 		}
 
 		if (this.isEnable(Plugins.TITLEMANAGER)) {
 			this.scoreboardManager.setScoreboard(new TitleManagerHook());
 		}
+
+		if (this.isEnable(Plugins.STERNALBOARD)) {
+			Plugin plugin = this.getServer().getPluginManager().getPlugin("SternalBoard");
+			this.scoreboardManager.setScoreboard(new SternalBoardHook(plugin));
+		}
+		
+		if (this.isEnable(Plugins.SIMPLECORE)) {
+			this.scoreboardManager.setScoreboard(new SimpleBoardHook(this));
+		}
+
 		this.scoreboardManager.setDefaultScoreboard();
 		Logger.info("Load " + this.scoreboardManager.getScoreboard().getClass().getName() + " scoreboard manager");
 
@@ -94,7 +104,7 @@ public class ZKothPlugin extends ZPlugin {
 
 		VersionChecker checker = new VersionChecker(this, 9);
 		checker.useLastVersion();
-		
+
 		postEnable();
 	}
 
@@ -121,5 +131,5 @@ public class ZKothPlugin extends ZPlugin {
 	public SchedulerManager getSchedulerManager() {
 		return scheduler;
 	}
-	
+
 }

@@ -44,11 +44,13 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.potion.PotionEffectType;
 
+import com.google.common.base.Strings;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
 import fr.maxlego08.zkoth.ZKothPlugin;
 import fr.maxlego08.zkoth.api.enums.DefaultFontInfo;
+import fr.maxlego08.zkoth.save.ProgressBar;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
 import fr.maxlego08.zkoth.zcore.enums.EnumInventory;
 import fr.maxlego08.zkoth.zcore.enums.Permission;
@@ -334,7 +336,7 @@ public abstract class ZUtils extends MessageUtils {
 	 * @return
 	 */
 	protected double percent(double value, double total) {
-		return (double) ((value * 100) / total);
+		return total == 0 ? 0 : (double) ((value * 100) / total);
 	}
 
 	/**
@@ -507,11 +509,11 @@ public abstract class ZUtils extends MessageUtils {
 	 * @return
 	 */
 	protected String color(String message) {
-		
+
 		if (message == null) {
 			return null;
 		}
-			
+
 		if (NMSUtils.isHexColor()) {
 			Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
 			Matcher matcher = pattern.matcher(message);
@@ -521,7 +523,7 @@ public abstract class ZUtils extends MessageUtils {
 				matcher = pattern.matcher(message);
 			}
 		}
-		
+
 		return message.replace("&", "§");
 	}
 
@@ -1134,6 +1136,23 @@ public abstract class ZUtils extends MessageUtils {
 		return day.equalsIgnoreCase("MONDAY") || day.equalsIgnoreCase("TUESDAY") || day.equalsIgnoreCase("WEDNESDAY")
 				|| day.equalsIgnoreCase("THURSDAY") || day.equalsIgnoreCase("FRIDAY")
 				|| day.equalsIgnoreCase("SATURDAY") || day.equalsIgnoreCase("SUNDAY");
+	}
+
+	public String getProgressBar(int current, int max, int totalBars, char symbol, String completedColor,
+			String notCompletedColor) {
+		try {
+			float percent = (float) current / max;
+			int progressBars = (int) (totalBars * percent);
+			return Strings.repeat(completedColor + symbol, progressBars)
+					+ Strings.repeat(notCompletedColor + symbol, totalBars - progressBars);
+		} catch (Exception e) {
+			return Strings.repeat(notCompletedColor + symbol, totalBars);
+		}
+	}
+
+	public String getProgressBar(int current, int max, ProgressBar progressBar) {
+		return this.getProgressBar(current, max, progressBar.getLenght(), progressBar.getSymbol(),
+				progressBar.getCompletedColor(), progressBar.getNotCompletedColor());
 	}
 
 }

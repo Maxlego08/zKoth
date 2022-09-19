@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import fr.maxlego08.zkoth.api.enums.KothType;
 import fr.maxlego08.zkoth.api.enums.LootType;
 import fr.maxlego08.zkoth.zcore.utils.storage.Saveable;
 
@@ -76,7 +77,7 @@ public interface KothManager extends Saveable {
 	 * @return
 	 */
 	public List<Koth> getActiveKoths();
-	
+
 	public List<Koth> getEnableKoths();
 
 	/**
@@ -146,11 +147,35 @@ public interface KothManager extends Saveable {
 	 * @param second
 	 */
 	public void setCaptureSeconds(CommandSender sender, String name, int second);
-	
+
 	/**
 	 * 
 	 * @return
 	 */
 	public List<String> getKothNames();
+
+	/**
+	 * 
+	 * @param sender
+	 * @param name
+	 * @param kothType
+	 */
+	public void setKothType(CommandSender sender, String name, KothType kothType);
+
+	/**
+	 * 
+	 * @param sender
+	 * @param name
+	 * @param seconds
+	 */
+	public void setKothTimerSeconds(CommandSender sender, String name, int seconds);
+
+	/**
+	 * 
+	 * @param sender
+	 * @param name
+	 * @param points
+	 */
+	public void setKothPoints(CommandSender sender, String name, int points);
 
 }

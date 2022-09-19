@@ -2,7 +2,10 @@ package fr.maxlego08.zkoth;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -21,6 +24,7 @@ import org.bukkit.util.Vector;
 
 import fr.maxlego08.zkoth.api.FactionListener;
 import fr.maxlego08.zkoth.api.Koth;
+import fr.maxlego08.zkoth.api.enums.KothType;
 import fr.maxlego08.zkoth.api.enums.LootType;
 import fr.maxlego08.zkoth.api.event.events.KothCapEvent;
 import fr.maxlego08.zkoth.api.event.events.KothCatchEvent;
@@ -30,8 +34,11 @@ import fr.maxlego08.zkoth.api.event.events.KothStartEvent;
 import fr.maxlego08.zkoth.api.event.events.KothStopEvent;
 import fr.maxlego08.zkoth.api.event.events.KothWinEvent;
 import fr.maxlego08.zkoth.save.Config;
+import fr.maxlego08.zkoth.save.ReplaceConfig;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
 import fr.maxlego08.zkoth.zcore.enums.Message;
+import fr.maxlego08.zkoth.zcore.logger.Logger;
+import fr.maxlego08.zkoth.zcore.logger.Logger.LogType;
 import fr.maxlego08.zkoth.zcore.utils.Cuboid;
 import fr.maxlego08.zkoth.zcore.utils.ZUtils;
 import fr.maxlego08.zkoth.zcore.utils.builder.TimerBuilder;
@@ -40,6 +47,7 @@ import fr.maxlego08.zkoth.zcore.utils.interfaces.CollectionConsumer;
 public class ZKoth extends ZUtils implements Koth {
 
 	private final String name;
+	private KothType kothType;
 	private int captureSeconds;
 	private Location minLocation;
 	private Location maxLocation;
@@ -47,12 +55,17 @@ public class ZKoth extends ZUtils implements Koth {
 	private List<String> commands = new ArrayList<String>();
 	private List<String> itemStacks = new ArrayList<String>();
 
+	private int maxSecondsCap;
+	private int maxPoints;
+
 	private transient boolean isEnable = false;
 	private transient boolean isCooldown = false;
 	private transient TimerTask timerTask;
 	private transient Player currentPlayer;
 	private transient FactionListener factionListener;
 	private transient AtomicInteger currentCaptureSeconds;
+
+	private transient Map<Player, Integer> playersValues = new HashMap<Player, Integer>();
 
 	/**
 	 * @param name
@@ -67,6 +80,17 @@ public class ZKoth extends ZUtils implements Koth {
 		this.minLocation = minLocation;
 		this.maxLocation = maxLocation;
 		this.type = LootType.NONE;
+		this.kothType = KothType.CLASSIC;
+		this.maxPoints = 60;
+		this.maxSecondsCap = 60;
+		if (this.playersValues == null) {
+			this.playersValues = new HashMap<>();
+		}
+	}
+
+	@Override
+	public void setType(KothType type) {
+		this.kothType = type;
 	}
 
 	@Override
@@ -139,6 +163,10 @@ public class ZKoth extends ZUtils implements Koth {
 	@Override
 	public void spawn(CommandSender sender, boolean now) {
 
+		if (this.playersValues == null) {
+			this.playersValues = new HashMap<>();
+		}
+
 		if (this.minLocation == null || this.maxLocation == null) {
 			message(sender, Message.ZKOTH_SPAWN_ERROR);
 		} else if (this.isCooldown) {
@@ -157,6 +185,10 @@ public class ZKoth extends ZUtils implements Koth {
 
 	@Override
 	public void spawn(boolean now) {
+
+		if (this.playersValues == null) {
+			this.playersValues = new HashMap<>();
+		}
 
 		if (this.minLocation == null || this.maxLocation == null) {
 			return;
@@ -179,6 +211,10 @@ public class ZKoth extends ZUtils implements Koth {
 	 */
 	private void spawn() {
 
+		if (this.playersValues == null) {
+			this.playersValues = new HashMap<>();
+		}
+
 		this.isCooldown = true;
 		this.isEnable = true;
 		this.currentCaptureSeconds = new AtomicInteger(Config.cooldownInSecond);
@@ -186,10 +222,11 @@ public class ZKoth extends ZUtils implements Koth {
 		KothStartEvent event = new KothStartEvent(this);
 		event.callEvent();
 
-		if (event.isCancelled())
+		if (event.isCancelled()) {
 			return;
+		}
 
-		scheduleFix(0, 1000, (task, isCancelled) -> {
+		scheduleFix(0, Config.enableDebug ? 10 : 1000, (task, isCancelled) -> {
 
 			this.timerTask = task;
 
@@ -214,6 +251,7 @@ public class ZKoth extends ZUtils implements Koth {
 				this.isCooldown = false;
 				this.timerTask.cancel();
 				this.spawnNow();
+				return;
 			}
 
 			this.currentCaptureSeconds.decrementAndGet();
@@ -225,6 +263,10 @@ public class ZKoth extends ZUtils implements Koth {
 	 * Permet de faire spawn le koth maintenant
 	 */
 	private void spawnNow() {
+
+		if (this.playersValues == null) {
+			this.playersValues = new HashMap<>();
+		}
 
 		KothSpawnEvent event = new KothSpawnEvent(this);
 		event.callEvent();
@@ -249,6 +291,10 @@ public class ZKoth extends ZUtils implements Koth {
 
 		switch (message.getType()) {
 		case ACTION: {
+			if (message.getMessage() == null){
+				Logger.info(message.name() + " is null, check your config plz !", LogType.ERROR);
+				return;
+			}
 			String realMessage = replaceMessage(message.getMessage());
 			this.broadcastAction(realMessage);
 			break;
@@ -310,7 +356,7 @@ public class ZKoth extends ZUtils implements Koth {
 			message = message.replace("%z%", String.valueOf(center.getBlockZ()));
 		}
 
-		int seconds = this.currentCaptureSeconds == null ? this.captureSeconds : currentCaptureSeconds.get();
+		int seconds = this.currentCaptureSeconds == null ? this.captureSeconds : this.currentCaptureSeconds.get();
 		message = message.replace("%capture%", TimerBuilder.getStringTime(seconds));
 		message = message.replace("%world%", center.getWorld().getName());
 		message = message.replace("%name%", this.name);
@@ -319,9 +365,41 @@ public class ZKoth extends ZUtils implements Koth {
 				: this.currentPlayer.getName();
 		message = message.replace("%player%", player);
 
+		int value = (int) this.getValue(this.currentPlayer);
+		message = message.replace("%points%", String.valueOf(value));
+		message = message.replace("%maxPoints%", String.valueOf(this.maxPoints));
+		message = message.replace("%pointsPercent%",
+				String.valueOf(this.format(this.percent(value, this.maxPoints), Config.percentPrecision)));
+
+		message = message.replace("%timer%", TimerBuilder.getStringTime(value));
+		message = message.replace("%maxTimer%", TimerBuilder.getStringTime(this.maxSecondsCap));
+
+		message = message.replace("%timerSeconds%", String.valueOf(value));
+		message = message.replace("%maxTimerSeconds%", String.valueOf(this.maxSecondsCap));
+
+		message = message.replace("%timerPercent%",
+				String.valueOf(this.format(this.percent(value, this.maxSecondsCap), Config.percentPrecision)));
+
+		message = message.replace("%timerProgress%",
+				this.getProgressBar(value, this.maxSecondsCap, Config.progressBarTimer));
+		message = message.replace("%pointsProgress%",
+				this.getProgressBar(value, this.maxPoints, Config.progressBarPoints));
+
+		message = message.replace("%classicProgress%",
+				this.getProgressBar(this.captureSeconds - seconds, this.captureSeconds, Config.progressBarClassic));
+		message = message.replace("%classicPercent%", String.valueOf(this
+				.format(this.percent(this.captureSeconds - seconds, this.captureSeconds), Config.percentPrecision)));
+
 		String faction = this.currentPlayer == null ? Message.ZKOHT_EVENT_FACION.getMessage()
 				: this.factionListener.getFactionTag(this.currentPlayer);
 		message = message.replace("%faction%", faction);
+
+		if (Config.replaceNoFaction != null && Config.enableReplaceNoFaction) {
+
+			ReplaceConfig config = Config.replaceNoFaction;
+			message = message.replace(config.getFrom(), config.getTo());
+
+		}
 
 		return message;
 	}
@@ -406,8 +484,9 @@ public class ZKoth extends ZUtils implements Koth {
 
 			if (this.currentPlayer != null) {
 				if (!this.currentPlayer.isValid() || !this.currentPlayer.isOnline()
-						|| !cuboid.contains(this.currentPlayer.getLocation()))
+						|| !cuboid.contains(this.currentPlayer.getLocation())) {
 					this.currentPlayer = null;
+				}
 			}
 
 			if (this.currentPlayer == null) {
@@ -419,8 +498,9 @@ public class ZKoth extends ZUtils implements Koth {
 					return;
 				}
 
-				if (this.timerTask != null)
+				if (this.timerTask != null) {
 					this.timerTask.cancel();
+				}
 
 				this.timerTask = null;
 				this.currentPlayer = null;
@@ -431,98 +511,135 @@ public class ZKoth extends ZUtils implements Koth {
 				return;
 
 			}
-			
+
 			if (Config.displayMessageKothCap.contains(tmpCapture)) {
 				broadcast(Message.ZKOHT_EVENT_TIMER);
+			} else if (Config.enableEverySecondsCapMessage) {
+				broadcast(Message.ZKOHT_EVENT_EVERYSECONDS);
 			}
 
-			if (tmpCapture <= 0) {
+			if (this.hasWin()) {
 
-				KothWinEvent kothWinEvent = new KothWinEvent(this, this.currentPlayer);
-				kothWinEvent.callEvent();
+				this.endKoth(task, cuboid, player);
 
-				if (kothWinEvent.isCancelled()) {
-					return;
-				}
-
-				task.cancel();
-				broadcast(Message.ZKOTH_EVENT_WIN);
-
-				/* Gestion des loots */
-
-				this.commands.forEach(command -> {
-					command = replaceMessage(command);
-					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), papi(command, player));
-				});
-
-				Location center = cuboid.getCenter();
-				World world = center.getWorld();
-				while (center.getBlock().getRelative(BlockFace.DOWN).getType().equals(Material.AIR)) {
-					center = center.getBlock().getRelative(BlockFace.DOWN).getLocation();
-				}
-				
-				Location location = center;
-
-				if (this.itemStacks.size() != 0)
-					switch (this.type) {
-					case CHEST:
-						location.getBlock().setType(Material.CHEST);
-						Chest chest = (Chest) location.getBlock().getState();
-
-						this.getItemStacks().forEach(itemStack -> chest.getInventory().addItem(itemStack));
-
-						Bukkit.getScheduler().runTaskLater(ZPlugin.z(), () -> {
-							location.getBlock().setType(Material.AIR);
-						}, 20 * Config.removeChestSec);
-						break;
-					case DROP:
-						location.add(0.5, 0.3, 0.5);
-						this.getItemStacks().forEach(itemStack -> {
-
-							Item item = world.dropItem(location, itemStack);
-							Vector vector = item.getVelocity();
-							vector.setZ(0);
-							vector.setY(0.5);
-							vector.setX(0);
-							item.setVelocity(vector);
-
-						});
-						break;
-					case INVENTORY:
-						this.getItemStacks().forEach(itemStack -> give(this.currentPlayer, itemStack));
-						break;
-					case NONE:
-						break;
-					default:
-						break;
-					}
-
-				/* FIN Gestion des loots */
-
-				this.isEnable = false;
-				this.isCooldown = false;
-				this.currentPlayer = null;
-				this.timerTask = null;
-				this.currentCaptureSeconds = null;
 			} else {
 
 				KothCapEvent capEvent = new KothCapEvent(this, player, this.currentCaptureSeconds.get(),
 						this.factionListener.getFactionTag(player));
 				capEvent.callEvent();
 
-				this.currentCaptureSeconds.decrementAndGet();
+				switch (this.getType()) {
+				case CLASSIC:
+				default:
+					this.currentCaptureSeconds.decrementAndGet();
+					break;
+				case POINT:
+				case TIMER:
+					this.playersValues.put(this.currentPlayer, this.getValue(this.currentPlayer) + 1);
+					break;
+				}
 			}
 		});
 	}
 
 	@Override
-	public CollectionConsumer<Player> onScoreboard() {
-		if (this.isCooldown) {
-			return p -> Config.scoreboardCooldown.stream().map(e -> papi(replaceMessage(e), p))
-					.collect(Collectors.toList());
-		} else {
-			return p -> Config.scoreboard.stream().map(e -> papi(replaceMessage(e), p)).collect(Collectors.toList());
+	public boolean hasWin() {
+
+		switch (this.getType()) {
+		case CLASSIC:
+			return this.currentCaptureSeconds != null && this.currentCaptureSeconds.get() <= 0;
+		case POINT:
+			return this.currentPlayer == null ? false : this.getValue(this.currentPlayer) >= this.maxPoints;
+		case TIMER:
+			return this.currentPlayer == null ? false : this.getValue(this.currentPlayer) >= this.maxSecondsCap;
+		default:
+			return false;
 		}
+
+	}
+
+	@Override
+	public void endKoth(TimerTask task, Cuboid cuboid, Player player) {
+		KothWinEvent kothWinEvent = new KothWinEvent(this, this.currentPlayer);
+		kothWinEvent.callEvent();
+
+		if (kothWinEvent.isCancelled()) {
+			return;
+		}
+
+		task.cancel();
+		broadcast(Message.ZKOTH_EVENT_WIN);
+
+		/* Gestion des loots */
+
+		this.commands.forEach(command -> {
+			command = replaceMessage(command);
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), papi(command, player));
+		});
+
+		Location center = cuboid.getCenter();
+		World world = center.getWorld();
+		while (center.getBlock().getRelative(BlockFace.DOWN).getType().equals(Material.AIR)) {
+			center = center.getBlock().getRelative(BlockFace.DOWN).getLocation();
+		}
+
+		Location location = center;
+
+		if (this.itemStacks.size() != 0) {
+			switch (this.type) {
+			case CHEST:
+				location.getBlock().setType(Material.CHEST);
+				Chest chest = (Chest) location.getBlock().getState();
+
+				this.getItemStacks().forEach(itemStack -> chest.getInventory().addItem(itemStack));
+
+				Bukkit.getScheduler().runTaskLater(ZPlugin.z(), () -> {
+					location.getBlock().setType(Material.AIR);
+				}, 20 * Config.removeChestSec);
+				break;
+			case DROP:
+				location.add(0.5, 0.3, 0.5);
+				this.getItemStacks().forEach(itemStack -> {
+
+					Item item = world.dropItem(location, itemStack);
+					Vector vector = item.getVelocity();
+					vector.setZ(0);
+					vector.setY(0.5);
+					vector.setX(0);
+					item.setVelocity(vector);
+
+				});
+				break;
+			case INVENTORY:
+				this.getItemStacks().forEach(itemStack -> give(this.currentPlayer, itemStack));
+				break;
+			case NONE:
+				break;
+			default:
+				break;
+			}
+		}
+
+		/* FIN Gestion des loots */
+
+		this.isEnable = false;
+		this.isCooldown = false;
+		this.currentPlayer = null;
+		this.timerTask = null;
+		this.currentCaptureSeconds = null;
+		this.playersValues.clear();
+	}
+
+	@Override
+	public CollectionConsumer<Player> onScoreboard() {
+		return p -> {
+			if (this.isCooldown) {
+				return Config.scoreboardCooldown.stream().map(e -> papi(replaceMessage(e), p))
+						.collect(Collectors.toList());
+			} else {
+				return Config.scoreboard.stream().map(e -> papi(replaceMessage(e), p)).collect(Collectors.toList());
+			}
+		};
 	}
 
 	@Override
@@ -563,14 +680,14 @@ public class ZKoth extends ZUtils implements Koth {
 		if (this.timerTask != null) {
 			this.timerTask.cancel();
 		}
-		
+
 		this.timerTask = null;
 		this.isEnable = false;
 		this.isCooldown = false;
 		this.currentPlayer = null;
 		this.timerTask = null;
 		this.currentCaptureSeconds = null;
-
+		this.playersValues.clear();
 	}
 
 	@Override
@@ -592,6 +709,154 @@ public class ZKoth extends ZUtils implements Koth {
 	public String getCurrentFaction() {
 		return this.currentPlayer == null ? Message.ZKOHT_EVENT_FACION.getMessage()
 				: this.factionListener.getFactionTag(this.currentPlayer);
+	}
+
+	@Override
+	public KothType getType() {
+		return this.kothType == null ? this.kothType = KothType.CLASSIC : this.kothType;
+	}
+
+	@Override
+	public int getMaxSecondsCap() {
+		return this.maxSecondsCap;
+	}
+
+	@Override
+	public void setMaxSecondsCap(int seconds) {
+		this.maxSecondsCap = seconds;
+	}
+
+	@Override
+	public int getMaxPoints() {
+		return this.maxPoints;
+	}
+
+	@Override
+	public void setMaxPoints(int points) {
+		this.maxPoints = points;
+	}
+
+	@Override
+	public Map<Player, Integer> getValues() {
+		if (this.playersValues == null) {
+			this.playersValues = new HashMap<>();
+		}
+		return this.playersValues;
+	}
+
+	@Override
+	public int getValue(Player player) {
+		if (this.playersValues == null) {
+			this.playersValues = new HashMap<>();
+		}
+		return player == null ? 0 : this.playersValues.getOrDefault(player, 0);
+	}
+
+	@Override
+	public void onPlayerLeave(Player player) {
+		this.playersValues.remove(player);
+	}
+
+	private Entry<Player, Integer> getEntryAt(int position) {
+		try {
+			return this.playersValues.entrySet().stream()
+					.sorted((f1, f2) -> Integer.compare(f2.getValue(), f1.getValue())).collect(Collectors.toList())
+					.get(position - 1);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@Override
+	public int getPointsAt(int position) {
+		Entry<Player, Integer> entry = this.getEntryAt(position);
+		if (entry == null) {
+			return 0;
+		}
+		return entry.getValue();
+	}
+
+	@Override
+	public int getTimerAt(int position) {
+		Entry<Player, Integer> entry = this.getEntryAt(position);
+		if (entry == null) {
+			return 0;
+		}
+		return entry.getValue();
+	}
+
+	@Override
+	public String getPointsPercentAt(int position) {
+		Entry<Player, Integer> entry = this.getEntryAt(position);
+		if (entry == null) {
+			return "0";
+		}
+		return this.format(this.percent(entry.getValue(), this.maxPoints), Config.percentPrecision);
+	}
+
+	@Override
+	public String getTimerPercentAt(int position) {
+		Entry<Player, Integer> entry = this.getEntryAt(position);
+		if (entry == null) {
+			return "0";
+		}
+		return this.format(this.percent(entry.getValue(), this.maxSecondsCap), Config.percentPrecision);
+	}
+
+	@Override
+	public String getTimerFormatAt(int position) {
+		Entry<Player, Integer> entry = this.getEntryAt(position);
+		if (entry == null) {
+			return "0s";
+		}
+		return TimerBuilder.getStringTime(entry.getValue());
+	}
+
+	@Override
+	public String getMaxTimerFormat() {
+		return TimerBuilder.getStringTime(this.maxSecondsCap);
+	}
+
+	@Override
+	public String getPointsProgressBarAt(int position) {
+		Entry<Player, Integer> entry = this.getEntryAt(position);
+		if (entry == null) {
+			return "";
+		}
+		return this.getProgressBar(entry.getValue(), this.maxPoints, Config.progressBarPoints);
+	}
+
+	@Override
+	public String getTimerProgressBarAt(int position) {
+		Entry<Player, Integer> entry = this.getEntryAt(position);
+		if (entry == null) {
+			return "";
+		}
+		return this.getProgressBar(entry.getValue(), this.maxSecondsCap, Config.progressBarTimer);
+	}
+
+	@Override
+	public String getClassicProgressBar() {
+		return this.getProgressBar(this.captureSeconds - this.currentCaptureSeconds.get(), this.captureSeconds,
+				Config.progressBarClassic);
+	}
+
+	@Override
+	public String getTimerNameAt(int position) {
+		Entry<Player, Integer> entry = this.getEntryAt(position);
+		if (entry == null) {
+			return Message.ZKOHT_EVENT_PLAYER.getMessage();
+		}
+		return entry.getKey().getName();
+	}
+
+	@Override
+	public String getPointsNameAt(int position) {
+		Entry<Player, Integer> entry = this.getEntryAt(position);
+		if (entry == null) {
+			return Message.ZKOHT_EVENT_PLAYER.getMessage();
+		}
+		return entry.getKey().getName();
 	}
 
 }

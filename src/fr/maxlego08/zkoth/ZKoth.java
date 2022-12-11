@@ -2,9 +2,11 @@ package fr.maxlego08.zkoth;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Map.Entry;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -57,6 +59,7 @@ public class ZKoth extends ZUtils implements Koth {
 
 	private int maxSecondsCap;
 	private int maxPoints;
+	private int randomItemStacks = 0;
 
 	private transient boolean isEnable = false;
 	private transient boolean isCooldown = false;
@@ -83,6 +86,7 @@ public class ZKoth extends ZUtils implements Koth {
 		this.kothType = KothType.CLASSIC;
 		this.maxPoints = 60;
 		this.maxSecondsCap = 60;
+		this.randomItemStacks = 0;
 		if (this.playersValues == null) {
 			this.playersValues = new HashMap<>();
 		}
@@ -131,9 +135,19 @@ public class ZKoth extends ZUtils implements Koth {
 
 	@Override
 	public List<ItemStack> getItemStacks() {
-		return this.itemStacks.stream().map(e -> decode(e)).collect(Collectors.toList());
+		List<ItemStack> itemStacks = this.itemStacks.stream().map(e -> decode(e)).collect(Collectors.toList());
+		if (this.randomItemStacks <= 0){
+			return itemStacks;
+		}
+		Collections.shuffle(itemStacks, new Random());
+		return itemStacks.stream().limit(this.randomItemStacks).collect(Collectors.toList());
 	}
 
+	@Override
+	public List<ItemStack> getAllItemStacks() {
+		return this.itemStacks.stream().map(e -> decode(e)).collect(Collectors.toList());
+	}
+	
 	@Override
 	public LootType getLootType() {
 		return this.type;
@@ -225,7 +239,7 @@ public class ZKoth extends ZUtils implements Koth {
 		if (event.isCancelled()) {
 			return;
 		}
-
+		
 		scheduleFix(0, Config.enableDebug ? 10 : 1000, (task, isCancelled) -> {
 
 			this.timerTask = task;
@@ -274,7 +288,7 @@ public class ZKoth extends ZUtils implements Koth {
 		if (event.isCancelled()) {
 			return;
 		}
-
+		
 		this.isCooldown = false;
 		this.isEnable = true;
 		this.currentCaptureSeconds = new AtomicInteger(this.captureSeconds);
@@ -857,6 +871,16 @@ public class ZKoth extends ZUtils implements Koth {
 			return Message.ZKOHT_EVENT_PLAYER.getMessage();
 		}
 		return entry.getKey().getName();
+	}
+
+	@Override
+	public int getRandomItemStacks() {
+		return this.randomItemStacks;
+	}
+
+	@Override
+	public void setRandomItemStacks(int value) {
+		this.randomItemStacks = value;
 	}
 
 }

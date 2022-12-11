@@ -64,6 +64,9 @@ public interface Koth {
 	 * @return itemstacks
 	 */
 	public List<ItemStack> getItemStacks();
+	
+	public List<ItemStack> getAllItemStacks();
+	
 
 	/**
 	 * 
@@ -263,5 +266,9 @@ public interface Koth {
 	public String getTimerNameAt(int position);
 	
 	public String getPointsNameAt(int position);
+	
+	public int getRandomItemStacks();
+	
+	public void setRandomItemStacks(int value);
 
 }

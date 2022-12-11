@@ -36,6 +36,9 @@ public enum Message {
 	ZKOTH_AXE_RECEIVE("§7You have just received the axe for zone selection."), 
 	ZKOTH_AXE_POS1("§7You have just put the first position in §f%world%§7, §f%x%§7, §f%y%§7, §f%z%§7."),
 	ZKOTH_AXE_POS2("§7You have just put the second position in §f%world%§7, §f%x%§7, §f%y%§7, §f%z%§7."), 
+	ZKOTH_AXE_ERROR("§cYour selection is invalid, you must have at least 2 blocks of height."),
+	ZKOTH_AXE_VALID("§aYour selection is valid, you can create a koth with the command §f/koth create <name>§a."),
+	
 	ZKOTH_ALREADY_EXIST("§cThe koth §f%name% §calready exists."),
 	ZKOTH_SIZE("§cYour koth is too small, you can't create one that small. Then you will come on discord for support when the problem comes from you."),
 	ZKOTH_DOESNT_EXIST("§cThe koth §f%name% §cdoesnt exists."),
@@ -44,6 +47,7 @@ public enum Message {
 	ZKOTH_DELETE_SUCCESS("§7You just deleted the koth §f%name%§7."), 
 	ZKOTH_MOVE_SUCCESS("§7You have just moved the koth §f%name%§7."),
 	ZKOTH_CREATE_ERROR_SELECTION("§cYou must select a zone with the command §b/zkoth axe§c."), 
+	ZKOTH_CREATE_ERROR_SIZE("§cYour selection is invalid, you must have at least 2 blocks of height."), 
 	
 	
 	ZKOTH_SPAWN_ERROR("§cImpossible to spawn the koth, positions do not work. You have to do §b/zkoth move §8<§aname§8>§c."), 
@@ -111,6 +115,7 @@ public enum Message {
 	ZKOTH_LOOT_INVENTORY("§7Loots §b%name%"),
 	ZKOTH_LOOT_CHANGE("§aYou have just modified the loots of the koth §2%name%§a."),
 	ZKOTH_CAPUTRE_EDIT("§aYou have just modified the capture time of the koth §n%name%§a to §f%seconds%§a."),
+	ZKOTH_RANDOMITEM("§aYou have just set the number of items to §f%item%§a for koth §n%name%§a."),
 	ZKOTH_LIST_CONSOLE("§fKoths§8: §f%koth%"),
 	ZKOTH_AXE_NAME("§6✤ §ezKoth axe §6✤"),
 	ZKOTH_AXE_DESCRIPTION("§8§m-+------------------------------+-", "",
@@ -141,6 +146,7 @@ public enum Message {
 	DESCRIPTION_CAPTURE("Set capture time for a koth"),
 	DESCRIPTION_TYPE("Set koth type (classic, point, timer)"),
 	DESCRIPTION_TIMER("Set koth max second for timer type"),
+	DESCRIPTION_RANDOMITEM("Set koth random item give"),
 	DESCRIPTION_POINTS("Set koth max point for point type"),
 	DESCRIPTION_LOOTTYPE("Set loot type for a koth"),
 	

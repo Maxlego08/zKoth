@@ -42,9 +42,14 @@ public class CommandKothMove extends VCommand {
 			return CommandType.DEFAULT;
 		}
 
+		if (!selection.isCorrect()) {
+			message(this.sender, Message.ZKOTH_CREATE_ERROR_SIZE);
+			return CommandType.DEFAULT;
+		}
+
 		Location minLocation = selection.getRightLocation();
 		Location maxLocation = selection.getLeftLocation();
-		this.manager.moveKoth(this.sender, maxLocation, minLocation, name);
+		this.manager.moveKoth(this.player, maxLocation, minLocation, name);
 
 		return CommandType.SUCCESS;
 	}

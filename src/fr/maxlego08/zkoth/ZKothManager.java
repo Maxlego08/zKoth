@@ -13,16 +13,21 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Shulker;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import fr.maxlego08.zkoth.api.FactionListener;
 import fr.maxlego08.zkoth.api.Koth;
@@ -50,6 +55,9 @@ import fr.maxlego08.zkoth.listener.ListenerAdapter;
 import fr.maxlego08.zkoth.save.Config;
 import fr.maxlego08.zkoth.scoreboard.ScoreBoardManager;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
+import fr.maxlego08.zkoth.zcore.board.ColorBoard;
+import fr.maxlego08.zkoth.zcore.board.EmptyBoard;
+import fr.maxlego08.zkoth.zcore.board.ZBoard;
 import fr.maxlego08.zkoth.zcore.enums.Message;
 import fr.maxlego08.zkoth.zcore.logger.Logger;
 import fr.maxlego08.zkoth.zcore.logger.Logger.LogType;
@@ -57,6 +65,7 @@ import fr.maxlego08.zkoth.zcore.utils.Cuboid;
 import fr.maxlego08.zkoth.zcore.utils.ZSelection;
 import fr.maxlego08.zkoth.zcore.utils.builder.ItemBuilder;
 import fr.maxlego08.zkoth.zcore.utils.builder.TimerBuilder;
+import fr.maxlego08.zkoth.zcore.utils.nms.NMSUtils;
 import fr.maxlego08.zkoth.zcore.utils.storage.Persist;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -70,6 +79,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 	private transient FactionListener factionListener;
 	private transient long playerMoveEventCooldown = 0;
 	private transient final Map<Inventory, String> lootInventories = new HashMap<>();
+	private transient ZBoard board = NMSUtils.isTwoHand() ? new ColorBoard() : new EmptyBoard();
 
 	/**
 	 * @param plugin
@@ -83,6 +93,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 	@Override
 	public void save(Persist persist) {
 		persist.save(this, "koths");
+		this.selections.values().forEach(Selection::clear);
 	}
 
 	@Override
@@ -188,8 +199,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 	}
 
 	@Override
-	public void createKoth(CommandSender sender, String name, Location minLocation, Location maxLocation,
-			int captureSeconds) {
+	public void createKoth(Player sender, String name, Location minLocation, Location maxLocation, int captureSeconds) {
 
 		Optional<Koth> optional = getKoth(name);
 		if (optional.isPresent()) {
@@ -210,6 +220,11 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		if (event.isCancelled()) {
 			return;
+		}
+
+		Optional<Selection> optionalSelection = getSelection(sender.getUniqueId());
+		if (optionalSelection.isPresent()) {
+			optionalSelection.get().clear();
 		}
 
 		koths.add((ZKoth) koth);
@@ -233,6 +248,11 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 				&& same(itemStack, Message.ZKOTH_AXE_NAME.getMessage())) {
 
 			event.setCancelled(true);
+
+			if (NMSUtils.isTwoHand() && event.getHand() == EquipmentSlot.OFF_HAND) {
+				return;
+			}
+
 			Optional<Selection> optional = getSelection(player.getUniqueId());
 			Selection selection = null;
 
@@ -245,12 +265,37 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 			Location location = event.getClickedBlock().getLocation();
 			org.bukkit.event.block.Action action = event.getAction();
-			selection.action(action, location);
+
+			LivingEntity entity = null;
+
+			if (NMSUtils.isTwoHand()) {
+
+				Shulker shulker = location.getWorld().spawn(location, Shulker.class);
+				shulker.setInvulnerable(true);
+				shulker.setAI(false);
+				shulker.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 99999, 1, false, false));
+				shulker.setInvisible(true);
+				shulker.setCollidable(false);
+
+				entity = shulker;
+
+				Bukkit.getScheduler().runTaskLater(this.plugin, () -> shulker.remove(), 20 * 60 * 2);
+			}
+
+			selection.action(action, location, entity);
+
+			this.board.addEntity(selection.isCorrect(), selection.getLeftEntity());
+			this.board.addEntity(selection.isCorrect(), selection.getRightEntity());
+
 			Message message = action.equals(org.bukkit.event.block.Action.LEFT_CLICK_BLOCK) ? Message.ZKOTH_AXE_POS1
 					: Message.ZKOTH_AXE_POS2;
 			message(player, message, "%x%", String.valueOf(location.getBlockX()), "%y%",
 					String.valueOf(location.getBlockY()), "%z%", String.valueOf(location.getBlockZ()), "%world%",
 					location.getWorld().getName());
+
+			if (selection.isValid()) {
+				message(player, selection.isCorrect() ? Message.ZKOTH_AXE_VALID : Message.ZKOTH_AXE_ERROR);
+			}
 		}
 	}
 
@@ -306,7 +351,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 	}
 
 	@Override
-	public void moveKoth(CommandSender sender, Location maxLocation, Location minLocation, String name) {
+	public void moveKoth(Player sender, Location maxLocation, Location minLocation, String name) {
 
 		Optional<Koth> optional = getKoth(name);
 		if (!optional.isPresent()) {
@@ -320,6 +365,11 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 		if (event.isCancelled()) {
 			return;
+		}
+
+		Optional<Selection> optionalSelection = getSelection(sender.getUniqueId());
+		if (optionalSelection.isPresent()) {
+			optionalSelection.get().clear();
 		}
 
 		koth.move(minLocation, maxLocation);
@@ -469,6 +519,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		message(sender, "§fMax points: §b%points%", "%points%", koth.getMaxPoints());
 		message(sender, "§fMax timer seconds: §b%timer%", "%timer%", koth.getMaxSecondsCap());
 		message(sender, "§fLoot type: §b%lootType%", "%lootType%", name(koth.getLootType().name()));
+		message(sender, "§fItem max give: §b%item%", "%item%", koth.getRandomItemStacks());
 		message(sender, "§fCommands §8(§7" + koth.getCommands().size() + "§8):");
 		if (sender instanceof ConsoleCommandSender) {
 			koth.getCommands().forEach(command -> messageWO(sender, " §7" + command));
@@ -605,7 +656,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		Inventory inventory = Bukkit.createInventory(null, 54, inventoryName);
 
 		int slot = 0;
-		for (ItemStack itemStack : koth.getItemStacks()) {
+		for (ItemStack itemStack : koth.getAllItemStacks()) {
 			inventory.setItem(slot++, itemStack);
 		}
 
@@ -677,6 +728,20 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 	@Override
 	public List<String> getKothNames() {
 		return koths.stream().map(e -> e.getName()).collect(Collectors.toList());
+	}
+
+	@Override
+	public void setKothRandomItems(CommandSender sender, String name, int items) {
+		Optional<Koth> optional = getKoth(name);
+		if (!optional.isPresent()) {
+			message(sender, Message.ZKOTH_DOESNT_EXIST, "%name%", name);
+			return;
+		}
+
+		Koth koth = optional.get();
+		koth.setRandomItemStacks(items);
+		message(sender, Message.ZKOTH_RANDOMITEM, "%name%", koth.getName(), "%item%", items);
+
 	}
 
 }

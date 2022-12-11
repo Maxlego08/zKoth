@@ -1,8 +1,9 @@
 package fr.maxlego08.zkoth.scoreboard;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.function.Consumer;
 
 import org.bukkit.entity.Player;
@@ -15,7 +16,7 @@ import fr.mrmicky.fastboard.FastBoard;
 
 public class ScoreBoardManager extends ZUtils {
 
-	private final Map<Player, FastBoard> boards = new HashMap<Player, FastBoard>();
+	private final ConcurrentMap<Player, FastBoard> boards = new ConcurrentHashMap<>();
 	private boolean isRunning = false;
 	private CollectionConsumer<Player> lines;
 	private Scoreboard scoreboard;

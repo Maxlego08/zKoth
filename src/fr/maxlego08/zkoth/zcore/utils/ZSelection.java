@@ -1,6 +1,7 @@
 package fr.maxlego08.zkoth.zcore.utils;
 
 import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.block.Action;
 
 import fr.maxlego08.zkoth.api.Selection;
@@ -9,6 +10,8 @@ public class ZSelection implements Selection {
 
 	private Location rightLocation;
 	private Location leftLocation;
+	private LivingEntity rightEntity;
+	private LivingEntity leftEntity;
 
 	@Override
 	public Location getRightLocation() {
@@ -37,13 +40,21 @@ public class ZSelection implements Selection {
 	}
 
 	@Override
-	public void action(Action action, Location location) {
+	public void action(Action action, Location location, LivingEntity livingEntity) {
 		switch (action) {
 		case LEFT_CLICK_BLOCK:
 			this.setLeftLocation(location);
+			if (this.leftEntity != null && this.leftEntity.isValid()) {
+				this.leftEntity.remove();
+			}
+			this.leftEntity = livingEntity;
 			break;
 		case RIGHT_CLICK_BLOCK:
 			this.setRightLocation(location);
+			if (this.rightEntity != null && this.rightEntity.isValid()) {
+				this.rightEntity.remove();
+			}
+			this.rightEntity = livingEntity;
 			break;
 		default:
 		case LEFT_CLICK_AIR:
@@ -56,6 +67,32 @@ public class ZSelection implements Selection {
 	@Override
 	public boolean isValid() {
 		return this.leftLocation != null && this.rightLocation != null;
+	}
+
+	@Override
+	public boolean isCorrect() {
+		return isValid() && Math.abs(this.leftLocation.getY() - this.rightLocation.getY()) > 1;
+	}
+
+	@Override
+	public LivingEntity getRightEntity() {
+		return this.rightEntity;
+	}
+
+	@Override
+	public LivingEntity getLeftEntity() {
+		return this.leftEntity;
+	}
+
+	@Override
+	public void clear() {
+		if (this.rightEntity != null && this.rightEntity.isValid()) {
+			this.rightEntity.remove();
+		}
+		if (this.leftEntity != null && this.leftEntity.isValid()) {
+			this.leftEntity.remove();
+		}
+
 	}
 
 }

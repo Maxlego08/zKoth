@@ -61,18 +61,24 @@ public class KothExpension extends PlaceholderExpansion {
 
 		String[] args = params.split("_");
 
-		if (args.length != 2) {
+		if (args.length < 2) {
 			return null;
 		}
 
 		String kothName = args[0];
-		String string = args[1];
+		StringBuilder builder = new StringBuilder();
+		for (int a = 1; a < args.length; a++) {
+			builder.append(args[a]);
+			if (a != args.length -1) {
+				builder.append("_");
+			}
+		}
 
 		Optional<Koth> optional = this.manager.getKoth(kothName);
 		if (optional.isPresent()) {
 
 			Koth koth = optional.get();
-			return this.getExpension(koth, string);
+			return this.getExpension(koth, builder.toString());
 
 		}
 
@@ -112,75 +118,75 @@ public class KothExpension extends PlaceholderExpansion {
 
 			return koth.getCurrentPlayer();
 		} else if (string.equals("classic_progress")) {
-			
+
 			return String.valueOf(koth.getClassicProgressBar());
 		} else if (string.equals("max_points")) {
-			
+
 			return String.valueOf(koth.getMaxPoints());
 		} else if (string.equals("max_timer")) {
-			
+
 			return String.valueOf(koth.getMaxSecondsCap());
-			
+
 		} else if (string.equals("max_timer_format")) {
-			
+
 			return String.valueOf(koth.getMaxTimerFormat());
 
 		} else if (string.startsWith("points_percent_")) {
-			
+
 			try {
 				int position = Integer.valueOf(string.replace("points_percent_", ""));
 				return String.valueOf(koth.getPointsPercentAt(position));
 			} catch (Exception e) {
 			}
-			
+
 		} else if (string.startsWith("points_progress_")) {
-			
+
 			try {
 				int position = Integer.valueOf(string.replace("points_progress_", ""));
 				return String.valueOf(koth.getPointsProgressBarAt(position));
 			} catch (Exception e) {
 			}
-			
+
 		} else if (string.startsWith("timer_percent_")) {
-			
+
 			try {
 				int position = Integer.valueOf(string.replace("timer_percent_", ""));
 				return String.valueOf(koth.getTimerPercentAt(position));
 			} catch (Exception e) {
 			}
-			
+
 		} else if (string.startsWith("timer_progress_")) {
-			
+
 			try {
 				int position = Integer.valueOf(string.replace("timer_progress_", ""));
 				return String.valueOf(koth.getTimerProgressBarAt(position));
 			} catch (Exception e) {
 			}
-			
+
 		} else if (string.startsWith("timer_format_")) {
-			
+
 			try {
 				int position = Integer.valueOf(string.replace("timer_format_", ""));
 				return String.valueOf(koth.getTimerFormatAt(position));
 			} catch (Exception e) {
 			}
-			
+
 		} else if (string.startsWith("timer_name_")) {
-			
+
 			try {
 				int position = Integer.valueOf(string.replace("timer_name_", ""));
 				return koth.getTimerNameAt(position);
 			} catch (Exception e) {
 			}
-			
+
 		} else if (string.startsWith("points_name_")) {
-			
+
 			try {
 				int position = Integer.valueOf(string.replace("points_name_", ""));
 				return koth.getPointsNameAt(position);
 			} catch (Exception e) {
 			}
-			
+
 		} else if (string.startsWith("points_")) {
 
 			try {
@@ -188,9 +194,9 @@ public class KothExpension extends PlaceholderExpansion {
 				return String.valueOf(koth.getPointsAt(position));
 			} catch (Exception e) {
 			}
-			
+
 		} else if (string.startsWith("timer_")) {
-			
+
 			try {
 				int position = Integer.valueOf(string.replace("timer_", ""));
 				return String.valueOf(koth.getTimerAt(position));

@@ -157,6 +157,7 @@ public class SchedulerManager extends ZUtils implements Saveable {
 	 * 
 	 * @param sender
 	 */
+	@SuppressWarnings("deprecation")
 	public void show(CommandSender sender) {
 
 		if (schedulers.size() == 0) {

@@ -39,13 +39,18 @@ public class CommandKothCreate extends VCommand {
 		Selection selection = optional.get();
 
 		if (!selection.isValid()) {
-			message(sender, Message.ZKOTH_CREATE_ERROR_SELECTION);
+			message(this.sender, Message.ZKOTH_CREATE_ERROR_SELECTION);
+			return CommandType.DEFAULT;
+		}
+		
+		if (!selection.isCorrect()) {
+			message(this.sender, Message.ZKOTH_CREATE_ERROR_SIZE);
 			return CommandType.DEFAULT;
 		}
 
 		Location minLocation = selection.getRightLocation();
-		Location maxLocation = selection.getLeftLocation();
-		this.manager.createKoth(this.sender, name, minLocation, maxLocation, captureSeconds);
+		Location maxLocation = selection.getLeftLocation();		
+		this.manager.createKoth(this.player, name, minLocation, maxLocation, captureSeconds);
 
 		return CommandType.SUCCESS;
 	}

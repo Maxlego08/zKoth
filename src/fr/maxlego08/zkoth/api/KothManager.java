@@ -31,7 +31,7 @@ public interface KothManager extends Saveable {
 	 * @param maxLocation
 	 * @param captureSeconds
 	 */
-	public void createKoth(CommandSender sender, String name, Location minLocation, Location maxLocation,
+	public void createKoth(Player sender, String name, Location minLocation, Location maxLocation,
 			int captureSeconds);
 
 	/**
@@ -62,7 +62,7 @@ public interface KothManager extends Saveable {
 	 * @param minLocation
 	 * @param name
 	 */
-	public void moveKoth(CommandSender sender, Location maxLocation, Location minLocation, String name);
+	public void moveKoth(Player sender, Location maxLocation, Location minLocation, String name);
 
 	/***
 	 * 

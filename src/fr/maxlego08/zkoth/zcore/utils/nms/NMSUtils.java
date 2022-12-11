@@ -86,6 +86,15 @@ public class NMSUtils {
 		return version == 1.7 || version == 1.8 || version == 1.9 || version == 1.10 || version == 1.12
 				|| version == 1.11;
 	}
+	
+	/**
+	 * Check if version is old version of minecraft with old material system
+	 * 
+	 * @return boolean
+	 */
+	public static boolean isTwoHand() {
+		return !(version == 1.7 || version == 1.8);
+	}
 
 	/**
 	 * 

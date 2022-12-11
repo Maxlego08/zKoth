@@ -115,6 +115,7 @@ public enum Message {
 	ZKOTH_LOOT_INVENTORY("§7Loots §b%name%"),
 	ZKOTH_LOOT_CHANGE("§aYou have just modified the loots of the koth §2%name%§a."),
 	ZKOTH_CAPUTRE_EDIT("§aYou have just modified the capture time of the koth §n%name%§a to §f%seconds%§a."),
+	ZKOTH_RANDOMITEM("§aYou have just set the number of items to §f%item%§a for koth §n%name%§a."),
 	ZKOTH_LIST_CONSOLE("§fKoths§8: §f%koth%"),
 	ZKOTH_AXE_NAME("§6✤ §ezKoth axe §6✤"),
 	ZKOTH_AXE_DESCRIPTION("§8§m-+------------------------------+-", "",
@@ -145,6 +146,7 @@ public enum Message {
 	DESCRIPTION_CAPTURE("Set capture time for a koth"),
 	DESCRIPTION_TYPE("Set koth type (classic, point, timer)"),
 	DESCRIPTION_TIMER("Set koth max second for timer type"),
+	DESCRIPTION_RANDOMITEM("Set koth random item give"),
 	DESCRIPTION_POINTS("Set koth max point for point type"),
 	DESCRIPTION_LOOTTYPE("Set loot type for a koth"),
 	

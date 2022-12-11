@@ -178,4 +178,6 @@ public interface KothManager extends Saveable {
 	 */
 	public void setKothPoints(CommandSender sender, String name, int points);
 
+	public void setKothRandomItems(CommandSender sender, String name, int items);
+
 }

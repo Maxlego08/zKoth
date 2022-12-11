@@ -199,8 +199,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 	}
 
 	@Override
-	public void createKoth(Player sender, String name, Location minLocation, Location maxLocation,
-			int captureSeconds) {
+	public void createKoth(Player sender, String name, Location minLocation, Location maxLocation, int captureSeconds) {
 
 		Optional<Koth> optional = getKoth(name);
 		if (optional.isPresent()) {
@@ -224,10 +223,10 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		}
 
 		Optional<Selection> optionalSelection = getSelection(sender.getUniqueId());
-		if (optionalSelection.isPresent()){
+		if (optionalSelection.isPresent()) {
 			optionalSelection.get().clear();
 		}
-		
+
 		koths.add((ZKoth) koth);
 		message(sender, Message.ZKOTH_CREATE_SUCCESS, "%name%", name);
 
@@ -279,7 +278,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 				shulker.setCollidable(false);
 
 				entity = shulker;
-				
+
 				Bukkit.getScheduler().runTaskLater(this.plugin, () -> shulker.remove(), 20 * 60 * 2);
 			}
 
@@ -369,10 +368,10 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		}
 
 		Optional<Selection> optionalSelection = getSelection(sender.getUniqueId());
-		if (optionalSelection.isPresent()){
+		if (optionalSelection.isPresent()) {
 			optionalSelection.get().clear();
 		}
-		
+
 		koth.move(minLocation, maxLocation);
 		message(sender, Message.ZKOTH_MOVE_SUCCESS, "%name%", name);
 
@@ -520,6 +519,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		message(sender, "§fMax points: §b%points%", "%points%", koth.getMaxPoints());
 		message(sender, "§fMax timer seconds: §b%timer%", "%timer%", koth.getMaxSecondsCap());
 		message(sender, "§fLoot type: §b%lootType%", "%lootType%", name(koth.getLootType().name()));
+		message(sender, "§fItem max give: §b%item%", "%item%", koth.getRandomItemStacks());
 		message(sender, "§fCommands §8(§7" + koth.getCommands().size() + "§8):");
 		if (sender instanceof ConsoleCommandSender) {
 			koth.getCommands().forEach(command -> messageWO(sender, " §7" + command));
@@ -656,7 +656,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		Inventory inventory = Bukkit.createInventory(null, 54, inventoryName);
 
 		int slot = 0;
-		for (ItemStack itemStack : koth.getItemStacks()) {
+		for (ItemStack itemStack : koth.getAllItemStacks()) {
 			inventory.setItem(slot++, itemStack);
 		}
 
@@ -728,6 +728,20 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 	@Override
 	public List<String> getKothNames() {
 		return koths.stream().map(e -> e.getName()).collect(Collectors.toList());
+	}
+
+	@Override
+	public void setKothRandomItems(CommandSender sender, String name, int items) {
+		Optional<Koth> optional = getKoth(name);
+		if (!optional.isPresent()) {
+			message(sender, Message.ZKOTH_DOESNT_EXIST, "%name%", name);
+			return;
+		}
+
+		Koth koth = optional.get();
+		koth.setRandomItemStacks(items);
+		message(sender, Message.ZKOTH_RANDOMITEM, "%name%", koth.getName(), "%item%", items);
+
 	}
 
 }

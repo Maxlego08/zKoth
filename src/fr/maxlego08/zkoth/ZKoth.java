@@ -6,9 +6,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.TimerTask;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -68,7 +69,7 @@ public class ZKoth extends ZUtils implements Koth {
 	private transient FactionListener factionListener;
 	private transient AtomicInteger currentCaptureSeconds;
 
-	private transient Map<Player, Integer> playersValues = new HashMap<Player, Integer>();
+	private transient Map<UUID, Integer> playersValues = new HashMap<UUID, Integer>();
 
 	/**
 	 * @param name
@@ -136,7 +137,7 @@ public class ZKoth extends ZUtils implements Koth {
 	@Override
 	public List<ItemStack> getItemStacks() {
 		List<ItemStack> itemStacks = this.itemStacks.stream().map(e -> decode(e)).collect(Collectors.toList());
-		if (this.randomItemStacks <= 0){
+		if (this.randomItemStacks <= 0) {
 			return itemStacks;
 		}
 		Collections.shuffle(itemStacks, new Random());
@@ -147,7 +148,7 @@ public class ZKoth extends ZUtils implements Koth {
 	public List<ItemStack> getAllItemStacks() {
 		return this.itemStacks.stream().map(e -> decode(e)).collect(Collectors.toList());
 	}
-	
+
 	@Override
 	public LootType getLootType() {
 		return this.type;
@@ -239,7 +240,7 @@ public class ZKoth extends ZUtils implements Koth {
 		if (event.isCancelled()) {
 			return;
 		}
-		
+
 		scheduleFix(0, Config.enableDebug ? 10 : 1000, (task, isCancelled) -> {
 
 			this.timerTask = task;
@@ -282,18 +283,24 @@ public class ZKoth extends ZUtils implements Koth {
 			this.playersValues = new HashMap<>();
 		}
 
+		this.playersValues.clear();
+
 		KothSpawnEvent event = new KothSpawnEvent(this);
 		event.callEvent();
 
 		if (event.isCancelled()) {
 			return;
 		}
-		
+
 		this.isCooldown = false;
 		this.isEnable = true;
 		this.currentCaptureSeconds = new AtomicInteger(this.captureSeconds);
 
 		this.broadcast(Message.ZKOTH_EVENT_START);
+
+		if (this.kothType == KothType.POINT_COUNT) {
+			this.startschedule();
+		}
 	}
 
 	/**
@@ -305,7 +312,7 @@ public class ZKoth extends ZUtils implements Koth {
 
 		switch (message.getType()) {
 		case ACTION: {
-			if (message.getMessage() == null){
+			if (message.getMessage() == null) {
 				Logger.info(message.name() + " is null, check your config plz !", LogType.ERROR);
 				return;
 			}
@@ -425,6 +432,10 @@ public class ZKoth extends ZUtils implements Koth {
 			return;
 		}
 
+		if (this.kothType == KothType.POINT_COUNT) {
+			return;
+		}
+
 		this.factionListener = factionListener;
 		Cuboid cuboid = this.getCuboid();
 
@@ -451,6 +462,41 @@ public class ZKoth extends ZUtils implements Koth {
 			this.timerTask = null;
 			this.currentPlayer = null;
 		}
+	}
+
+	private void startschedule() {
+		this.scheduleFix(1000, 1000, (task, isCancelled) -> {
+
+			this.timerTask = task;
+
+			if (!isCancelled) {
+				task.cancel();
+				return;
+			}
+
+			if (!this.isEnable) {
+				task.cancel();
+				return;
+			}
+
+			Cuboid cuboid = this.getCuboid();
+			Bukkit.getOnlinePlayers().forEach(player -> {
+
+				if (!cuboid.contains(player.getLocation())) {
+					return;
+				}
+
+				int value = this.playersValues.getOrDefault(player.getUniqueId(), 0) + 1;
+				this.playersValues.put(player.getUniqueId(), value);
+
+				if (value > this.captureSeconds) {
+
+					// WINNER
+					this.endKoth(task, cuboid, player);
+				}
+			});
+
+		});
 	}
 
 	/**
@@ -549,7 +595,7 @@ public class ZKoth extends ZUtils implements Koth {
 					break;
 				case POINT:
 				case TIMER:
-					this.playersValues.put(this.currentPlayer, this.getValue(this.currentPlayer) + 1);
+					this.playersValues.put(this.currentPlayer.getUniqueId(), this.getValue(this.currentPlayer) + 1);
 					break;
 				}
 			}
@@ -751,7 +797,7 @@ public class ZKoth extends ZUtils implements Koth {
 	}
 
 	@Override
-	public Map<Player, Integer> getValues() {
+	public Map<UUID, Integer> getValues() {
 		if (this.playersValues == null) {
 			this.playersValues = new HashMap<>();
 		}
@@ -763,15 +809,15 @@ public class ZKoth extends ZUtils implements Koth {
 		if (this.playersValues == null) {
 			this.playersValues = new HashMap<>();
 		}
-		return player == null ? 0 : this.playersValues.getOrDefault(player, 0);
+		return player == null ? 0 : this.playersValues.getOrDefault(player.getUniqueId(), 0);
 	}
 
 	@Override
 	public void onPlayerLeave(Player player) {
-		this.playersValues.remove(player);
+		this.playersValues.remove(player.getUniqueId());
 	}
 
-	private Entry<Player, Integer> getEntryAt(int position) {
+	private Entry<UUID, Integer> getEntryAt(int position) {
 		try {
 			return this.playersValues.entrySet().stream()
 					.sorted((f1, f2) -> Integer.compare(f2.getValue(), f1.getValue())).collect(Collectors.toList())
@@ -783,7 +829,7 @@ public class ZKoth extends ZUtils implements Koth {
 
 	@Override
 	public int getPointsAt(int position) {
-		Entry<Player, Integer> entry = this.getEntryAt(position);
+		Entry<UUID, Integer> entry = this.getEntryAt(position);
 		if (entry == null) {
 			return 0;
 		}
@@ -792,7 +838,7 @@ public class ZKoth extends ZUtils implements Koth {
 
 	@Override
 	public int getTimerAt(int position) {
-		Entry<Player, Integer> entry = this.getEntryAt(position);
+		Entry<UUID, Integer> entry = this.getEntryAt(position);
 		if (entry == null) {
 			return 0;
 		}
@@ -801,7 +847,7 @@ public class ZKoth extends ZUtils implements Koth {
 
 	@Override
 	public String getPointsPercentAt(int position) {
-		Entry<Player, Integer> entry = this.getEntryAt(position);
+		Entry<UUID, Integer> entry = this.getEntryAt(position);
 		if (entry == null) {
 			return "0";
 		}
@@ -810,7 +856,7 @@ public class ZKoth extends ZUtils implements Koth {
 
 	@Override
 	public String getTimerPercentAt(int position) {
-		Entry<Player, Integer> entry = this.getEntryAt(position);
+		Entry<UUID, Integer> entry = this.getEntryAt(position);
 		if (entry == null) {
 			return "0";
 		}
@@ -819,7 +865,7 @@ public class ZKoth extends ZUtils implements Koth {
 
 	@Override
 	public String getTimerFormatAt(int position) {
-		Entry<Player, Integer> entry = this.getEntryAt(position);
+		Entry<UUID, Integer> entry = this.getEntryAt(position);
 		if (entry == null) {
 			return "0s";
 		}
@@ -833,7 +879,7 @@ public class ZKoth extends ZUtils implements Koth {
 
 	@Override
 	public String getPointsProgressBarAt(int position) {
-		Entry<Player, Integer> entry = this.getEntryAt(position);
+		Entry<UUID, Integer> entry = this.getEntryAt(position);
 		if (entry == null) {
 			return "";
 		}
@@ -842,7 +888,7 @@ public class ZKoth extends ZUtils implements Koth {
 
 	@Override
 	public String getTimerProgressBarAt(int position) {
-		Entry<Player, Integer> entry = this.getEntryAt(position);
+		Entry<UUID, Integer> entry = this.getEntryAt(position);
 		if (entry == null) {
 			return "";
 		}
@@ -857,20 +903,20 @@ public class ZKoth extends ZUtils implements Koth {
 
 	@Override
 	public String getTimerNameAt(int position) {
-		Entry<Player, Integer> entry = this.getEntryAt(position);
+		Entry<UUID, Integer> entry = this.getEntryAt(position);
 		if (entry == null) {
 			return Message.ZKOHT_EVENT_PLAYER.getMessage();
 		}
-		return entry.getKey().getName();
+		return Bukkit.getOfflinePlayer(entry.getKey()).getName();
 	}
 
 	@Override
 	public String getPointsNameAt(int position) {
-		Entry<Player, Integer> entry = this.getEntryAt(position);
+		Entry<UUID, Integer> entry = this.getEntryAt(position);
 		if (entry == null) {
 			return Message.ZKOHT_EVENT_PLAYER.getMessage();
 		}
-		return entry.getKey().getName();
+		return Bukkit.getOfflinePlayer(entry.getKey()).getName();
 	}
 
 	@Override

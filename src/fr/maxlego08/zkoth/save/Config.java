@@ -64,6 +64,7 @@ public class Config implements Saveable {
 	private static volatile Config instance;
 	public static boolean enableDebug;
 	public static boolean spawnKothWithSchedulerNow = true;
+	public static String defaultNoKoth = "No KOTH";
 
 	/**
 	 * Private constructor for singleton.

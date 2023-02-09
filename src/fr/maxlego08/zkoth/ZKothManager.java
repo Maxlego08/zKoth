@@ -268,7 +268,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 			LivingEntity entity = null;
 
-			if (NMSUtils.isTwoHand()) {
+			if (NMSUtils.isHexColor()) {
 
 				Shulker shulker = location.getWorld().spawn(location, Shulker.class);
 				shulker.setInvulnerable(true);

@@ -8,6 +8,8 @@ import org.bukkit.plugin.Plugin;
 
 import fr.maxlego08.zkoth.api.Koth;
 import fr.maxlego08.zkoth.api.KothManager;
+import fr.maxlego08.zkoth.save.Config;
+import fr.maxlego08.zkoth.zcore.utils.builder.TimerBuilder;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 public class KothExpension extends PlaceholderExpansion {
@@ -56,13 +58,13 @@ public class KothExpension extends PlaceholderExpansion {
 		}
 
 		if (!params.contains("_")) {
-			return null;
+			return Config.defaultNoKoth;
 		}
 
 		String[] args = params.split("_");
 
 		if (args.length < 2) {
-			return null;
+			return Config.defaultNoKoth;
 		}
 
 		String kothName = args[0];
@@ -82,7 +84,7 @@ public class KothExpension extends PlaceholderExpansion {
 
 		}
 
-		return null;
+		return Config.defaultNoKoth;
 	}
 
 	/**
@@ -99,6 +101,9 @@ public class KothExpension extends PlaceholderExpansion {
 		} else if (string.equals("capture")) {
 
 			return String.valueOf(koth.getCurrentSecond());
+		} else if (string.equals("capture_formated")) {
+			
+			return TimerBuilder.getStringTime(koth.getCurrentSecond());
 		} else if (string.equals("x")) {
 
 			return String.valueOf(koth.getCenter().getBlockX());

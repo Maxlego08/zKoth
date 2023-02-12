@@ -36,6 +36,7 @@ import fr.maxlego08.zkoth.api.event.events.KothSpawnEvent;
 import fr.maxlego08.zkoth.api.event.events.KothStartEvent;
 import fr.maxlego08.zkoth.api.event.events.KothStopEvent;
 import fr.maxlego08.zkoth.api.event.events.KothWinEvent;
+import fr.maxlego08.zkoth.hooks.DefaultHook;
 import fr.maxlego08.zkoth.save.Config;
 import fr.maxlego08.zkoth.save.ReplaceConfig;
 import fr.maxlego08.zkoth.zcore.ZPlugin;
@@ -66,7 +67,7 @@ public class ZKoth extends ZUtils implements Koth {
 	private transient boolean isCooldown = false;
 	private transient TimerTask timerTask;
 	private transient Player currentPlayer;
-	private transient FactionListener factionListener;
+	private transient FactionListener factionListener = new DefaultHook();
 	private transient AtomicInteger currentCaptureSeconds;
 
 	private transient Map<UUID, Integer> playersValues = new HashMap<UUID, Integer>();
@@ -298,6 +299,10 @@ public class ZKoth extends ZUtils implements Koth {
 
 		this.broadcast(Message.ZKOTH_EVENT_START);
 
+		if (this.factionListener == null){
+			this.factionListener = new DefaultHook();
+		}
+		
 		if (this.kothType == KothType.POINT_COUNT) {
 			this.startschedule();
 		}
@@ -489,9 +494,10 @@ public class ZKoth extends ZUtils implements Koth {
 				int value = this.playersValues.getOrDefault(player.getUniqueId(), 0) + 1;
 				this.playersValues.put(player.getUniqueId(), value);
 
-				if (value > this.captureSeconds) {
+				if (value > this.maxPoints) {
 
 					// WINNER
+					this.currentPlayer = player;
 					this.endKoth(task, cuboid, player);
 				}
 			});

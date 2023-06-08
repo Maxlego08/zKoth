@@ -299,10 +299,10 @@ public class ZKoth extends ZUtils implements Koth {
 
 		this.broadcast(Message.ZKOTH_EVENT_START);
 
-		if (this.factionListener == null){
+		if (this.factionListener == null) {
 			this.factionListener = new DefaultHook();
 		}
-		
+
 		if (this.kothType == KothType.POINT_COUNT) {
 			this.startschedule();
 		}
@@ -639,8 +639,16 @@ public class ZKoth extends ZUtils implements Koth {
 		/* Gestion des loots */
 
 		this.commands.forEach(command -> {
-			command = replaceMessage(command);
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), papi(command, player));
+			if (command.contains("%online-player%")) {
+				for (Player cPlayer : this.factionListener.getOnlinePlayer(player)) {
+					String finaleCommand = replaceMessage(command);
+					finaleCommand = finaleCommand.replace("%online-player%", cPlayer.getName());
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), papi(finaleCommand, cPlayer));
+				}
+			} else {
+				command = replaceMessage(command);
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), papi(command, player));
+			}
 		});
 
 		Location center = cuboid.getCenter();

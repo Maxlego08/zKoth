@@ -534,7 +534,7 @@ public abstract class VCommand extends Arguments {
 	protected List<String> generateList(List<String> defaultList, String startWith, Tab tab) {
 		List<String> newList = new ArrayList<>();
 		for (String str : defaultList) {
-			if (startWith.length() == 0
+			if (str != null && startWith.length() == 0
 					|| (tab.equals(Tab.START) ? str.toLowerCase().startsWith(startWith.toLowerCase())
 							: str.toLowerCase().contains(startWith.toLowerCase()))) {
 				newList.add(str);

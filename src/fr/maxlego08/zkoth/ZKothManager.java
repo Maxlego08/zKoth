@@ -40,6 +40,7 @@ import fr.maxlego08.zkoth.api.event.events.KothHookEvent;
 import fr.maxlego08.zkoth.api.event.events.KothMoveEvent;
 import fr.maxlego08.zkoth.api.event.events.KothStopEvent;
 import fr.maxlego08.zkoth.api.event.events.KothWinEvent;
+import fr.maxlego08.zkoth.hooks.BetterTeamHook;
 import fr.maxlego08.zkoth.hooks.ClanHook;
 import fr.maxlego08.zkoth.hooks.DefaultHook;
 import fr.maxlego08.zkoth.hooks.FactionLegacyHook;
@@ -109,6 +110,11 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 				this.factionListener = new FactionsXHook();
 				Logger.info("FactionsX plugin detected successfully.", LogType.SUCCESS);
+
+			} else if (pluginManager.isPluginEnabled("BetterTeams")) {
+
+				this.factionListener = new BetterTeamHook();
+				Logger.info("BetterTeams plugin detected successfully.", LogType.SUCCESS);
 
 			} else if (pluginManager.isPluginEnabled("SimpleClans")) {
 
@@ -268,7 +274,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 
 			LivingEntity entity = null;
 
-			if (NMSUtils.isTwoHand()) {
+			if (NMSUtils.isHexColor()) {
 
 				Shulker shulker = location.getWorld().spawn(location, Shulker.class);
 				shulker.setInvulnerable(true);

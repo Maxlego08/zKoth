@@ -48,6 +48,10 @@ public class CommandKothCreate extends VCommand {
 			return CommandType.DEFAULT;
 		}
 
+		if (name == null){
+			return CommandType.SYNTAX_ERROR;
+		}
+		
 		Location minLocation = selection.getRightLocation();
 		Location maxLocation = selection.getLeftLocation();		
 		this.manager.createKoth(this.player, name, minLocation, maxLocation, captureSeconds);

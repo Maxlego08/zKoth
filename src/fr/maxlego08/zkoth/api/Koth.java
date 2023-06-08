@@ -3,6 +3,7 @@ package fr.maxlego08.zkoth.api;
 import java.util.List;
 import java.util.Map;
 import java.util.TimerTask;
+import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -217,7 +218,7 @@ public interface Koth {
 	 * 
 	 * @return
 	 */
-	public Map<Player, Integer> getValues();
+	public Map<UUID, Integer> getValues();
 
 	/**
 	 * 

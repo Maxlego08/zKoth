@@ -49,6 +49,7 @@ import fr.maxlego08.zkoth.hooks.FactionsHook;
 import fr.maxlego08.zkoth.hooks.FactionsXHook;
 import fr.maxlego08.zkoth.hooks.GangsHook;
 import fr.maxlego08.zkoth.hooks.GuildsHook;
+import fr.maxlego08.zkoth.hooks.ScaredClanHook;
 import fr.maxlego08.zkoth.hooks.SimpleClanHook;
 import fr.maxlego08.zkoth.hooks.SuperiorSkyblock2Hook;
 import fr.maxlego08.zkoth.hooks.UltimateFaction;
@@ -128,10 +129,14 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 				Logger.info("SuperiorSkyblock2 plugin detected successfully.", LogType.SUCCESS);
 
 			} else if (pluginManager.isPluginEnabled("Clans")) {
-
-				this.factionListener = new ClanHook();
-				Logger.info("Clans plugin detected successfully.", LogType.SUCCESS);
-
+			    try {
+			        Class.forName("Clans.Main");
+			        this.factionListener = new ClanHook();
+			        Logger.info("Clan plugin detected successfully.", LogType.SUCCESS);
+			    } catch (Exception ignored) {
+			        this.factionListener = new ScaredClanHook();
+			        Logger.info("ScaredClan plugin detected successfully.", LogType.SUCCESS);
+			    }
 			} else if (pluginManager.isPluginEnabled("GangsPlus")) {
 
 				this.factionListener = new GangsHook();

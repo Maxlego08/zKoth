@@ -17,6 +17,16 @@
 			</plugin>
 		</plugins>
 	</build>
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+		<repository>
+			<id>krypton</id>
+			<url>https://repo.kryptonmc.org/releases</url>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>com.sun.org.apache</groupId>
@@ -33,6 +43,25 @@
 			<groupId>fr.mrmicky</groupId>
 			<artifactId>fastboard</artifactId>
 			<version>1.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.booksaw</groupId>
+			<artifactId>BetterTeams</artifactId>
+			<version>4.8.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.MrUniverse44</groupId>
+			<artifactId>ScaredClansAPI</artifactId>
+			<version>0.3</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- TAB -->
+		<dependency>
+			<groupId>me.neznamy</groupId>
+			<artifactId>tab-api</artifactId>
+			<version>4.0.0</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>

@@ -110,6 +110,8 @@ public enum Message {
 	ZKOTH_CAPUTRE_EDIT("§aYou have just modified the capture time of the koth §n%name%§a to §f%seconds%§a."),
 	ZKOTH_RANDOMITEM("§aYou have just set the number of items to §f%item%§a for koth §n%name%§a."),
 	ZKOTH_LIST_CONSOLE("§fKoths§8: §f%koth%"),
+	ZKOTH_LIST_PLAYER("§fKoths§8: §8(§7Use your mouse)"),
+	ZKOTH_LIST_EMPTY("§fKoths§8: §cempty"),
 	ZKOTH_AXE_NAME("§6✤ §ezKoth axe §6✤"),
 	ZKOTH_AXE_DESCRIPTION("§8§m-+------------------------------+-", "",
 			"",

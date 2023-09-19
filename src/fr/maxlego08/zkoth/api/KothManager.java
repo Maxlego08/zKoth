@@ -137,8 +137,9 @@ public interface KothManager extends Saveable {
 	 * 
 	 * @param player
 	 * @param name
+	 * @param page
 	 */
-	public void updateLoots(Player player, String name);
+	public void updateLoots(Player player, String name, int page);
 
 	/**
 	 * 

@@ -478,6 +478,7 @@ public class ZKoth extends ZUtils implements Koth {
 			}
 
 			this.changeBlocks(Config.noOneCapturingMaterial);
+			this.currentCaptureSeconds = new AtomicInteger(this.captureSeconds);
 			this.timerTask = null;
 			this.currentPlayer = null;
 		}
@@ -600,6 +601,7 @@ public class ZKoth extends ZUtils implements Koth {
 				this.changeBlocks(Config.noOneCapturingMaterial);
 				this.timerTask = null;
 				this.currentPlayer = null;
+				this.currentCaptureSeconds = new AtomicInteger(this.captureSeconds);
 
 				if (Config.enableLooseCapMessage) {
 					broadcast(Message.ZKOHT_EVENT_LOOSE);

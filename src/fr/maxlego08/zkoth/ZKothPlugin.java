@@ -61,7 +61,7 @@ public class ZKothPlugin extends ZPlugin {
 
 		/* Add Saver */
 
-		addSave(Config.getInstance());
+		saveDefaultConfig();
 		addSave(this.messageLoader);
 
 		if (this.isEnable(Plugins.FEATHERBOARD)) {
@@ -101,6 +101,7 @@ public class ZKothPlugin extends ZPlugin {
 		}
 
 		getSavers().forEach(saver -> saver.load(getPersist()));
+		Config.getInstance().load(this);
 
 		new Metrics(this, 6924);
 

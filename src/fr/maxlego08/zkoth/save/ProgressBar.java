@@ -1,6 +1,10 @@
 package fr.maxlego08.zkoth.save;
 
-public class ProgressBar {
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import fr.maxlego08.zkoth.zcore.utils.ZUtils;
+
+public class ProgressBar extends ZUtils{
 
 	private final int lenght;
 	private final char symbol;
@@ -19,6 +23,13 @@ public class ProgressBar {
 		this.symbol = symbol;
 		this.completedColor = completedColor;
 		this.notCompletedColor = notCompletedColor;
+	}
+
+	public ProgressBar(YamlConfiguration configuration, String path) {
+		this.lenght = configuration.getInt(path + "lenght");
+		this.symbol = configuration.getString(path + "symbol").charAt(0);
+		this.completedColor = color(configuration.getString(path + "completedColor"));
+		this.notCompletedColor = color(configuration.getString(path + "notCompletedColor"));
 	}
 
 	/**

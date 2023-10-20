@@ -1,0 +1,208 @@
+##########################################################################################################
+#
+#
+# ███████╗██╗░░██╗░█████╗░████████╗██╗░░██╗
+# ╚════██║██║░██╔╝██╔══██╗╚══██╔══╝██║░░██║
+# ░░███╔═╝█████═╝░██║░░██║░░░██║░░░███████║
+# ██╔══╝░░██╔═██╗░██║░░██║░░░██║░░░██╔══██║
+# ███████╗██║░╚██╗╚█████╔╝░░░██║░░░██║░░██║
+# ╚══════╝╚═╝░░╚═╝░╚════╝░░░░╚═╝░░░╚═╝░░╚═╝
+#
+#
+# Commands
+#   /zkoth (zkoth.use) » Show commands.
+#   /zkoth create <koth name> (zkoth.create) » Create a koth "You must select an area with the command /koth axe".
+#   /zkoth delete <koth name> (zkoth.delete) » Delete a koth.
+#   /zkoth list (zkoth.list) » Show koths.
+#   /zkoth spawn <zkoth name> (zkoth.spawn) » Spawn a koth.
+#   /zkoth now <koth name> (zkoth.now) » Spawn a koth without cooldown.
+#   /zkoth stop <koth name> (zkoth.stop) » Stop a koth.
+#   /zkoth reload (zkoth.reload) » Reload configuration.
+#   /zkoth move <koth> (zkoth.move) » Move koth location.
+#   /zkoth axe (zkoth.axe) » Get koth axe for the selection for locations.
+#   /zkoth info <koth> (zkoth.info) » Get all the information about a koth, delete and add commands as well.
+#   /zkoth addcommand <koth> <command> (zkoth.command.add) » Add a command.
+#   /zkoth removecommand <koth> <id> (zkoth.command.remove) » Delete a command.
+#   /zkoth setloottype <koth> <none/drop/inventory/chest> (zkoth.loottype) » Changing the type of loots of a koth.
+#   /zkoth settype <koth> <classic/point/timer> (zkoth.type) » Changing the koth type.
+#   /zkoth settimer <koth> <second> (zkoth.timer) » Set koth max second for timer type.
+#   /zkoth setpoints <koth> <points> (zkoth.points) » Set koth max poins for point type
+#   /zkoth loot <koth> (zkoth.loot) » Add or remove items from the koth.
+#   /zkoth setcapture <koth> <second> (zkoth.setcapture) » Allows to modify the time of capture of a koth.
+#   /zkoth scheduler (zkoth.scheduler) » Use zScheduler: https://www.spigotmc.org/resources/zschedulers.112705/
+#
+#
+# Placeholders:
+#   %zkoth_name% » Displays the name of the current koth.
+#   %zkoth_x% » Displays the x location of the current koth.
+#   %zkoth_y% » Displays the y location of the current koth.
+#   %zkoth_z% » Displays the z location of the current koth.
+#   %zkoth_faction% » Displays the faction who capture of the current koth.
+#   %zkoth_player% » Displays the player who capture of the current koth.
+#   %zkoth_classic_progress% » Displays the progress bar for the KOTH classic.
+#   %zkoth_max_points% » Displays the maximum number of points to be obtained.
+#   %zkoth_max_timer% » Displays the maximum number of seconds to be obtained.
+#   %zkoth_max_timer_format% » Displays the number of seconds to get formatted.
+#   %zkoth_points_percent_<position>% » Displays the percentage of point for the given position.
+#   %zkoth_points_progress_<position>% » Displays the point progress bar for the given position.
+#   %zkoth_timer_percent_<position>% » Displays the percentage of the timer for the given position.
+#   %zkoth_timer_progress_<position>% » Displays the timer progress bar for the given position.
+#   %zkoth_timer_format_<position>% » Displays the formatted time for the given position.
+#   %zkoth_timer_name_<position>% » Displays the player's nickname for the timer at the given position.
+#   %zkoth_points_name_<position>% » Displays the player's nickname for the point at the given position.
+#   %zkoth_points_<position>% » Displays the number of points at the given position.
+#   %zkoth_timer_<position>% » Displays the number of seconds at the given position.
+#   %zkoth_<koth name>_name% » Displays the name of the selected koth.
+#   %zkoth_<koth name>_x% » Displays the x location of the selected koth.
+#   %zkoth_<koth name>_y% » Displays the y location of the selected koth.
+#   %zkoth_<koth name>_z% » Displays the z location of the selected koth.
+#   %zkoth_<koth name>_faction% » Displays the faction who capture of the selected koth.
+#   %zkoth_<koth name>_player% » Displays the player who capture of the selected koth.
+#   %zkoth_<koth name>_classic_progress% » Displays the progress bar for the KOTH classic of the selected koth.
+#   %zkoth_<koth name>_max_points% » Displays the maximum number of points to be obtained of the selected koth.
+#   %zkoth_<koth name>_max_timer% » Displays the maximum number of seconds to be obtained of the selected koth.
+#   %zkoth_<koth name>_max_timer_format% » Displays the number of seconds to get formatted of the selected koth.
+#   %zkoth_<koth name>_points_percent_<position>% » Displays the percentage of point for the given position of the selected koth.
+#   %zkoth_<koth name>_points_progress_<position>% » Displays the point progress bar for the given position of the selected koth.
+#   %zkoth_<koth name>_timer_percent_<position>% » Displays the percentage of the timer for the given position of the selected koth.
+#   %zkoth_<koth name>_timer_progress_<position>% » Displays the timer progress bar for the given position of the selected koth.
+#   %zkoth_<koth name>_timer_format_<position>% » Displays the formatted time for the given position of the selected koth.
+#   %zkoth_<koth name>_timer_name_<position>% » Displays the player's nickname for the timer at the given position of the selected koth.
+#   %zkoth_<koth name>_points_name_<position>% » Displays the player's nickname for the point at the given position of the selected koth.
+#   %zkoth_<koth name>_points_<position>% » Displays the number of points at the given position of the selected koth.
+#   %zkoth_<koth name>_timer_<position>% » Displays the number of seconds at the given position of the selected koth.
+#
+##########################################################################################################
+
+# Enable plugin debug
+enableDebug: false
+
+# Number of milliseconds between each PlayerMoveEvent action
+# Allows to cooldown the player not to overload the plugin 
+playerMoveEventCooldown: 50
+
+# Activate the scoreboard
+enableScoreboard: false
+
+# Check the plugin version
+enableVersionChecker: true
+
+# Force the use of no plugin, only a player can capture a koth
+useNoFactionHook: false
+
+# Message when a player starts capturing a koth
+enableStartCapMessage: true
+
+# Message when a player loses a koth capture
+enableLooseCapMessage: true
+
+# Message sent every second when a player captures the koth, convenient to display an actionbar during the entire period of the koth 
+enableEverySecondsCapMessage: false
+
+# Default value for placeholders if koth is not found
+defaultNoKoth: "No KOTH"
+
+# Scoreboard Title
+scoreboardTitle: "&f&l⌈ &6&ozKoth &f&l⌋"
+
+# Scoreboard when a koth is running
+scoreboard:
+  - "&r"
+  - "&6&l⟣ &fKoth: &b%name%"
+  - "&6&l⟣ &fCoord: &b%x% %y% %z%"
+  - "&6&l⟣ &fFaction: &b%faction%"
+  - "&0"
+  - "&6&l⟣ &fTime: &d%capture%"
+  - "&b"
+  - "&6&l⟣ &fPoints: &b%points%&f/&a%maxPoints%"
+  - "&6&l⟣ &fPercent: &b%pointsPercent%&7%"
+  - "&6&l⟣ &fTimer: &b%timer%"
+  - "&6&l⟣ &fTimer: &b%timerSeconds%&f/&a%maxTimerSeconds%"
+  - "&6&l⟣ &fPercent: &b%timerPercent%&7%"
+  - "&1"
+  - "&6&l⟣ &fhttps://groupez.dev"
+  
+# Scoreboard when a koth is in cooldown   
+scoreboardCooldown:
+  - "§r"
+  - "§6l⟣ §fKoth: §b%name%"
+  - "§6l⟣ §fCoordinate: §b%x% %y% %z%"
+  - "§6l⟣ §fStarts in: §d%capture%"
+  - "§1"
+  - "§6l⟣ §fhttps://groupez.dev"  
+  
+# Allows you to change blocks to visually indicate what is happening:
+# When no one captures the koth
+noOneCapturingMaterial: DIAMOND_BLOCK
+# When a single player captures the koth
+onePersonneCapturingMaterial: GOLD_BLOCK
+# When several players are on the koth, only available for type POINT_COUNT
+multiPersonneCapturingMaterial: EMERALD_BLOCK
+
+# Change the name of the Wilderness faction to NoFaction
+replaceNoFaction:
+  enable: false
+  to: "§3NoFaction"
+  from: "§2Wilderness"
+  
+# Progression bar for the placeholder points  
+progressBarPoints:
+  lenght: 10
+  symbol: "|"
+  completedColor: "&b"
+  notCompletedColor: "&7"
+  
+# Progression bar for the placeholder timer  
+progressBarTimer:
+  lenght: 10
+  symbol: "|"
+  completedColor: "&b"
+  notCompletedColor: "&7"
+  
+# Progression bar for the placeholder classic  
+progressBarClassic:
+  lenght: 10
+  symbol: "|"
+  completedColor: "&b"
+  notCompletedColor: "&7"
+
+# Decimal format (https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html)
+percentPrecision: "#.#"
+
+# Time in milliseconds for scoreboard update
+schedulerMillisecond: 1000
+
+# Time in second before the appearance of the koth with the command/koth spawn
+cooldownInSecond: 300
+
+# Time to remove the chest in seconds, the koth loot type must be in CHEST
+removeChestSec: 120
+
+# Stops the koth automatically after 900 seconds
+forceStoKothAfterSeconds: 900
+
+# Display a message during koth cooldown
+displayMessageCooldown:
+  - 300
+  - 120
+  - 60
+  - 30
+  - 10
+  - 5
+  - 4
+  - 3
+  - 2
+  - 1 
+
+# Display a message during koth cap
+displayMessageKothCap:
+  - 300
+  - 120
+  - 60
+  - 30
+  - 10
+  - 5
+  - 4
+  - 3
+  - 2
+  - 1 

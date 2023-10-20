@@ -1,5 +1,7 @@
 package fr.maxlego08.zkoth.save;
 
+import org.bukkit.configuration.file.YamlConfiguration;
+
 public class ReplaceConfig {
 
 	private final String from;
@@ -13,6 +15,11 @@ public class ReplaceConfig {
 		super();
 		this.from = from;
 		this.to = to;
+	}
+
+	public ReplaceConfig(YamlConfiguration configuration) {
+		this.from = configuration.getString("replaceNoFaction.from");
+		this.to = configuration.getString("replaceNoFaction.to");
 	}
 
 	/**

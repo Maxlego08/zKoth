@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -67,6 +68,7 @@ public class ZKoth extends ZUtils implements Koth {
 	private transient boolean isEnable = false;
 	private transient boolean isCooldown = false;
 	private transient TimerTask timerTask;
+	private transient TimerTask timerTaskStop;
 	private transient Player currentPlayer;
 	private transient FactionListener factionListener = new DefaultHook();
 	private transient AtomicInteger currentCaptureSeconds;
@@ -319,6 +321,16 @@ public class ZKoth extends ZUtils implements Koth {
 		if (this.kothType == KothType.POINT_COUNT) {
 			this.startschedule();
 		}
+
+		Timer timer = new Timer();
+		this.timerTaskStop = new TimerTask() {
+			@Override
+			public void run() {
+				stop(Bukkit.getConsoleSender());
+			}
+		};
+		timer.schedule(this.timerTaskStop, Config.forceStoKothAfterSeconds * 1000);
+
 	}
 
 	/**
@@ -735,6 +747,7 @@ public class ZKoth extends ZUtils implements Koth {
 		this.currentCaptureSeconds = null;
 		this.playersValues.clear();
 		this.resetBlocks();
+		if (this.timerTaskStop != null) this.timerTaskStop.cancel();
 	}
 
 	@Override
@@ -796,6 +809,7 @@ public class ZKoth extends ZUtils implements Koth {
 		this.currentCaptureSeconds = null;
 		this.playersValues.clear();
 		this.resetBlocks();
+		if (this.timerTaskStop != null) this.timerTaskStop.cancel();
 	}
 
 	@Override

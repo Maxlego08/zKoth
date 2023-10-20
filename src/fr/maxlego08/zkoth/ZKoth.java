@@ -58,6 +58,7 @@ public class ZKoth extends ZUtils implements Koth {
 	private LootType type;
 	private List<String> commands = new ArrayList<String>();
 	private List<String> itemStacks = new ArrayList<String>();
+	private List<String> blockLocations = new ArrayList<String>();
 
 	private int maxSecondsCap;
 	private int maxPoints;
@@ -70,6 +71,7 @@ public class ZKoth extends ZUtils implements Koth {
 	private transient FactionListener factionListener = new DefaultHook();
 	private transient AtomicInteger currentCaptureSeconds;
 
+	private transient Material lastMaterial;
 	private transient Map<UUID, Integer> playersValues = new HashMap<UUID, Integer>();
 
 	/**
@@ -92,6 +94,16 @@ public class ZKoth extends ZUtils implements Koth {
 		if (this.playersValues == null) {
 			this.playersValues = new HashMap<>();
 		}
+		if (this.blockLocations == null) {
+			this.blockLocations = new ArrayList<>();
+		}
+
+		Cuboid cuboid = getCuboid();
+		cuboid.forEach(block -> {
+			if (block.getType() == Material.SPONGE) {
+				this.blockLocations.add(changeLocationToString(block.getLocation()));
+			}
+		});
 	}
 
 	@Override
@@ -298,6 +310,7 @@ public class ZKoth extends ZUtils implements Koth {
 		this.currentCaptureSeconds = new AtomicInteger(this.captureSeconds);
 
 		this.broadcast(Message.ZKOTH_EVENT_START);
+		this.changeBlocks(Config.noOneCapturingMaterial);
 
 		if (this.factionListener == null) {
 			this.factionListener = new DefaultHook();
@@ -464,6 +477,7 @@ public class ZKoth extends ZUtils implements Koth {
 				this.timerTask.cancel();
 			}
 
+			this.changeBlocks(Config.noOneCapturingMaterial);
 			this.timerTask = null;
 			this.currentPlayer = null;
 		}
@@ -485,11 +499,14 @@ public class ZKoth extends ZUtils implements Koth {
 			}
 
 			Cuboid cuboid = this.getCuboid();
-			Bukkit.getOnlinePlayers().forEach(player -> {
+			int amount = 0;
+			for (Player player : Bukkit.getOnlinePlayers()) {
 
 				if (!cuboid.contains(player.getLocation())) {
-					return;
+					continue;
 				}
+
+				amount++;
 
 				int value = this.playersValues.getOrDefault(player.getUniqueId(), 0) + 1;
 				this.playersValues.put(player.getUniqueId(), value);
@@ -499,8 +516,18 @@ public class ZKoth extends ZUtils implements Koth {
 					// WINNER
 					this.currentPlayer = player;
 					this.endKoth(task, cuboid, player);
+
+					amount = -1;
 				}
-			});
+			}
+
+			if (amount == 1) {
+				this.changeBlocks(Config.onePersonneCapturingMaterial);
+			} else if (amount > 1) {
+				this.changeBlocks(Config.multiPersonneCapturingMaterial);
+			} else {
+				this.changeBlocks(Config.noOneCapturingMaterial);
+			}
 
 		});
 	}
@@ -531,6 +558,8 @@ public class ZKoth extends ZUtils implements Koth {
 		captureSeconds = captureSeconds < 0 ? 30 : captureSeconds;
 		this.currentCaptureSeconds = new AtomicInteger(captureSeconds);
 		Cuboid cuboid = getCuboid();
+
+		this.changeBlocks(Config.onePersonneCapturingMaterial);
 
 		scheduleFix(0, 1000, (task, isCancelled) -> {
 
@@ -568,6 +597,7 @@ public class ZKoth extends ZUtils implements Koth {
 					this.timerTask.cancel();
 				}
 
+				this.changeBlocks(Config.noOneCapturingMaterial);
 				this.timerTask = null;
 				this.currentPlayer = null;
 
@@ -702,6 +732,7 @@ public class ZKoth extends ZUtils implements Koth {
 		this.timerTask = null;
 		this.currentCaptureSeconds = null;
 		this.playersValues.clear();
+		this.resetBlocks();
 	}
 
 	@Override
@@ -762,6 +793,7 @@ public class ZKoth extends ZUtils implements Koth {
 		this.timerTask = null;
 		this.currentCaptureSeconds = null;
 		this.playersValues.clear();
+		this.resetBlocks();
 	}
 
 	@Override
@@ -941,6 +973,50 @@ public class ZKoth extends ZUtils implements Koth {
 	@Override
 	public void setRandomItemStacks(int value) {
 		this.randomItemStacks = value;
+	}
+
+	@Override
+	public List<Location> getBlockLocations() {
+		if (this.blockLocations == null) {
+			this.blockLocations = new ArrayList<>();
+		}
+		return this.blockLocations.stream().map(this::changeStringLocationToLocation).collect(Collectors.toList());
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void changeBlocks(Material material) {
+
+		if (this.blockLocations == null || this.blockLocations.isEmpty()) {
+			return;
+		}
+
+		if (this.lastMaterial != null && material == this.lastMaterial) {
+			return;
+		}
+		this.lastMaterial = material;
+
+		Bukkit.getOnlinePlayers().forEach(player -> {
+			this.getBlockLocations().forEach(location -> {
+				player.sendBlockChange(location, material, (byte) 0);
+			});
+		});
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void resetBlocks() {
+
+		if (this.blockLocations == null || this.blockLocations.isEmpty()) {
+			return;
+		}
+
+		this.getBlockLocations().forEach(location -> {
+			Bukkit.getOnlinePlayers().forEach(player -> {
+				player.sendBlockChange(location, location.getBlock().getType(), (byte) 0);
+			});
+		});
+
 	}
 
 }

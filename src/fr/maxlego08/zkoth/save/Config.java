@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.Material;
+
 import fr.maxlego08.zkoth.zcore.utils.storage.Persist;
 import fr.maxlego08.zkoth.zcore.utils.storage.Saveable;
 
@@ -28,9 +30,13 @@ public class Config implements Saveable {
 	public static ProgressBar progressBarPoints = new ProgressBar(10, '|', "§b", "§7");
 	public static ProgressBar progressBarTimer = new ProgressBar(10, '|', "§b", "§7");
 	public static ProgressBar progressBarClassic = new ProgressBar(10, '|', "§b", "§7");
-	
+
 	public static ReplaceConfig replaceNoFaction = new ReplaceConfig("§2Wilderness", "§3NoFaction");
 	public static boolean enableReplaceNoFaction = false;
+
+	public static Material noOneCapturingMaterial = Material.DIAMOND_BLOCK;
+	public static Material onePersonneCapturingMaterial = Material.GOLD_BLOCK;
+	public static Material multiPersonneCapturingMaterial = Material.EMERALD_BLOCK;
 
 	static {
 

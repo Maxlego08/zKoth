@@ -6,6 +6,7 @@ import java.util.TimerTask;
 import java.util.UUID;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -271,5 +272,11 @@ public interface Koth {
 	public int getRandomItemStacks();
 	
 	public void setRandomItemStacks(int value);
+	
+	public List<Location> getBlockLocations();
+	
+	public void changeBlocks(Material material);
+	
+	public void resetBlocks();
 
 }

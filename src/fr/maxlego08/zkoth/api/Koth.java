@@ -275,8 +275,10 @@ public interface Koth {
 	
 	public List<Location> getBlockLocations();
 	
-	public void changeBlocks(Material material);
+	public void changeBlocks(Material material, boolean force);
 	
 	public void resetBlocks();
+	
+	public List<Location> getBeaconLocations();
 
 }

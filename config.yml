@@ -109,7 +109,7 @@ scoreboardTitle: "&f&l⌈ &6&ozKoth &f&l⌋"
 scoreboard:
   - "&r"
   - "&6&l⟣ &fKoth: &b%name%"
-  - "&6&l⟣ &fCoord: &b%x% %y% %z%"
+  - "&6&l⟣ &b%x% %y% %z%"
   - "&6&l⟣ &fFaction: &b%faction%"
   - "&0"
   - "&6&l⟣ &fTime: &d%capture%"

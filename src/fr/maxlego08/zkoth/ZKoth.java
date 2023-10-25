@@ -60,6 +60,7 @@ public class ZKoth extends ZUtils implements Koth {
 	private List<String> commands = new ArrayList<String>();
 	private List<String> itemStacks = new ArrayList<String>();
 	private List<String> blockLocations = new ArrayList<String>();
+	private List<String> beaconLocations = new ArrayList<String>();
 
 	private int maxSecondsCap;
 	private int maxPoints;
@@ -100,10 +101,17 @@ public class ZKoth extends ZUtils implements Koth {
 			this.blockLocations = new ArrayList<>();
 		}
 
+		if (this.beaconLocations == null) {
+			this.beaconLocations = new ArrayList<>();
+		}
+
 		Cuboid cuboid = getCuboid();
 		cuboid.forEach(block -> {
 			if (block.getType() == Material.SPONGE) {
 				this.blockLocations.add(changeLocationToString(block.getLocation()));
+			}
+			if (block.getType() == Material.BEDROCK) {
+				this.beaconLocations.add(changeLocationToString(block.getLocation()));
 			}
 		});
 	}
@@ -312,7 +320,7 @@ public class ZKoth extends ZUtils implements Koth {
 		this.currentCaptureSeconds = new AtomicInteger(this.captureSeconds);
 
 		this.broadcast(Message.ZKOTH_EVENT_START);
-		this.changeBlocks(Config.noOneCapturingMaterial);
+		this.changeBlocks(Config.noOneCapturingMaterial, true);
 
 		if (this.factionListener == null) {
 			this.factionListener = new DefaultHook();
@@ -489,7 +497,7 @@ public class ZKoth extends ZUtils implements Koth {
 				this.timerTask.cancel();
 			}
 
-			this.changeBlocks(Config.noOneCapturingMaterial);
+			this.changeBlocks(Config.noOneCapturingMaterial, true);
 			this.currentCaptureSeconds = new AtomicInteger(this.captureSeconds);
 			this.timerTask = null;
 			this.currentPlayer = null;
@@ -535,11 +543,11 @@ public class ZKoth extends ZUtils implements Koth {
 			}
 
 			if (amount == 1) {
-				this.changeBlocks(Config.onePersonneCapturingMaterial);
+				this.changeBlocks(Config.onePersonneCapturingMaterial, false);
 			} else if (amount > 1) {
-				this.changeBlocks(Config.multiPersonneCapturingMaterial);
+				this.changeBlocks(Config.multiPersonneCapturingMaterial, false);
 			} else {
-				this.changeBlocks(Config.noOneCapturingMaterial);
+				this.changeBlocks(Config.noOneCapturingMaterial, false);
 			}
 
 		});
@@ -572,7 +580,7 @@ public class ZKoth extends ZUtils implements Koth {
 		this.currentCaptureSeconds = new AtomicInteger(captureSeconds);
 		Cuboid cuboid = getCuboid();
 
-		this.changeBlocks(Config.onePersonneCapturingMaterial);
+		this.changeBlocks(Config.onePersonneCapturingMaterial, false);
 
 		scheduleFix(0, 1000, (task, isCancelled) -> {
 
@@ -610,7 +618,7 @@ public class ZKoth extends ZUtils implements Koth {
 					this.timerTask.cancel();
 				}
 
-				this.changeBlocks(Config.noOneCapturingMaterial);
+				this.changeBlocks(Config.noOneCapturingMaterial, true);
 				this.timerTask = null;
 				this.currentPlayer = null;
 				this.currentCaptureSeconds = new AtomicInteger(this.captureSeconds);
@@ -747,7 +755,8 @@ public class ZKoth extends ZUtils implements Koth {
 		this.currentCaptureSeconds = null;
 		this.playersValues.clear();
 		this.resetBlocks();
-		if (this.timerTaskStop != null) this.timerTaskStop.cancel();
+		if (this.timerTaskStop != null)
+			this.timerTaskStop.cancel();
 	}
 
 	@Override
@@ -809,7 +818,8 @@ public class ZKoth extends ZUtils implements Koth {
 		this.currentCaptureSeconds = null;
 		this.playersValues.clear();
 		this.resetBlocks();
-		if (this.timerTaskStop != null) this.timerTaskStop.cancel();
+		if (this.timerTaskStop != null)
+			this.timerTaskStop.cancel();
 	}
 
 	@Override
@@ -999,15 +1009,23 @@ public class ZKoth extends ZUtils implements Koth {
 		return this.blockLocations.stream().map(this::changeStringLocationToLocation).collect(Collectors.toList());
 	}
 
+	@Override
+	public List<Location> getBeaconLocations() {
+		if (this.beaconLocations == null) {
+			this.beaconLocations = new ArrayList<>();
+		}
+		return this.beaconLocations.stream().map(this::changeStringLocationToLocation).collect(Collectors.toList());
+	}
+
 	@SuppressWarnings("deprecation")
 	@Override
-	public void changeBlocks(Material material) {
+	public void changeBlocks(Material material, boolean force) {
 
 		if (this.blockLocations == null || this.blockLocations.isEmpty()) {
 			return;
 		}
 
-		if (this.lastMaterial != null && material == this.lastMaterial) {
+		if (this.lastMaterial != null && material == this.lastMaterial && !force) {
 			return;
 		}
 		this.lastMaterial = material;
@@ -1016,22 +1034,32 @@ public class ZKoth extends ZUtils implements Koth {
 			this.getBlockLocations().forEach(location -> {
 				player.sendBlockChange(location, material, (byte) 0);
 			});
-		});
+			
+			this.getBeaconLocations().forEach(location -> {
+				player.sendBlockChange(location, Material.BEACON, (byte) 0);
+			});
+		});	
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public void resetBlocks() {
 
-		if (this.blockLocations == null || this.blockLocations.isEmpty()) {
-			return;
+		if (this.blockLocations != null && !this.blockLocations.isEmpty()) {
+			this.getBlockLocations().forEach(location -> {
+				Bukkit.getOnlinePlayers().forEach(player -> {
+					player.sendBlockChange(location, location.getBlock().getType(), (byte) 0);
+				});
+			});
 		}
 
-		this.getBlockLocations().forEach(location -> {
-			Bukkit.getOnlinePlayers().forEach(player -> {
-				player.sendBlockChange(location, location.getBlock().getType(), (byte) 0);
+		if (this.beaconLocations != null && !this.beaconLocations.isEmpty()) {
+			this.getBeaconLocations().forEach(location -> {
+				Bukkit.getOnlinePlayers().forEach(player -> {
+					player.sendBlockChange(location, location.getBlock().getType(), (byte) 0);
+				});
 			});
-		});
+		}
 
 	}
 

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import fr.maxlego08.zkoth.ZKothPlugin;
@@ -46,6 +47,8 @@ public class Config extends ZUtils {
 	public static boolean enableDebug = false;
 
 	public static String defaultNoKoth = "No KOTH";
+
+	public static List<HologramConfig> hologramConfigs = new ArrayList<>();
 
 	/**
 	 * static Singleton instance.
@@ -112,6 +115,14 @@ public class Config extends ZUtils {
 				.valueOf(configuration.getString("onePersonneCapturingMaterial", "STONE"));
 		multiPersonneCapturingMaterial = Material
 				.valueOf(configuration.getString("multiPersonneCapturingMaterial", "STONE"));
+
+		hologramConfigs.clear();
+		ConfigurationSection configurationSection = configuration.getConfigurationSection("holograms.");
+		if (configurationSection != null) {
+			for (String key : configurationSection.getKeys(false)) {
+				hologramConfigs.add(new HologramConfig(configuration, "holograms." + key + "."));
+			}
+		}
 	}
 
 }

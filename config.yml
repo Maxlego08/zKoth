@@ -124,12 +124,12 @@ scoreboard:
   
 # Scoreboard when a koth is in cooldown   
 scoreboardCooldown:
-  - "§r"
-  - "§6l⟣ §fKoth: §b%name%"
-  - "§6l⟣ §fCoordinate: §b%x% %y% %z%"
-  - "§6l⟣ §fStarts in: §d%capture%"
-  - "§1"
-  - "§6l⟣ §fhttps://groupez.dev"  
+  - "&r"
+  - "&6&l⟣ &fKoth: &b%name%"
+  - "&6&l⟣ &fCoordinate: &b%x% %y% %z%"
+  - "&6&l⟣ &fStarts in: &d%capture%"
+  - "&1"
+  - "&6&l⟣ &fhttps://groupez.dev"  
   
 # Allows you to change blocks to visually indicate what is happening:
 # When no one captures the koth
@@ -206,3 +206,14 @@ displayMessageKothCap:
   - 3
   - 2
   - 1 
+  
+# Holograms
+holograms:
+  example:
+    enable: true
+    koth: "test"
+    location: "world,0,64,0"
+    lines:
+    - "&fCoordinate: &b%x% %y% %z%"
+    - ""
+    - "&fTimer: &b%capture%"  

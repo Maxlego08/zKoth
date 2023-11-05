@@ -302,6 +302,8 @@ public class ZKoth extends ZUtils implements Koth {
 	 */
 	private void spawnNow() {
 
+		this.plugin = (ZKothPlugin) ZPlugin.z();
+		
 		if (this.playersValues == null) {
 			this.playersValues = new HashMap<>();
 		}
@@ -330,14 +332,18 @@ public class ZKoth extends ZUtils implements Koth {
 			this.startschedule();
 		}
 
+		Koth koth = this;
 		Timer timer = new Timer();
 		this.timerTaskStop = new TimerTask() {
 			@Override
 			public void run() {
+				plugin.getHologram().end(koth);
 				stop(Bukkit.getConsoleSender());
 			}
 		};
 		timer.schedule(this.timerTaskStop, Config.forceStoKothAfterSeconds * 1000);
+		
+		this.plugin.getHologram().start(this);
 
 	}
 
@@ -404,7 +410,8 @@ public class ZKoth extends ZUtils implements Koth {
 	 * @param message
 	 * @return string
 	 */
-	private String replaceMessage(String message) {
+	@Override
+	public String replaceMessage(String message) {
 
 		Cuboid cuboid = getCuboid();
 		Location center = cuboid.getCenter();
@@ -481,6 +488,7 @@ public class ZKoth extends ZUtils implements Koth {
 
 			this.currentPlayer = player;
 			this.startCap(player);
+			this.plugin.getHologram().update(this);
 
 		} else if (this.currentPlayer != null && !cuboid.contains(this.currentPlayer.getLocation())) {
 
@@ -491,6 +499,7 @@ public class ZKoth extends ZUtils implements Koth {
 				return;
 			}
 
+			this.plugin.getHologram().update(this);
 			broadcast(Message.ZKOHT_EVENT_LOOSE);
 
 			if (this.timerTask != null) {
@@ -550,6 +559,7 @@ public class ZKoth extends ZUtils implements Koth {
 				this.changeBlocks(Config.noOneCapturingMaterial, false);
 			}
 
+			this.plugin.getHologram().update(this);
 		});
 	}
 
@@ -581,6 +591,7 @@ public class ZKoth extends ZUtils implements Koth {
 		Cuboid cuboid = getCuboid();
 
 		this.changeBlocks(Config.onePersonneCapturingMaterial, false);
+		this.plugin.getHologram().update(this);
 
 		scheduleFix(0, 1000, (task, isCancelled) -> {
 
@@ -602,6 +613,7 @@ public class ZKoth extends ZUtils implements Koth {
 				if (!this.currentPlayer.isValid() || !this.currentPlayer.isOnline()
 						|| !cuboid.contains(this.currentPlayer.getLocation())) {
 					this.currentPlayer = null;
+					this.plugin.getHologram().update(this);
 				}
 			}
 
@@ -626,6 +638,8 @@ public class ZKoth extends ZUtils implements Koth {
 				if (Config.enableLooseCapMessage) {
 					broadcast(Message.ZKOHT_EVENT_LOOSE);
 				}
+				
+				this.plugin.getHologram().update(this);
 				return;
 
 			}
@@ -656,6 +670,8 @@ public class ZKoth extends ZUtils implements Koth {
 					this.playersValues.put(this.currentPlayer.getUniqueId(), this.getValue(this.currentPlayer) + 1);
 					break;
 				}
+				
+				this.plugin.getHologram().update(this);
 			}
 		});
 	}
@@ -685,6 +701,7 @@ public class ZKoth extends ZUtils implements Koth {
 			return;
 		}
 
+		this.plugin.getHologram().end(this);
 		task.cancel();
 		broadcast(Message.ZKOTH_EVENT_WIN);
 
@@ -820,6 +837,8 @@ public class ZKoth extends ZUtils implements Koth {
 		this.resetBlocks();
 		if (this.timerTaskStop != null)
 			this.timerTaskStop.cancel();
+		
+		this.plugin.getHologram().end(this);
 	}
 
 	@Override

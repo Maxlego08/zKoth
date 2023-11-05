@@ -6,6 +6,9 @@ import org.bukkit.plugin.ServicePriority;
 import fr.maxlego08.zkoth.api.KothManager;
 import fr.maxlego08.zkoth.command.CommandManager;
 import fr.maxlego08.zkoth.command.commands.CommandKoth;
+import fr.maxlego08.zkoth.hologram.DecentHologram;
+import fr.maxlego08.zkoth.hologram.EmptyHologram;
+import fr.maxlego08.zkoth.hologram.ZHologram;
 import fr.maxlego08.zkoth.inventory.InventoryManager;
 import fr.maxlego08.zkoth.listener.AdapterListener;
 import fr.maxlego08.zkoth.save.Config;
@@ -35,6 +38,7 @@ public class ZKothPlugin extends ZPlugin {
 
 	private KothManager kothManager;
 	private final MessageLoader messageLoader = new MessageLoader(this);
+	private ZHologram hologram = new EmptyHologram();
 
 	@Override
 	public void onEnable() {
@@ -100,6 +104,11 @@ public class ZKothPlugin extends ZPlugin {
 			implementation.register();
 		}
 
+		if (this.isEnable(Plugins.DH)) {
+			Logger.info("Register DecentHologram implementation", LogType.INFO);
+			this.hologram = new DecentHologram();	
+		}
+		
 		getSavers().forEach(saver -> saver.load(getPersist()));
 		Config.getInstance().load(this);
 
@@ -116,6 +125,7 @@ public class ZKothPlugin extends ZPlugin {
 
 		preDisable();
 
+		this.hologram.onDisable();
 		this.scoreboardManager.setRunning(false);
 		getSavers().forEach(saver -> saver.save(getPersist()));
 
@@ -129,6 +139,10 @@ public class ZKothPlugin extends ZPlugin {
 
 	public KothManager getKothManager() {
 		return kothManager;
+	}
+	
+	public ZHologram getHologram() {
+		return hologram;
 	}
 
 }

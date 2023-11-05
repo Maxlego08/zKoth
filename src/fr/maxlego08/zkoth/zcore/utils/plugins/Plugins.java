@@ -11,6 +11,7 @@ public enum Plugins {
 	STERNALBOARD("SternalBoard"),
 	SIMPLECORE("SimpleScore"),
 	ZSCHEDULERS("zSchedulers"),
+	DH("DecentHolograms"),
 	
 	;
 

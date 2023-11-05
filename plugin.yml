@@ -18,5 +18,6 @@ softdepend:
 - SimpleClan
 - SternalBoard
 - zSchedulers
+- DecentHolograms
 commands:
 api-version: 1.13

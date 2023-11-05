@@ -280,5 +280,7 @@ public interface Koth {
 	public void resetBlocks();
 	
 	public List<Location> getBeaconLocations();
+	
+	String replaceMessage(String message);
 
 }

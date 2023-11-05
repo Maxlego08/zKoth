@@ -10,6 +10,8 @@ public enum Plugins {
 	TITLEMANAGER("TitleManager"),
 	STERNALBOARD("SternalBoard"),
 	SIMPLECORE("SimpleScore"),
+	ZSCHEDULERS("zSchedulers"),
+	DH("DecentHolograms"),
 	
 	;
 

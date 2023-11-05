@@ -2,7 +2,6 @@ package fr.maxlego08.zkoth.command.commands;
 
 import fr.maxlego08.zkoth.ZKothPlugin;
 import fr.maxlego08.zkoth.command.VCommand;
-import fr.maxlego08.zkoth.command.commands.scheduler.CommandKothScheduler;
 import fr.maxlego08.zkoth.zcore.enums.Message;
 import fr.maxlego08.zkoth.zcore.enums.Permission;
 import fr.maxlego08.zkoth.zcore.utils.commands.CommandType;

@@ -4,67 +4,56 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import fr.maxlego08.zkoth.zcore.utils.storage.Persist;
-import fr.maxlego08.zkoth.zcore.utils.storage.Saveable;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 
-public class Config implements Saveable {
+import fr.maxlego08.zkoth.ZKothPlugin;
+import fr.maxlego08.zkoth.zcore.utils.ZUtils;
 
-	public static long playerMoveEventCooldown = 50;
+public class Config extends ZUtils {
+
 	public static List<Integer> displayMessageCooldown = Arrays.asList(300, 120, 60, 30, 10, 5, 4, 3, 2, 1);
 	public static List<Integer> displayMessageKothCap = Arrays.asList(300, 120, 60, 30, 10, 5, 4, 3, 2, 1);
-	public static boolean enableScoreboard = false;
+	public static long schedulerMillisecond = 1000;
+	public static int cooldownInSecond = 300;
+	public static int removeChestSec = 120;
+	public static int forceStoKothAfterSeconds = 600;
+	public static String percentPrecision = "#.#";
+
+	public static ProgressBar progressBarPoints = new ProgressBar(10, '|', "§b", "§7");
+	public static ProgressBar progressBarTimer = new ProgressBar(10, '|', "§b", "§7");
+	public static ProgressBar progressBarClassic = new ProgressBar(10, '|', "§b", "§7");
+
+	public static ReplaceConfig replaceNoFaction = new ReplaceConfig("§2Wilderness", "§3NoFaction");
+	public static boolean enableReplaceNoFaction = false;
+
 	public static boolean enableVersionChecker = true;
 	public static boolean useNoFactionHook = false;
 	public static boolean enableStartCapMessage = true;
 	public static boolean enableLooseCapMessage = true;
 	public static boolean enableEverySecondsCapMessage = false;
+
+	public static boolean enableScoreboard = false;
+	public static long playerMoveEventCooldown = 50;
+
 	public static String scoreboardTitle = "§f§l⌈ §7§ozKoth §f§l⌋";
 	public static List<String> scoreboard = new ArrayList<String>();
 	public static List<String> scoreboardCooldown = new ArrayList<String>();
-	public static long schedulerMillisecond = 1000;
-	public static int cooldownInSecond = 300;
-	public static int removeChestSec = 120;
-	public static String percentPrecision = "#.#";
-	public static ProgressBar progressBarPoints = new ProgressBar(10, '|', "§b", "§7");
-	public static ProgressBar progressBarTimer = new ProgressBar(10, '|', "§b", "§7");
-	public static ProgressBar progressBarClassic = new ProgressBar(10, '|', "§b", "§7");
-	
-	public static ReplaceConfig replaceNoFaction = new ReplaceConfig("§2Wilderness", "§3NoFaction");
-	public static boolean enableReplaceNoFaction = false;
 
-	static {
+	public static Material noOneCapturingMaterial = Material.DIAMOND_BLOCK;
+	public static Material onePersonneCapturingMaterial = Material.GOLD_BLOCK;
+	public static Material multiPersonneCapturingMaterial = Material.EMERALD_BLOCK;
+	public static boolean enableDebug = false;
 
-		scoreboard.add("§r");
-		scoreboard.add("§6§l⟣ §fKoth: §b%name%");
-		scoreboard.add("§6§l⟣ §fCoord: §b%x% %y% %z%");
-		scoreboard.add("§6§l⟣ §fFaction: §b%faction%");
-		scoreboard.add("§0");
-		scoreboard.add("§6§l⟣ §fTime: §d%capture%");
-		scoreboard.add("§b");
-		scoreboard.add("§6§l⟣ §fPoints: §b%points%§f/§a%maxPoints%");
-		scoreboard.add("§6§l⟣ §fPercent: §b%pointsPercent%§7%");
-		scoreboard.add("§6§l⟣ §fTimer: §b%timer%");
-		scoreboard.add("§6§l⟣ §fTimer: §b%timerSeconds%§f/§a%maxTimerSeconds%");
-		scoreboard.add("§6§l⟣ §fPercent: §b%timerPercent%§7%");
-		scoreboard.add("§1");
-		scoreboard.add("§6§l⟣ §fhttps://groupez.dev");
+	public static String defaultNoKoth = "No KOTH";
 
-		scoreboardCooldown.add("§r");
-		scoreboardCooldown.add("§6§l⟣ §fKoth: §b%name%");
-		scoreboardCooldown.add("§6§l⟣ §fCoordinate: §b%x% %y% %z%");
-		scoreboardCooldown.add("§6§l⟣ §fStarts in: §d%capture%");
-		scoreboardCooldown.add("§1");
-		scoreboardCooldown.add("§6§l⟣ §fhttps://groupez.dev");
-
-	}
+	public static List<HologramConfig> hologramConfigs = new ArrayList<>();
 
 	/**
 	 * static Singleton instance.
 	 */
 	private static volatile Config instance;
-	public static boolean enableDebug;
-	public static boolean spawnKothWithSchedulerNow = true;
-	public static String defaultNoKoth = "No KOTH";
 
 	/**
 	 * Private constructor for singleton.
@@ -87,12 +76,53 @@ public class Config implements Saveable {
 		return instance;
 	}
 
-	public void save(Persist persist) {
-		persist.save(getInstance());
-	}
+	public void load(ZKothPlugin plugin) {
 
-	public void load(Persist persist) {
-		persist.loadOrSaveDefault(getInstance(), Config.class);
+		YamlConfiguration configuration = (YamlConfiguration) plugin.getConfig();
+
+		progressBarPoints = new ProgressBar(configuration, "progressBarPoints.");
+		progressBarTimer = new ProgressBar(configuration, "progressBarTimer.");
+		progressBarClassic = new ProgressBar(configuration, "progressBarClassic.");
+
+		enableScoreboard = configuration.getBoolean("enableScoreboard", false);
+		enableVersionChecker = configuration.getBoolean("enableVersionChecker", false);
+		useNoFactionHook = configuration.getBoolean("useNoFactionHook", false);
+		enableStartCapMessage = configuration.getBoolean("enableStartCapMessage", false);
+		enableLooseCapMessage = configuration.getBoolean("enableLooseCapMessage", false);
+		enableEverySecondsCapMessage = configuration.getBoolean("enableEverySecondsCapMessage", false);
+		enableReplaceNoFaction = configuration.getBoolean("enableReplaceNoFaction.enable", false);
+		enableDebug = configuration.getBoolean("enableDebug", false);
+		replaceNoFaction = new ReplaceConfig(configuration);
+
+		playerMoveEventCooldown = configuration.getInt("playerMoveEventCooldown", 50);
+
+		scoreboardTitle = color(configuration.getString("scoreboardTitle"));
+		scoreboard = color(configuration.getStringList("scoreboard"));
+		scoreboardCooldown = color(configuration.getStringList("scoreboardCooldown"));
+
+		displayMessageCooldown = configuration.getIntegerList("displayMessageCooldown");
+		displayMessageKothCap = configuration.getIntegerList("displayMessageKothCap");
+
+		schedulerMillisecond = configuration.getLong("schedulerMillisecond", 1000L);
+		cooldownInSecond = configuration.getInt("cooldownInSecond", 300);
+		removeChestSec = configuration.getInt("removeChestSec", 120);
+		forceStoKothAfterSeconds = configuration.getInt("forceStoKothAfterSeconds", 300);
+
+		percentPrecision = configuration.getString("percentPrecision", "#.#");
+		defaultNoKoth = configuration.getString("defaultNoKoth", "No Koth");
+		noOneCapturingMaterial = Material.valueOf(configuration.getString("noOneCapturingMaterial", "STONE"));
+		onePersonneCapturingMaterial = Material
+				.valueOf(configuration.getString("onePersonneCapturingMaterial", "STONE"));
+		multiPersonneCapturingMaterial = Material
+				.valueOf(configuration.getString("multiPersonneCapturingMaterial", "STONE"));
+
+		hologramConfigs.clear();
+		ConfigurationSection configurationSection = configuration.getConfigurationSection("holograms.");
+		if (configurationSection != null) {
+			for (String key : configurationSection.getKeys(false)) {
+				hologramConfigs.add(new HologramConfig(configuration, "holograms." + key + "."));
+			}
+		}
 	}
 
 }

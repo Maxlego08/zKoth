@@ -20,7 +20,7 @@ public class BetterTeamHook implements FactionListener{
 	@Override
 	public List<Player> getOnlinePlayer(Player player) {
 		Team team = Team.getTeam(player);
-		return team == null ? Arrays.asList(player) : team.getOnlineMemebers();
+		return team == null ? Arrays.asList(player) : team.getOnlineMembers();
 	}
 
 }

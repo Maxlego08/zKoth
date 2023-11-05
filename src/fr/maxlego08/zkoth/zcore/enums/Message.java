@@ -97,14 +97,7 @@ public enum Message {
 	ZKOHT_EVENT_PLAYER("Person"), 
 	ZKOTH_EVENT_DISABLE("§cThe event is not enable."),
 	
-	ZKOTH_SCHEDULER_CREATE("§aYou have just created a scheduler for the koth §f%koth%§a."),
-	ZKOTH_SCHEDULER_EMPTY("§cNo scheduler available"),
-	ZKOTH_SCHEDULER_REMOVE_HOVER("§7Click to delete the scheduler"),
-	ZKOTH_SCHEDULER_LIST("§6%totemName%§7, §f%type%§7, §e%day%§7, §e%hour%§7, §e%minute%"),
-	ZKOTH_SCHEDULER_LIST_REPEAT("§6%totemName%§7, §f%type%§7, §e%timer%"),
-	ZKOTH_SCHEDULER_REMOVE_ERROR("§cYou must make §b/koth scheduler list §cand then click on one of the koths to be able to delete it"),
-	ZKOTH_SCHEDULER_REMOVE_SUCCESS("§eYou have just deleted the scheduler"),	
-	ZKOTH_SCHEDULER_ERROR("§cImpossible to find the day §f%day%§c."),
+	ZKOTH_SCHEDULER_INFO("§fOld zKoth was delete, use §bzSchedulers §8(§7https://groupez.dev/resources/303§8) §fnow."),
 	
 	ZKOTH_COMMAND_CREATE("§7You have just added the command §8\"§f%command%§8\""),
 	ZKOTH_COMMAND_DELETE("§aYou have just deleted a command."),
@@ -117,6 +110,8 @@ public enum Message {
 	ZKOTH_CAPUTRE_EDIT("§aYou have just modified the capture time of the koth §n%name%§a to §f%seconds%§a."),
 	ZKOTH_RANDOMITEM("§aYou have just set the number of items to §f%item%§a for koth §n%name%§a."),
 	ZKOTH_LIST_CONSOLE("§fKoths§8: §f%koth%"),
+	ZKOTH_LIST_PLAYER("§fKoths§8: §8(§7Use your mouse)"),
+	ZKOTH_LIST_EMPTY("§fKoths§8: §cempty"),
 	ZKOTH_AXE_NAME("§6✤ §ezKoth axe §6✤"),
 	ZKOTH_AXE_DESCRIPTION("§8§m-+------------------------------+-", "",
 			"",
@@ -126,10 +121,7 @@ public enum Message {
 			"",
 			"§8§m-+------------------------------+-"),
 	
-	DESCRIPTION_SCHEDULER("Show scheduler commands"),
-	DESCRIPTION_SCHEDULER_LIST("Show scheduler list"),
-	DESCRIPTION_SCHEDULER_ADD("Add a scheduler"),
-	DESCRIPTION_SCHEDULER_REMOVE("Remove a scheduler"),
+	DESCRIPTION_SCHEDULER("Show scheduler info"),
 	DESCRIPTION_VERSION("Show plugin version"),
 	DESCRIPTION_ADDCOMMAND("Allows you to add a command to a koth"),
 	DESCRIPTION_REMOVECOMMAND("Allows you to remove a command to a koth"),
@@ -149,12 +141,6 @@ public enum Message {
 	DESCRIPTION_RANDOMITEM("Set koth random item give"),
 	DESCRIPTION_POINTS("Set koth max point for point type"),
 	DESCRIPTION_LOOTTYPE("Set loot type for a koth"),
-	
-	ZKOTH_SCHEDULER_ADD(
-		"§f/zkoth scheduler add repeat <koth name> <hour> §8» §7Repeat koth every x hours.",
-		"§f/zkoth scheduler add delay <koth name> <day> <hour> <minute> §8» §7Start koth at specitif time."
-		),
-	
 	;
 
 	private List<String> messages;

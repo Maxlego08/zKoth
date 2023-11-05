@@ -3,7 +3,7 @@ package fr.maxlego08.zkoth;
 import java.util.List;
 import java.util.Optional;
 
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.Plugin;
 
 import fr.maxlego08.zkoth.api.Koth;
@@ -43,7 +43,7 @@ public class KothExpension extends PlaceholderExpansion {
 	}
 
 	@Override
-	public String onPlaceholderRequest(Player player, String params) {
+	public String onRequest(OfflinePlayer player, String params) {
 
 		List<Koth> koths = this.manager.getEnableKoths();
 		if (koths.size() >= 1) {
@@ -71,7 +71,7 @@ public class KothExpension extends PlaceholderExpansion {
 		StringBuilder builder = new StringBuilder();
 		for (int a = 1; a < args.length; a++) {
 			builder.append(args[a]);
-			if (a != args.length -1) {
+			if (a != args.length - 1) {
 				builder.append("_");
 			}
 		}
@@ -102,7 +102,7 @@ public class KothExpension extends PlaceholderExpansion {
 
 			return String.valueOf(koth.getCurrentSecond());
 		} else if (string.equals("capture_formated")) {
-			
+
 			return TimerBuilder.getStringTime(koth.getCurrentSecond());
 		} else if (string.equals("x")) {
 

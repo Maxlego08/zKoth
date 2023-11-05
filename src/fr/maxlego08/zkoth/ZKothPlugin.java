@@ -6,11 +6,14 @@ import org.bukkit.plugin.ServicePriority;
 import fr.maxlego08.zkoth.api.KothManager;
 import fr.maxlego08.zkoth.command.CommandManager;
 import fr.maxlego08.zkoth.command.commands.CommandKoth;
+import fr.maxlego08.zkoth.hologram.DecentHologram;
+import fr.maxlego08.zkoth.hologram.EmptyHologram;
+import fr.maxlego08.zkoth.hologram.ZHologram;
 import fr.maxlego08.zkoth.inventory.InventoryManager;
 import fr.maxlego08.zkoth.listener.AdapterListener;
 import fr.maxlego08.zkoth.save.Config;
 import fr.maxlego08.zkoth.save.MessageLoader;
-import fr.maxlego08.zkoth.scheduler.SchedulerManager;
+import fr.maxlego08.zkoth.scheduler.ZkothImplementation;
 import fr.maxlego08.zkoth.scoreboard.ScoreBoardManager;
 import fr.maxlego08.zkoth.scoreboard.implementations.FeatherBoardHook;
 import fr.maxlego08.zkoth.scoreboard.implementations.SimpleBoardHook;
@@ -34,8 +37,8 @@ import fr.maxlego08.zkoth.zcore.utils.plugins.VersionChecker;
 public class ZKothPlugin extends ZPlugin {
 
 	private KothManager kothManager;
-	private SchedulerManager scheduler;
 	private final MessageLoader messageLoader = new MessageLoader(this);
+	private ZHologram hologram = new EmptyHologram();
 
 	@Override
 	public void onEnable() {
@@ -44,7 +47,6 @@ public class ZKothPlugin extends ZPlugin {
 
 		this.scoreboardManager = new ScoreBoardManager();
 		this.kothManager = new ZKothManager(this.scoreboardManager);
-		this.scheduler = new SchedulerManager(this.kothManager);
 
 		this.getServer().getServicesManager().register(KothManager.class, kothManager, this, ServicePriority.High);
 
@@ -63,10 +65,8 @@ public class ZKothPlugin extends ZPlugin {
 
 		/* Add Saver */
 
-		addSave(Config.getInstance());
-		// addSave((ZKothManager) kothManager);
-		addSave(messageLoader);
-		addSave(scheduler);
+		saveDefaultConfig();
+		addSave(this.messageLoader);
 
 		if (this.isEnable(Plugins.FEATHERBOARD)) {
 			this.scoreboardManager.setScoreboard(new FeatherBoardHook());
@@ -84,7 +84,7 @@ public class ZKothPlugin extends ZPlugin {
 			Plugin plugin = this.getServer().getPluginManager().getPlugin("SternalBoard");
 			this.scoreboardManager.setScoreboard(new SternalBoardHook(plugin));
 		}
-		
+
 		if (this.isEnable(Plugins.SIMPLECORE)) {
 			this.scoreboardManager.setScoreboard(new SimpleBoardHook(this));
 		}
@@ -98,7 +98,19 @@ public class ZKothPlugin extends ZPlugin {
 			expension.register();
 		}
 
+		if (this.isEnable(Plugins.ZSCHEDULERS)) {
+			Logger.info("Register zScheduler implementation", LogType.INFO);
+			ZkothImplementation implementation = new ZkothImplementation(this);
+			implementation.register();
+		}
+
+		if (this.isEnable(Plugins.DH)) {
+			Logger.info("Register DecentHologram implementation", LogType.INFO);
+			this.hologram = new DecentHologram();	
+		}
+		
 		getSavers().forEach(saver -> saver.load(getPersist()));
+		Config.getInstance().load(this);
 
 		new Metrics(this, 6924);
 
@@ -113,6 +125,7 @@ public class ZKothPlugin extends ZPlugin {
 
 		preDisable();
 
+		this.hologram.onDisable();
 		this.scoreboardManager.setRunning(false);
 		getSavers().forEach(saver -> saver.save(getPersist()));
 
@@ -127,9 +140,9 @@ public class ZKothPlugin extends ZPlugin {
 	public KothManager getKothManager() {
 		return kothManager;
 	}
-
-	public SchedulerManager getSchedulerManager() {
-		return scheduler;
+	
+	public ZHologram getHologram() {
+		return hologram;
 	}
 
 }

@@ -49,6 +49,7 @@ import fr.maxlego08.zkoth.hooks.FactionsHook;
 import fr.maxlego08.zkoth.hooks.FactionsXHook;
 import fr.maxlego08.zkoth.hooks.GangsHook;
 import fr.maxlego08.zkoth.hooks.GuildsHook;
+import fr.maxlego08.zkoth.hooks.ScaredClanHook;
 import fr.maxlego08.zkoth.hooks.SimpleClanHook;
 import fr.maxlego08.zkoth.hooks.SuperiorSkyblock2Hook;
 import fr.maxlego08.zkoth.hooks.UltimateFaction;
@@ -66,6 +67,7 @@ import fr.maxlego08.zkoth.zcore.utils.Cuboid;
 import fr.maxlego08.zkoth.zcore.utils.ZSelection;
 import fr.maxlego08.zkoth.zcore.utils.builder.ItemBuilder;
 import fr.maxlego08.zkoth.zcore.utils.builder.TimerBuilder;
+import fr.maxlego08.zkoth.zcore.utils.inventory.Pagination;
 import fr.maxlego08.zkoth.zcore.utils.nms.NMSUtils;
 import fr.maxlego08.zkoth.zcore.utils.storage.Persist;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
@@ -128,10 +130,14 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 				Logger.info("SuperiorSkyblock2 plugin detected successfully.", LogType.SUCCESS);
 
 			} else if (pluginManager.isPluginEnabled("Clans")) {
-
-				this.factionListener = new ClanHook();
-				Logger.info("Clans plugin detected successfully.", LogType.SUCCESS);
-
+				try {
+					Class.forName("Clans.Main");
+					this.factionListener = new ClanHook();
+					Logger.info("Clan plugin detected successfully.", LogType.SUCCESS);
+				} catch (Exception ignored) {
+					this.factionListener = new ScaredClanHook();
+					Logger.info("ScaredClan plugin detected successfully.", LogType.SUCCESS);
+				}
 			} else if (pluginManager.isPluginEnabled("GangsPlus")) {
 
 				this.factionListener = new GangsHook();
@@ -451,6 +457,11 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 	@Override
 	public void sendKothList(CommandSender sender) {
 
+		if (koths.isEmpty()) {
+			message(sender, Message.ZKOTH_LIST_EMPTY);
+			return;
+		}
+
 		if (sender instanceof ConsoleCommandSender) {
 
 			String string = toList(koths.stream().map(e -> e.getName()).collect(Collectors.toList()), "§8", "§7");
@@ -459,7 +470,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		} else {
 
 			Player player = (Player) sender;
-			message(player, "§fKoths§8:");
+			message(player, Message.ZKOTH_LIST_PLAYER);
 			koths.forEach(koth -> buildKothMessage(player, koth));
 
 		}
@@ -648,8 +659,10 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 		this.save(this.plugin.getPersist());
 	}
 
+	private final Map<UUID, Integer> pages = new HashMap<>();
+
 	@Override
-	public void updateLoots(Player player, String name) {
+	public void updateLoots(Player player, String name, int page) {
 
 		Optional<Koth> optional = getKoth(name);
 		if (!optional.isPresent()) {
@@ -657,12 +670,19 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 			return;
 		}
 
+		this.pages.put(player.getUniqueId(), page);
 		Koth koth = optional.get();
 		String inventoryName = this.getMessage(Message.ZKOTH_LOOT_INVENTORY, "%name%", name);
 		Inventory inventory = Bukkit.createInventory(null, 54, inventoryName);
 
+		Pagination<ItemStack> pagination = new Pagination<>();
+		List<ItemStack> itemStacks = new ArrayList<>(koth.getAllItemStacks());
+		while (itemStacks.size() < 54 * page) {
+			itemStacks.add(new ItemStack(Material.AIR));
+		}
+
 		int slot = 0;
-		for (ItemStack itemStack : koth.getAllItemStacks()) {
+		for (ItemStack itemStack : pagination.paginate(itemStacks, 54, page)) {
 			inventory.setItem(slot++, itemStack);
 		}
 
@@ -686,13 +706,19 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 			}
 
 			Koth koth = optional.get();
-			List<ItemStack> itemStacks = new ArrayList<>();
-			for (ItemStack itemStack : event.getInventory().getContents()) {
-				if (itemStack != null) {
-					itemStacks.add(itemStack);
-				}
+			int page = this.pages.getOrDefault(player.getUniqueId(), 1);
+			List<ItemStack> itemStacks = new ArrayList<>(koth.getAllItemStacks());
+
+			while (itemStacks.size() < 54 * page) {
+				itemStacks.add(new ItemStack(Material.AIR));
 			}
 
+			for (int index = 0; index != 54; index++) {
+				ItemStack itemStack = event.getInventory().getContents()[index];
+				itemStacks.set(index + ((page - 1) * 54), itemStack);
+			}
+
+			itemStacks.removeIf(e -> e == null || e.getType() == Material.AIR);
 			koth.setItemStacks(itemStacks);
 			message(player, Message.ZKOTH_LOOT_CHANGE, "%name%", koth.getName());
 		}

@@ -717,7 +717,7 @@ public class ZKothManager extends ListenerAdapter implements KothManager {
 				ItemStack itemStack = event.getInventory().getContents()[index];
 				itemStacks.set(index + ((page - 1) * 54), itemStack);
 			}
-
+			
 			itemStacks.removeIf(e -> e == null || e.getType() == Material.AIR);
 			koth.setItemStacks(itemStacks);
 			message(player, Message.ZKOTH_LOOT_CHANGE, "%name%", koth.getName());

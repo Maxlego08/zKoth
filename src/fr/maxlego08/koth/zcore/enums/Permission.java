@@ -1,9 +1,10 @@
 package fr.maxlego08.koth.zcore.enums;
 
 public enum Permission {
-	
-	EXAMPLE_PERMISSION,
-	EXAMPLE_PERMISSION_RELOAD,
+
+	ZKOTH_USE,
+	ZKOTH_RELOAD,
+	ZKOTH_AXE,
 
 	;
 

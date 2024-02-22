@@ -6,6 +6,10 @@ public class NMSUtils {
 
 	public static double version = getNMSVersion();
 
+	public static boolean isTwoHand() {
+		return !(version == 1.7 || version == 1.8);
+	}
+
 	/**
 	 * Get minecraft serveur version
 	 * 

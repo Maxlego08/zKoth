@@ -150,6 +150,10 @@ public enum NmsVersion {
         return version != 1880;
     }
 
+    public boolean isTwoHand() {
+        return version >= 1900;
+    }
+
     /**
      * Gets the version number associated with the enumeration.
      *

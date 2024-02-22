@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import fr.maxlego08.koth.KothManager;
 import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.enums.Permission;
 import fr.maxlego08.koth.zcore.utils.commands.Arguments;
@@ -22,6 +23,7 @@ import fr.maxlego08.koth.zcore.utils.commands.Tab;
 public abstract class VCommand extends Arguments {
 
 	protected final KothPlugin plugin;
+	protected KothManager manager;
 
 	/**
 	 * Permission used for the command, if it is a null then everyone can
@@ -448,6 +450,7 @@ public abstract class VCommand extends Arguments {
 			return CommandType.SYNTAX_ERROR;
 		}
 
+		this.manager = plugin.getKothManager();
 		this.sender = commandSender;
 		if (this.sender instanceof Player) {
 			this.player = (Player) commandSender;

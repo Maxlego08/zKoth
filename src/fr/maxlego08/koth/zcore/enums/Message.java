@@ -10,7 +10,7 @@ import java.util.Map;
 
 public enum Message {
 
-    PREFIX("§8(§6Template§8) "),
+    PREFIX("§8(§6zKoth§8) "),
 
     TELEPORT_MOVE("§cYou must not move!"),
     TELEPORT_MESSAGE("§7Teleportation in §3%second% §7seconds!"),
@@ -44,8 +44,25 @@ public enum Message {
     RELOAD("§aYou have just reloaded the configuration files."),
 
     DESCRIPTION_RELOAD("Reload configuration files"),
+    DESCRIPTION_AXE("Getting the selection axe"),
+
+    AXE_RECEIVE("§7You have just received the axe for zone selection."),
+    AXE_NAME("§6✤ §7zKoth axe §6✤"),
+    AXE_DESCRIPTION("§8§m-+------------------------------+-", "",
+            "",
+            "§f§l» §7Allows you to select a zone to create a koth",
+            " §7§oYou must select an area with the right click",
+            " §7§oand left then do the command §b/koth create §8<§aname§8>",
+            "",
+            "§8§m-+------------------------------+-"),
+
+    AXE_POS1("§7You have just put the first position in §f%world%§7, §f%x%§7, §f%y%§7, §f%z%§7."),
+    AXE_POS2("§7You have just put the second position in §f%world%§7, §f%x%§7, §f%y%§7, §f%z%§7."),
+    AXE_ERROR("§cYour selection is invalid, you must have at least 2 blocks of height."),
+    AXE_VALID("§aYour selection is valid, you can create a koth with the command §f/koth create <name>§a."),
 
     ;
+
 
     private List<String> messages;
     private String message;

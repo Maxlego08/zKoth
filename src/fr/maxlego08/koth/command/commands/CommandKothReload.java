@@ -5,12 +5,13 @@ import fr.maxlego08.koth.command.VCommand;
 import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.enums.Permission;
 import fr.maxlego08.koth.zcore.utils.commands.CommandType;
+import org.bukkit.inventory.ItemStack;
 
 public class CommandKothReload extends VCommand {
 
 	public CommandKothReload(KothPlugin plugin) {
 		super(plugin);
-		this.setPermission(Permission.EXAMPLE_PERMISSION_RELOAD);
+		this.setPermission(Permission.ZKOTH_RELOAD);
 		this.addSubCommand("reload", "rl");
 		this.setDescription(Message.DESCRIPTION_RELOAD);
 	}
@@ -18,9 +19,9 @@ public class CommandKothReload extends VCommand {
 	@Override
 	protected CommandType perform(KothPlugin plugin) {
 
-		plugin.reloadConfig();
-		plugin.reloadFiles();
-		message(sender, Message.RELOAD);
+		ItemStack itemStack = this.manager.getKothAxe();
+		this.player.getInventory().addItem(itemStack);
+		message(this.sender, Message.AXE_RECEIVE);
 		
 		return CommandType.SUCCESS;
 	}

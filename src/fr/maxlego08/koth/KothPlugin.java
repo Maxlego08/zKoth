@@ -13,6 +13,8 @@ import fr.maxlego08.koth.zcore.ZPlugin;
  */
 public class KothPlugin extends ZPlugin {
 
+    private KothManager kothManager;
+
     @Override
     public void onEnable() {
 
@@ -21,11 +23,16 @@ public class KothPlugin extends ZPlugin {
 
         this.preEnable();
 
+        this.kothManager = new KothManager(this);
+
         this.registerCommand("zkoth", new CommandKoth(this), "koth");
 
         this.saveDefaultConfig();
         // this.addSave(Config.getInstance());
         this.addSave(new MessageLoader(this));
+        this.addSave(this.kothManager);
+
+        this.addListener(new KothListener(this, this.kothManager));
 
         this.loadFiles();
 
@@ -42,4 +49,7 @@ public class KothPlugin extends ZPlugin {
         this.postDisable();
     }
 
+    public KothManager getKothManager() {
+        return kothManager;
+    }
 }

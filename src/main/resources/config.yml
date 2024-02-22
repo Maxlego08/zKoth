@@ -15,6 +15,7 @@
 # /zkoth now <koth name> - zkoth.now - Spawn a koth without cooldown
 # /zkoth spawn <koth name> - zkoth.spawn - Spawn a koth
 # /zkoth stop <koth name> - zkoth.stop - Stop a koth
+# /zkoth move <koth name> - zkoth.stop - Move a koth
 #
 # Placeholders:
 #

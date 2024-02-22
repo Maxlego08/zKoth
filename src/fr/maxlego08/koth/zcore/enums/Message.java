@@ -47,6 +47,7 @@ public enum Message {
     DESCRIPTION_NOW("Spawn a koth without cooldown"),
     DESCRIPTION_SPAWN("Spawn a koth with cooldown"),
     DESCRIPTION_STOP("Stop a koth"),
+    DESCRIPTION_MOVE("Move a koth"),
     DESCRIPTION_AXE("Getting the selection axe"),
     DESCRIPTION_CREATE("Create new koth"),
 
@@ -119,6 +120,8 @@ public enum Message {
     EVENT_LOOSE(MessageType.ACTION, "§d%playerName% §fjust loose koth §n%name%§f. §8(§7%centerX%, %centerY%, %centerZ%§8)"),
     EVENT_TIMER(MessageType.ACTION, "§fAnother §b%captureFormat% §fbefore §d%playerName% §fwins the koth §n%name%§e. §8(§7%centerX%, %centerY%, %centerZ%§8)"),
     EVENT_EVERYSECONDS(MessageType.ACTION, "§d%playerName% §7- §8[§f%classicProgress%§8] §7- §b%classicPercent%§f%"),
+
+    MOVE_SUCCESS("§7You have just moved the koth §f%name%§7."),
 
     ;
 

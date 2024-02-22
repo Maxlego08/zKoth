@@ -28,6 +28,7 @@ enableLooseCapMessage: true
 startCommands: []
 
 # Available placeholders:
+# You can use these placeholders for scoreboards and messages.
 # - %online-player% - Allows to run the order to all online players of the team
 # - %name% - Koth name
 # - %world% - World name

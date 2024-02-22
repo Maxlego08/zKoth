@@ -5,6 +5,7 @@ import fr.maxlego08.koth.api.KothStatus;
 import fr.maxlego08.koth.api.KothTeam;
 import fr.maxlego08.koth.api.KothType;
 import fr.maxlego08.koth.api.events.KothCreateEvent;
+import fr.maxlego08.koth.api.events.KothMoveEvent;
 import fr.maxlego08.koth.hook.TeamPlugin;
 import fr.maxlego08.koth.hook.teams.NoneHook;
 import fr.maxlego08.koth.loader.KothLoader;
@@ -187,5 +188,28 @@ public class KothManager extends ZUtils implements Savable {
 
         Koth koth = optional.get();
         koth.stop(sender);
+    }
+
+    public void moveKoth(Player player, Location maxLocation, Location minLocation, String name) {
+
+        Optional<Koth> optional = getKoth(name);
+        if (!optional.isPresent()) {
+            message(player, Message.DOESNT_EXIST, "%name%", name);
+            return;
+        }
+
+        Koth koth = optional.get();
+        KothMoveEvent event = new KothMoveEvent(koth, maxLocation, minLocation);
+        event.call();
+
+        if (event.isCancelled()) return;
+
+        Optional<Selection> optionalSelection = getSelection(player.getUniqueId());
+        optionalSelection.ifPresent(Selection::clear);
+
+        koth.move(minLocation, maxLocation);
+        message(player, Message.MOVE_SUCCESS, "%name%", name);
+
+        this.saveKoth(koth);
     }
 }

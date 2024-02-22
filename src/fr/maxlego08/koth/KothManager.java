@@ -1,10 +1,14 @@
 package fr.maxlego08.koth;
 
 import fr.maxlego08.koth.api.Koth;
+import fr.maxlego08.koth.api.KothTeam;
 import fr.maxlego08.koth.api.KothType;
 import fr.maxlego08.koth.api.events.KothCreateEvent;
+import fr.maxlego08.koth.hook.TeamPlugin;
+import fr.maxlego08.koth.hook.teams.NoneHook;
 import fr.maxlego08.koth.loader.KothLoader;
 import fr.maxlego08.koth.zcore.enums.Message;
+import fr.maxlego08.koth.zcore.logger.Logger;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
 import fr.maxlego08.koth.zcore.utils.builder.ItemBuilder;
 import fr.maxlego08.koth.zcore.utils.loader.Loader;
@@ -32,11 +36,19 @@ public class KothManager extends ZUtils implements Savable {
     private final Map<UUID, Selection> selections = new HashMap<>();
     private final KothPlugin plugin;
     private final File folder;
+    private KothTeam kothTeam = new NoneHook();
 
     public KothManager(KothPlugin plugin) {
         this.plugin = plugin;
         this.folder = new File(plugin.getDataFolder(), "koths");
         if (!this.folder.exists()) this.folder.mkdir();
+
+        for (TeamPlugin value : TeamPlugin.values()) {
+            if (value.isEnable()) {
+                kothTeam = value.init(plugin);
+                Logger.info("Register " + value.getPluginName() + " team implementation.", Logger.LogType.INFO);
+            }
+        }
     }
 
     @Override
@@ -127,5 +139,9 @@ public class KothManager extends ZUtils implements Savable {
 
     private Optional<Koth> getKoth(String name) {
         return this.koths.stream().filter(koth -> name != null && koth.getName().equalsIgnoreCase(name)).findFirst();
+    }
+
+    public KothTeam getKothTeam() {
+        return kothTeam;
     }
 }

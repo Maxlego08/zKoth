@@ -6,6 +6,7 @@ import fr.maxlego08.koth.hook.ScoreboardPlugin;
 import fr.maxlego08.koth.hook.scoreboard.DefaultHook;
 import fr.maxlego08.koth.placeholder.LocalPlaceholder;
 import fr.maxlego08.koth.save.MessageLoader;
+import fr.maxlego08.koth.storage.StorageManager;
 import fr.maxlego08.koth.zcore.ZPlugin;
 import fr.maxlego08.koth.zcore.logger.Logger;
 
@@ -18,6 +19,7 @@ import fr.maxlego08.koth.zcore.logger.Logger;
 public class KothPlugin extends ZPlugin {
 
     private KothManager kothManager;
+    private StorageManager storageManager;
     private KothScoreboard kothScoreboard = new DefaultHook();
 
     @Override
@@ -28,6 +30,7 @@ public class KothPlugin extends ZPlugin {
 
         this.preEnable();
 
+        this.storageManager = new StorageManager(this);
         this.kothManager = new KothManager(this);
 
         this.registerCommand("zkoth", new CommandKoth(this), "koth");
@@ -68,5 +71,9 @@ public class KothPlugin extends ZPlugin {
 
     public KothScoreboard getKothScoreboard() {
         return this.kothScoreboard;
+    }
+
+    public StorageManager getStorageManager() {
+        return this.storageManager;
     }
 }

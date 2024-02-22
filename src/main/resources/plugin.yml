@@ -22,4 +22,5 @@ softdepend:
   - zSchedulers
   - DecentHolograms
   - HuskTowns
+  - Lands
 commands:

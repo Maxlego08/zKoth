@@ -23,8 +23,6 @@ public enum ScoreboardPlugin {
     private final String pluginName;
     private final Class<? extends KothScoreboard> scoreboardClass;
 
-    private static KothScoreboard kothScoreboard;
-
     ScoreboardPlugin(String pluginName, Class<? extends KothScoreboard> scoreboardClass) {
         this.pluginName = pluginName;
         this.scoreboardClass = scoreboardClass;

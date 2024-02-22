@@ -17,6 +17,7 @@ import fr.maxlego08.koth.zcore.utils.storage.Persist;
 import fr.maxlego08.koth.zcore.utils.storage.Savable;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -111,7 +112,8 @@ public class KothManager extends ZUtils implements Savable {
 
     public void createKoth(Player player, String name, Location minLocation, Location maxLocation, int capture, KothType kothType) {
 
-        Optional<Koth> optional = getKoth(name);
+        String fileName = name.replace(" ", "_");
+        Optional<Koth> optional = getKoth(fileName);
         if (optional.isPresent()) {
             message(player, Message.ALREADY_EXIST, "%name%", name);
             return;
@@ -123,7 +125,6 @@ public class KothManager extends ZUtils implements Savable {
             return;
         }
 
-        String fileName = name.replace(" ", "_");
         Koth koth = new ZKoth(this.plugin, fileName, kothType, name, capture, minLocation, maxLocation);
 
         KothCreateEvent event = new KothCreateEvent(koth);
@@ -141,7 +142,7 @@ public class KothManager extends ZUtils implements Savable {
     }
 
     private Optional<Koth> getKoth(String name) {
-        return this.koths.stream().filter(koth -> name != null && koth.getName().equalsIgnoreCase(name)).findFirst();
+        return this.koths.stream().filter(koth -> name != null && koth.getFileName().equalsIgnoreCase(name)).findFirst();
     }
 
     public KothTeam getKothTeam() {
@@ -154,5 +155,29 @@ public class KothManager extends ZUtils implements Savable {
 
     public List<Koth> getEnableKoths() {
         return koths.stream().filter(koth -> koth.getStatus() == KothStatus.COOLDOWN).collect(Collectors.toList());
+    }
+
+    public List<String> getNameKoths() {
+        return this.koths.stream().map(Koth::getFileName).collect(Collectors.toList());
+    }
+
+    public void spawnKoth(CommandSender sender, String name, boolean now) {
+
+        Optional<Koth> optional = getKoth(name);
+        if (!optional.isPresent()) {
+            message(sender, Message.DOESNT_EXIST, "%name%", name);
+            return;
+        }
+
+        Koth koth = optional.get();
+        koth.spawn(sender, now);
+
+        /*if (Config.enableScoreboard) {
+
+            this.manager.setLinesAndSchedule(koth.onScoreboard());
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                this.manager.createBoard(player, Config.scoreboardTitle);
+            }
+        }*/
     }
 }

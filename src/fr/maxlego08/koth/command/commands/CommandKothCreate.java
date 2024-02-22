@@ -23,7 +23,7 @@ public class CommandKothCreate extends VCommand {
         this.setConsoleCanUse(false);
         this.addRequireArg("name");
         this.addOptionalArg("type", (a, b) -> Arrays.stream(KothType.values()).map(e -> e.name().toLowerCase()).collect(Collectors.toList()));
-        this.addOptionalArg("capture/score");
+        this.addOptionalArg("capture/score", (a, b) -> Arrays.asList("10", "20", "30", "40", "50", "60"));
     }
 
     @Override

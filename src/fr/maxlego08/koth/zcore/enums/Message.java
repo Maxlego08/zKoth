@@ -44,6 +44,7 @@ public enum Message {
     RELOAD("§aYou have just reloaded the configuration files."),
 
     DESCRIPTION_RELOAD("Reload configuration files"),
+    DESCRIPTION_NOW("Spawn a koth without cooldown"),
     DESCRIPTION_AXE("Getting the selection axe"),
     DESCRIPTION_CREATE("Create new koth"),
 

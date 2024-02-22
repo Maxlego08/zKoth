@@ -12,6 +12,7 @@
 # /zkoth reload - zkoth.reload - Reload configuration files
 # /zkoth axe - zkoth.axe - Getting the selection axe
 # /zkoth create <koth name> [<koth type>] [<capture/score] - zkoth.create - Create koth
+# /zkoth now <koth name> - zkoth.now - Spawn a koth without cooldown
 #
 # Placeholders:
 #

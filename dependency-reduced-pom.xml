@@ -85,6 +85,14 @@
       <id>papermc</id>
       <url>https://repo.papermc.io/repository/maven-public/</url>
     </repository>
+    <repository>
+      <id>krypton</id>
+      <url>https://repo.kryptonmc.org/releases</url>
+    </repository>
+    <repository>
+      <id>william278.net</id>
+      <url>https://repo.william278.net/releases</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
@@ -110,6 +118,57 @@
       <artifactId>authlib</artifactId>
       <version>3.11.50</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.booksaw</groupId>
+      <artifactId>BetterTeams</artifactId>
+      <version>4.8.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.MrUniverse44</groupId>
+      <artifactId>ScaredClansAPI</artifactId>
+      <version>0.3</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>me.neznamy</groupId>
+      <artifactId>tab-api</artifactId>
+      <version>4.0.2</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.william278</groupId>
+      <artifactId>husktowns</artifactId>
+      <version>2.6.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.angeschossen</groupId>
+      <artifactId>LandsAPI</artifactId>
+      <version>6.44.6</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.ShieldCommunity</groupId>
+      <artifactId>SternalBoard</artifactId>
+      <version>2.2.0</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/libs/SternalBoard-2.2.8-all.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>be.maximvdw.featherboard</groupId>
+      <artifactId>FeatherBoard</artifactId>
+      <version>1.0.0</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/libs/FeatherBoard.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>io.puharesource.mc.titlemanager</groupId>
+      <artifactId>TitleManager</artifactId>
+      <version>1.0.0</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/libs/TitleManager-2.3.6.jar</systemPath>
     </dependency>
   </dependencies>
   <properties>

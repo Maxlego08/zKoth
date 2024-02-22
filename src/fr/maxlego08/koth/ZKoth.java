@@ -229,13 +229,7 @@ public class ZKoth extends ZUtils implements Koth {
     }
 
     @Override
-    public void stop(CommandSender sender) {
-
-        if (this.kothStatus != KothStatus.START) {
-            message(sender, Message.EVENT_DISABLE);
-            return;
-        }
-
+    public void stop() {
         KothStopEvent event = new KothStopEvent(this);
         event.call();
 
@@ -257,6 +251,17 @@ public class ZKoth extends ZUtils implements Koth {
         if (this.timerTaskStop != null) this.timerTaskStop.cancel();
 
         // this.plugin.getHologram().end(this);
+    }
+
+    @Override
+    public void stop(CommandSender sender) {
+
+        if (this.kothStatus != KothStatus.START) {
+            message(sender, Message.EVENT_DISABLE);
+            return;
+        }
+
+        this.stop();
     }
 
     private void spawn() {

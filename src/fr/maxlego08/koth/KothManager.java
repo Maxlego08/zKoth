@@ -57,11 +57,14 @@ public class KothManager extends ZUtils implements Savable {
 
     @Override
     public void save(Persist persist) {
+        this.koths.forEach(Koth::stop);
         this.selections.values().forEach(Selection::clear);
     }
 
     @Override
     public void load(Persist persist) {
+
+        this.koths.forEach(Koth::stop);
 
         File[] files = this.folder.listFiles((dir, name) -> name.endsWith(".yml"));
         if (files == null) return;
@@ -172,5 +175,17 @@ public class KothManager extends ZUtils implements Savable {
 
         Koth koth = optional.get();
         koth.spawn(sender, now);
+    }
+
+    public void stopKoth(CommandSender sender, String name) {
+
+        Optional<Koth> optional = getKoth(name);
+        if (!optional.isPresent()) {
+            message(sender, Message.DOESNT_EXIST, "%name%", name);
+            return;
+        }
+
+        Koth koth = optional.get();
+        koth.stop(sender);
     }
 }

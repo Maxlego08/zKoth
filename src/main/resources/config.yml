@@ -13,7 +13,8 @@
 # /zkoth axe - zkoth.axe - Getting the selection axe
 # /zkoth create <koth name> [<koth type>] [<capture/score] - zkoth.create - Create koth
 # /zkoth now <koth name> - zkoth.now - Spawn a koth without cooldown
-# /zkoth spawn <koth name> - zkoth.now - Spawn a koth
+# /zkoth spawn <koth name> - zkoth.spawn - Spawn a koth
+# /zkoth stop <koth name> - zkoth.stop - Stop a koth
 #
 # Placeholders:
 #

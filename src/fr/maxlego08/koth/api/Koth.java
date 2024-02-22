@@ -50,6 +50,8 @@ public interface Koth {
 
     void stop(CommandSender sender);
 
+    void stop();
+
     void playerMove(Player player, KothTeam kothTeam);
 
     int getCooldownStart();

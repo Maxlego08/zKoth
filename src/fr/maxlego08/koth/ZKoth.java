@@ -526,12 +526,6 @@ public class ZKoth extends ZUtils implements Koth {
 
             }
 
-            if (Config.displayMessageKothCap.contains(currentRemainingSeconds)) {
-                broadcast(Message.EVENT_TIMER);
-            } else if (enableEverySecondsCapMessage) {
-                broadcast(Message.EVENT_EVERYSECONDS);
-            }
-
             if (this.hasWin()) {
 
                 this.endKoth(task, cuboid, player);
@@ -540,6 +534,14 @@ public class ZKoth extends ZUtils implements Koth {
 
                 KothCapEvent capEvent = new KothCapEvent(this, player, this.remainingSeconds.get(), this.kothTeam.getFactionTag(player));
                 capEvent.callEvent();
+
+                if (Config.displayMessageKothCap.contains(currentRemainingSeconds)) {
+                    broadcast(Message.EVENT_TIMER);
+                } else if (enableEverySecondsCapMessage) {
+                    broadcast(Message.EVENT_EVERYSECONDS);
+                }
+
+                this.plugin.getKothHologram().update(this);
 
                 switch (this.kothType) {
                     case CAPTURE:
@@ -551,8 +553,6 @@ public class ZKoth extends ZUtils implements Koth {
                         this.playersValues.put(this.currentPlayer.getUniqueId(), this.getValue(this.currentPlayer) + 1);
                         break;
                 }
-
-                this.plugin.getKothHologram().update(this);
             }
         });
     }
@@ -772,5 +772,10 @@ public class ZKoth extends ZUtils implements Koth {
         }
         Collections.shuffle(itemStacks, new Random());
         return itemStacks.stream().limit(this.randomItemStacks).collect(Collectors.toList());
+    }
+
+    @Override
+    public int getRandomItemStack() {
+        return this.randomItemStacks;
     }
 }

@@ -66,9 +66,10 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
         }
 
         List<ItemStack> itemStacks = configuration.getStringList("loot.items").stream().map(ItemStackUtils::deserializeItemStack).collect(Collectors.toList());
+        int randomItemStacks = configuration.getInt("loot.random", 0);
 
         return new ZKoth(this.plugin, fileName, kothType, name, captureSeconds, minLocation, maxLocation, startCommands, endCommands, cooldownScoreboard,
-                startScoreboard, cooldownStart, stopAfterSeconds, enableStartCapMessage, enableLooseCapMessage, enableEverySecondsCapMessage, hologramConfig, itemStacks, kothLootType, discordWebhookConfig);
+                startScoreboard, cooldownStart, stopAfterSeconds, enableStartCapMessage, enableLooseCapMessage, enableEverySecondsCapMessage, hologramConfig, itemStacks, kothLootType, discordWebhookConfig, randomItemStacks);
     }
 
     @Override
@@ -91,6 +92,7 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
         hologramConfigLoader.save(koth.getHologramConfig(), configuration, "hologram.");
 
         configuration.set("loot.type", koth.getLootType().name());
+        configuration.set("loot.random", koth.getRandomItemStack());
         List<String> items = koth.getItemStacks().stream().map(ItemStackUtils::serializeItemStack).collect(Collectors.toList());
         configuration.set("loot.items", items);
 

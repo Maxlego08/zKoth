@@ -1,6 +1,5 @@
 package fr.maxlego08.koth.api;
 
-import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.api.discord.DiscordWebhookConfig;
 import fr.maxlego08.koth.api.utils.HologramConfig;
 import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
@@ -76,9 +75,12 @@ public interface Koth {
     DiscordWebhookConfig getDiscordWebhookConfig();
 
     List<ItemStack> getItemStacks();
+
     void setItemStacks(List<ItemStack> itemStacks);
 
     KothLootType getLootType();
 
     List<ItemStack> getRandomItemStacks();
+
+    int getRandomItemStack();
 }

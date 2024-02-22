@@ -127,6 +127,8 @@ public class KothListener extends ListenerAdapter {
             itemStacks.removeIf(itemStack -> itemStack == null || itemStack.getType() == Material.AIR);
             koth.setItemStacks(itemStacks);
             message(player, Message.LOOT_CHANGE, "%name%", koth.getName());
+
+            manager.saveKoth(koth);
         }
     }
 }

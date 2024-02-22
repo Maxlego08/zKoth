@@ -133,3 +133,12 @@ webhook:
       #   value: "A new koth"
       #   inline: false
 
+loot:
+  # Available type :
+  # DROP
+  # CHEST
+  # INVENTORY
+  # NONE
+  type: NONE
+  # Use /koth loot <koth name>
+  items: []

@@ -187,7 +187,13 @@ public class DiscordWebhook extends ZUtils {
 
         public EmbedObject(YamlConfiguration configuration, String path) {
 
-            this.event = KothEvent.valueOf(configuration.getString(path + "event", "START").toUpperCase());
+            KothEvent event;
+            try {
+                event = KothEvent.valueOf(configuration.getString(path + "event", "START").toUpperCase());
+            } catch (IllegalArgumentException ignored) {
+                event = KothEvent.START;
+            }
+
             this.title = configuration.getString(path + "title", null);
             this.description = configuration.getString(path + "description", null);
             this.url = configuration.getString(path + "url", null);
@@ -285,6 +291,22 @@ public class DiscordWebhook extends ZUtils {
             return this;
         }
 
+        @Override
+        public String toString() {
+            return "EmbedObject{" +
+                    "event=" + event +
+                    ", title='" + title + '\'' +
+                    ", description='" + description + '\'' +
+                    ", url='" + url + '\'' +
+                    ", color=" + color +
+                    ", footer=" + footer +
+                    ", thumbnail='" + thumbnail + '\'' +
+                    ", image='" + image + '\'' +
+                    ", author=" + author +
+                    ", fields=" + fields +
+                    '}';
+        }
+
         private class Footer {
             private String text;
             private String iconUrl;
@@ -362,22 +384,6 @@ public class DiscordWebhook extends ZUtils {
             private boolean isInline() {
                 return inline;
             }
-        }
-
-        @Override
-        public String toString() {
-            return "EmbedObject{" +
-                    "event=" + event +
-                    ", title='" + title + '\'' +
-                    ", description='" + description + '\'' +
-                    ", url='" + url + '\'' +
-                    ", color=" + color +
-                    ", footer=" + footer +
-                    ", thumbnail='" + thumbnail + '\'' +
-                    ", image='" + image + '\'' +
-                    ", author=" + author +
-                    ", fields=" + fields +
-                    '}';
         }
     }
 

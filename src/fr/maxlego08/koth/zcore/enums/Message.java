@@ -46,6 +46,7 @@ public enum Message {
     DESCRIPTION_RELOAD("Reload configuration files"),
     DESCRIPTION_NOW("Spawn a koth without cooldown"),
     DESCRIPTION_SPAWN("Spawn a koth with cooldown"),
+    DESCRIPTION_LOOT("Change loot for a koth"),
     DESCRIPTION_DELETE("Delete a koth"),
     DESCRIPTION_VERSION("Show plugin version"),
     DESCRIPTION_STOP("Stop a koth"),
@@ -131,6 +132,9 @@ public enum Message {
     LIST_EMPTY("§fKoths§8: §cempty"),
 
     DELETE_SUCCESS("§7You just deleted the koth §f%name%§7."),
+
+    LOOT_CHANGE("§aYou have just modified the loots of the koth §2%name%§a."),
+
     ;
 
 

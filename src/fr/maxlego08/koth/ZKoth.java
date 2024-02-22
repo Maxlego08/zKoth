@@ -2,6 +2,7 @@ package fr.maxlego08.koth;
 
 import fr.maxlego08.koth.api.Koth;
 import fr.maxlego08.koth.api.KothEvent;
+import fr.maxlego08.koth.api.KothLootType;
 import fr.maxlego08.koth.api.KothStatus;
 import fr.maxlego08.koth.api.KothTeam;
 import fr.maxlego08.koth.api.KothType;
@@ -30,8 +31,12 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Chest;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,6 +63,8 @@ public class ZKoth extends ZUtils implements Koth {
     private final boolean enableLooseCapMessage;
     private final boolean enableEverySecondsCapMessage;
     private final HologramConfig hologramConfig;
+    private final KothLootType kothLootType;
+    private List<ItemStack> itemStacks;
     private String name;
     private int captureSeconds;
     private Location minLocation;
@@ -72,7 +79,7 @@ public class ZKoth extends ZUtils implements Koth {
     private TimerTask timerTaskStop;
     private DiscordWebhookConfig discordWebhookConfig;
 
-    public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands, ScoreboardConfiguration cooldownScoreboard, ScoreboardConfiguration startScoreboard, int cooldownStart, int stopAfterSeconds, boolean enableStartCapMessage, boolean enableLooseCapMessage, boolean enableEverySecondsCapMessage, HologramConfig hologramConfig, DiscordWebhookConfig discordWebhookConfig) {
+    public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands, ScoreboardConfiguration cooldownScoreboard, ScoreboardConfiguration startScoreboard, int cooldownStart, int stopAfterSeconds, boolean enableStartCapMessage, boolean enableLooseCapMessage, boolean enableEverySecondsCapMessage, HologramConfig hologramConfig, List<ItemStack> itemStacks, KothLootType kothLootType, DiscordWebhookConfig discordWebhookConfig) {
         this.plugin = plugin;
         this.fileName = fileName;
         this.kothType = kothType;
@@ -90,6 +97,8 @@ public class ZKoth extends ZUtils implements Koth {
         this.enableLooseCapMessage = enableLooseCapMessage;
         this.enableEverySecondsCapMessage = enableEverySecondsCapMessage;
         this.hologramConfig = hologramConfig;
+        this.itemStacks = itemStacks;
+        this.kothLootType = kothLootType;
         this.discordWebhookConfig = discordWebhookConfig;
     }
 
@@ -110,6 +119,8 @@ public class ZKoth extends ZUtils implements Koth {
         this.enableEverySecondsCapMessage = false;
         this.hologramConfig = new HologramConfig(false, new ArrayList<>(), getCenter());
         this.discordWebhookConfig = null;
+        this.itemStacks = new ArrayList<>();
+        this.kothLootType = KothLootType.NONE;
     }
 
     @Override
@@ -240,7 +251,7 @@ public class ZKoth extends ZUtils implements Koth {
     @Override
     public void stop() {
 
-        if (this.kothStatus != KothStatus.STOP) return;
+        if (this.kothStatus == KothStatus.STOP) return;
 
         KothStopEvent event = new KothStopEvent(this);
         event.call();
@@ -577,18 +588,17 @@ public class ZKoth extends ZUtils implements Koth {
         while (center.getBlock().getRelative(BlockFace.DOWN).getType().equals(Material.AIR)) {
             center = center.getBlock().getRelative(BlockFace.DOWN).getLocation();
         }
+        Location location = center.clone();
 
-        /*if (this.itemStacks.size() != 0) {
-            switch (this.type) {
+        if (this.itemStacks.size() != 0) {
+            switch (this.kothLootType) {
                 case CHEST:
                     location.getBlock().setType(Material.CHEST);
                     Chest chest = (Chest) location.getBlock().getState();
 
                     this.getItemStacks().forEach(itemStack -> chest.getInventory().addItem(itemStack));
 
-                    Bukkit.getScheduler().runTaskLater(ZPlugin.z(), () -> {
-                        location.getBlock().setType(Material.AIR);
-                    }, 20 * Config.removeChestSec);
+                    Bukkit.getScheduler().runTaskLater(this.plugin, () -> location.getBlock().setType(Material.AIR), 20L * Config.removeChestSec);
                     break;
                 case DROP:
                     location.add(0.5, 0.3, 0.5);
@@ -606,12 +616,10 @@ public class ZKoth extends ZUtils implements Koth {
                 case INVENTORY:
                     this.getItemStacks().forEach(itemStack -> give(this.currentPlayer, itemStack));
                     break;
-                case NONE:
-                    break;
                 default:
                     break;
             }
-        }*/
+        }
 
         this.kothStatus = KothStatus.STOP;
         this.currentPlayer = null;
@@ -701,6 +709,21 @@ public class ZKoth extends ZUtils implements Koth {
     @Override
     public DiscordWebhookConfig getDiscordWebhookConfig() {
         return this.discordWebhookConfig;
+    }
+
+    @Override
+    public List<ItemStack> getItemStacks() {
+        return this.itemStacks;
+    }
+
+    @Override
+    public void setItemStacks(List<ItemStack> itemStacks) {
+        this.itemStacks = itemStacks;
+    }
+
+    @Override
+    public KothLootType getLootType() {
+        return this.kothLootType;
     }
 
     private String replaceKothInformations(String string) {

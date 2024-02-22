@@ -8,6 +8,7 @@ import fr.maxlego08.koth.api.events.KothCreateEvent;
 import fr.maxlego08.koth.api.events.KothMoveEvent;
 import fr.maxlego08.koth.hook.TeamPlugin;
 import fr.maxlego08.koth.hook.teams.NoneHook;
+import fr.maxlego08.koth.inventory.KothHolder;
 import fr.maxlego08.koth.loader.KothLoader;
 import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.logger.Logger;
@@ -285,5 +286,18 @@ public class KothManager extends ZUtils implements Savable {
 
         File file = new File(folder, koth.getFileName() + ".yml");
         file.delete();
+    }
+
+    public void updateLoots(Player player, String name, int page) {
+
+        Optional<Koth> optional = getKoth(name);
+        if (!optional.isPresent()) {
+            message(player, Message.DOESNT_EXIST, "%name%", name);
+            return;
+        }
+
+        Koth koth = optional.get();
+        KothHolder kothHolder = new KothHolder(koth, page);
+        kothHolder.open(player);
     }
 }

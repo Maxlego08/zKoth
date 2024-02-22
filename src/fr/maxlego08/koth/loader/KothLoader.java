@@ -3,17 +3,21 @@ package fr.maxlego08.koth.loader;
 import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.ZKoth;
 import fr.maxlego08.koth.api.Koth;
+import fr.maxlego08.koth.api.KothLootType;
 import fr.maxlego08.koth.api.KothType;
 import fr.maxlego08.koth.api.discord.DiscordWebhookConfig;
 import fr.maxlego08.koth.api.utils.HologramConfig;
 import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
 import fr.maxlego08.koth.zcore.utils.loader.Loader;
+import fr.maxlego08.koth.zcore.utils.nms.ItemStackUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class KothLoader extends ZUtils implements Loader<Koth> {
 
@@ -30,7 +34,13 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
     public Koth load(YamlConfiguration configuration, String path, File file) {
 
         String fileName = getFileNameWithoutExtension(file);
-        KothType kothType = KothType.valueOf(configuration.getString("type", KothType.CAPTURE.name()).toUpperCase());
+        KothType kothType;
+        try {
+            kothType = KothType.valueOf(configuration.getString("type", KothType.CAPTURE.name()).toUpperCase());
+        } catch (IllegalArgumentException ignored) {
+            kothType = KothType.CAPTURE;
+        }
+
         String name = configuration.getString("name");
         int captureSeconds = configuration.getInt("capture");
         int cooldownStart = configuration.getInt("cooldownStart");
@@ -48,8 +58,17 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
 
         DiscordWebhookConfig discordWebhookConfig = new DiscordWebhookConfig(configuration);
 
+        KothLootType kothLootType;
+        try {
+            kothLootType = KothLootType.valueOf(configuration.getString("loot.type", KothLootType.NONE.name()).toUpperCase());
+        } catch (IllegalArgumentException ignored) {
+            kothLootType = KothLootType.NONE;
+        }
+
+        List<ItemStack> itemStacks = configuration.getStringList("loot.items").stream().map(ItemStackUtils::deserializeItemStack).collect(Collectors.toList());
+
         return new ZKoth(this.plugin, fileName, kothType, name, captureSeconds, minLocation, maxLocation, startCommands, endCommands, cooldownScoreboard,
-                startScoreboard, cooldownStart, stopAfterSeconds, enableStartCapMessage, enableLooseCapMessage, enableEverySecondsCapMessage, hologramConfig, discordWebhookConfig);
+                startScoreboard, cooldownStart, stopAfterSeconds, enableStartCapMessage, enableLooseCapMessage, enableEverySecondsCapMessage, hologramConfig, itemStacks, kothLootType, discordWebhookConfig);
     }
 
     @Override
@@ -70,6 +89,10 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
         scoreboardLoaderLoader.save(koth.getCooldownScoreboard(), configuration, "scoreboard.cooldown.");
         scoreboardLoaderLoader.save(koth.getStartScoreboard(), configuration, "scoreboard.start.");
         hologramConfigLoader.save(koth.getHologramConfig(), configuration, "hologram.");
+
+        configuration.set("loot.type", koth.getLootType().name());
+        List<String> items = koth.getItemStacks().stream().map(ItemStackUtils::serializeItemStack).collect(Collectors.toList());
+        configuration.set("loot.items", items);
 
     }
 }

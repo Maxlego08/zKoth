@@ -190,6 +190,7 @@
             <groupId>com.github.Maxlego08</groupId>
             <artifactId>zSchedulers</artifactId>
             <version>1.0.5</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.decentsoftware-eu</groupId>

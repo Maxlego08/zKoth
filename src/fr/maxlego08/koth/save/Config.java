@@ -18,6 +18,7 @@ public class Config {
 	public static List<Integer> displayMessageKothCap = Arrays.asList(300, 120, 60, 30, 10, 5, 4, 3, 2, 1);
     public static String noPlayer = "X";
     public static String noFaction = "X";
+	public static int removeChestSec = 120;
 
     /**
 	 * static Singleton instance.
@@ -59,6 +60,7 @@ public class Config {
 		noPlayer = configuration.getString("noPlayer", "X");
 		noFaction = configuration.getString("noFaction", "X");
 		schedulerMillisecond = configuration.getLong("schedulerMillisecond", 1000);
+		removeChestSec = configuration.getInt("removeChestSec", 120);
 	}
 
 }

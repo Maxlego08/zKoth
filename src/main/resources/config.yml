@@ -19,6 +19,7 @@
 # /zkoth delete <koth name> - zkoth.delete - Delete a koth
 # /zkoth version - no permission - Show plugin version
 # /zkoth list - zkoth.list - Get koth list
+# /zkoth loot <koth name> [<page>] - zkoth.loot - Change loot for a koth
 #
 # Placeholders:
 #
@@ -72,3 +73,5 @@ noPlayer: 'X'
 noFaction: 'X'
 
 schedulerMillisecond: 1000
+
+removeChestSec: 120

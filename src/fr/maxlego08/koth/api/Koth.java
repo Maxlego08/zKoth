@@ -9,6 +9,7 @@ import fr.maxlego08.koth.zcore.utils.interfaces.CollectionConsumer;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
@@ -73,4 +74,9 @@ public interface Koth {
     String replaceMessage(String string);
 
     DiscordWebhookConfig getDiscordWebhookConfig();
+
+    List<ItemStack> getItemStacks();
+    void setItemStacks(List<ItemStack> itemStacks);
+
+    KothLootType getLootType();
 }

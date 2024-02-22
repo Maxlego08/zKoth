@@ -21,6 +21,8 @@ public class DecentHologram implements KothHologram {
         HologramConfig config = koth.getHologramConfig();
         if (!config.isEnable()) return;
 
+        DHAPI.removeHologram("ZKOTH-" + koth.getFileName());
+
         Hologram hologram = DHAPI.createHologram("ZKOTH-" + koth.getFileName(), config.getLocation());
         this.holograms.put(koth, hologram);
         updateLine(koth, hologram);

@@ -1,6 +1,7 @@
 package fr.maxlego08.koth.api;
 
 import fr.maxlego08.koth.KothPlugin;
+import fr.maxlego08.koth.api.discord.DiscordWebhookConfig;
 import fr.maxlego08.koth.api.utils.HologramConfig;
 import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
 import fr.maxlego08.koth.zcore.utils.Cuboid;
@@ -70,4 +71,6 @@ public interface Koth {
     HologramConfig getHologramConfig();
 
     String replaceMessage(String string);
+
+    DiscordWebhookConfig getDiscordWebhookConfig();
 }

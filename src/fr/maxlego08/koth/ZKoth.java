@@ -1,9 +1,11 @@
 package fr.maxlego08.koth;
 
 import fr.maxlego08.koth.api.Koth;
+import fr.maxlego08.koth.api.KothEvent;
 import fr.maxlego08.koth.api.KothStatus;
 import fr.maxlego08.koth.api.KothTeam;
 import fr.maxlego08.koth.api.KothType;
+import fr.maxlego08.koth.api.discord.DiscordWebhookConfig;
 import fr.maxlego08.koth.api.events.KothCapEvent;
 import fr.maxlego08.koth.api.events.KothCatchEvent;
 import fr.maxlego08.koth.api.events.KothLooseEvent;
@@ -68,8 +70,9 @@ public class ZKoth extends ZUtils implements Koth {
     private AtomicInteger remainingSeconds;
     private TimerTask timerTask;
     private TimerTask timerTaskStop;
+    private DiscordWebhookConfig discordWebhookConfig;
 
-    public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands, ScoreboardConfiguration cooldownScoreboard, ScoreboardConfiguration startScoreboard, int cooldownStart, int stopAfterSeconds, boolean enableStartCapMessage, boolean enableLooseCapMessage, boolean enableEverySecondsCapMessage, HologramConfig hologramConfig) {
+    public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands, ScoreboardConfiguration cooldownScoreboard, ScoreboardConfiguration startScoreboard, int cooldownStart, int stopAfterSeconds, boolean enableStartCapMessage, boolean enableLooseCapMessage, boolean enableEverySecondsCapMessage, HologramConfig hologramConfig, DiscordWebhookConfig discordWebhookConfig) {
         this.plugin = plugin;
         this.fileName = fileName;
         this.kothType = kothType;
@@ -87,6 +90,7 @@ public class ZKoth extends ZUtils implements Koth {
         this.enableLooseCapMessage = enableLooseCapMessage;
         this.enableEverySecondsCapMessage = enableEverySecondsCapMessage;
         this.hologramConfig = hologramConfig;
+        this.discordWebhookConfig = discordWebhookConfig;
     }
 
     public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation) {
@@ -105,6 +109,7 @@ public class ZKoth extends ZUtils implements Koth {
         this.enableLooseCapMessage = true;
         this.enableEverySecondsCapMessage = false;
         this.hologramConfig = new HologramConfig(false, new ArrayList<>(), getCenter());
+        this.discordWebhookConfig = null;
     }
 
     @Override
@@ -234,10 +239,14 @@ public class ZKoth extends ZUtils implements Koth {
 
     @Override
     public void stop() {
+
+        if (this.kothStatus != KothStatus.STOP) return;
+
         KothStopEvent event = new KothStopEvent(this);
         event.call();
 
         if (event.isCancelled()) return;
+        this.discordWebhookConfig.send(this.plugin, this, KothEvent.STOP);
 
         broadcast(Message.EVENT_STOP);
 
@@ -278,6 +287,8 @@ public class ZKoth extends ZUtils implements Koth {
         event.call();
 
         if (event.isCancelled()) return;
+
+        this.discordWebhookConfig.send(this.plugin, this, KothEvent.START);
 
         if (this.cooldownScoreboard.isEnable()) {
             ScoreBoardManager scoreBoardManager = this.plugin.getScoreBoardManager();
@@ -324,6 +335,7 @@ public class ZKoth extends ZUtils implements Koth {
         event.call();
 
         if (event.isCancelled()) return;
+        this.discordWebhookConfig.send(this.plugin, this, KothEvent.SPAWN);
 
         this.remainingSeconds = new AtomicInteger(this.captureSeconds);
 
@@ -361,7 +373,7 @@ public class ZKoth extends ZUtils implements Koth {
         this.timerTaskStop = new TimerTask() {
             @Override
             public void run() {
-                // plugin.getKothHologram().end(koth);
+                plugin.getKothHologram().end(koth);
                 Bukkit.getScheduler().runTask(plugin, () -> stop(Bukkit.getConsoleSender()));
             }
         };
@@ -400,6 +412,8 @@ public class ZKoth extends ZUtils implements Koth {
             KothLooseEvent event = new KothLooseEvent(this.currentPlayer, this);
             event.call();
 
+            this.discordWebhookConfig.send(this.plugin, this, KothEvent.LOOSE);
+
             if (event.isCancelled()) return;
 
             this.plugin.getKothHologram().update(this);
@@ -432,6 +446,8 @@ public class ZKoth extends ZUtils implements Koth {
             this.currentPlayer = null;
             return;
         }
+
+        this.discordWebhookConfig.send(this.plugin, this, KothEvent.START_CAP);
 
         if (enableStartCapMessage) {
             broadcast(Message.EVENT_CATCH);
@@ -473,9 +489,9 @@ public class ZKoth extends ZUtils implements Koth {
                 KothLooseEvent kothLooseEvent = new KothLooseEvent(null, this);
                 kothLooseEvent.call();
 
-                if (kothLooseEvent.isCancelled()) {
-                    return;
-                }
+                if (kothLooseEvent.isCancelled()) return;
+
+                this.discordWebhookConfig.send(this.plugin, this, KothEvent.LOOSE);
 
                 if (this.timerTask != null) {
                     this.timerTask.cancel();
@@ -532,6 +548,8 @@ public class ZKoth extends ZUtils implements Koth {
         kothWinEvent.call();
 
         if (kothWinEvent.isCancelled()) return;
+
+        this.discordWebhookConfig.send(this.plugin, this, KothEvent.WIN);
 
         this.plugin.getKothHologram().end(this);
         task.cancel();
@@ -668,6 +686,8 @@ public class ZKoth extends ZUtils implements Koth {
     @Override
     public String replaceMessage(String string) {
 
+        if (string == null) return null;
+
         string = string.replace("%playerName%", this.currentPlayer != null ? this.currentPlayer.getName() : Config.noPlayer);
         string = string.replace("%teamName%", this.currentPlayer != null ? this.currentPlayer.getName() : Config.noPlayer);
 
@@ -676,6 +696,11 @@ public class ZKoth extends ZUtils implements Koth {
         string = string.replace("%captureSeconds%", String.valueOf(seconds));
 
         return replaceKothInformations(string);
+    }
+
+    @Override
+    public DiscordWebhookConfig getDiscordWebhookConfig() {
+        return this.discordWebhookConfig;
     }
 
     private String replaceKothInformations(String string) {

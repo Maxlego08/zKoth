@@ -4,6 +4,7 @@ import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.ZKoth;
 import fr.maxlego08.koth.api.Koth;
 import fr.maxlego08.koth.api.KothType;
+import fr.maxlego08.koth.api.discord.DiscordWebhookConfig;
 import fr.maxlego08.koth.api.utils.HologramConfig;
 import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
@@ -45,8 +46,10 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
         ScoreboardConfiguration startScoreboard = scoreboardLoaderLoader.load(configuration, "scoreboard.start.", file);
         HologramConfig hologramConfig = hologramConfigLoader.load(configuration, "hologram.", file);
 
+        DiscordWebhookConfig discordWebhookConfig = new DiscordWebhookConfig(configuration);
+
         return new ZKoth(this.plugin, fileName, kothType, name, captureSeconds, minLocation, maxLocation, startCommands, endCommands, cooldownScoreboard,
-                startScoreboard, cooldownStart, stopAfterSeconds, enableStartCapMessage, enableLooseCapMessage, enableEverySecondsCapMessage, hologramConfig);
+                startScoreboard, cooldownStart, stopAfterSeconds, enableStartCapMessage, enableLooseCapMessage, enableEverySecondsCapMessage, hologramConfig, discordWebhookConfig);
     }
 
     @Override

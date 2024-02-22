@@ -98,3 +98,38 @@ hologram:
   x: 0
   y: 0
   z: 0
+
+webhook:
+  enable: true
+  url: "https://discord.com/api/webhooks/1187068418923438190/eHBOLr52d7S28rcMqtNAdHbCi-9Gpk1tG0IU1ulbf3p6z9IbM2UqoSl9MxRT1TdX5k-W"
+  # Available event:
+  # - SPAWN
+  # - START
+  # - STOP
+  # - START_CAP
+  # - WIN
+  # - LOOSE
+  events:
+    START:
+      event: START
+      title: 'Start Koth'
+      description: "Koth %name% has been started !"
+      # url: "<your url>"
+      color:
+        r: 40
+        g: 240
+        b: 40
+      footer:
+        text: zKoth
+        iconUrl: https://groupez.dev/storage/images/9.png
+      # thumbnail: "<your thumbnail>"
+      # image: "<your image>
+      # author:
+      # name: "Maxlego08"
+      # url: ""
+      # iconUrl: ""
+      # fields:
+      # - name: Info
+      #   value: "A new koth"
+      #   inline: false
+

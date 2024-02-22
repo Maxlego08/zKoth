@@ -337,6 +337,7 @@ public class ZKoth extends ZUtils implements Koth {
                 return;
             }
 
+            this.plugin.getScoreBoardManager().update();
             this.remainingSeconds.decrementAndGet();
         });
     }
@@ -421,6 +422,7 @@ public class ZKoth extends ZUtils implements Koth {
             this.currentPlayer = player;
             this.startCap(player);
             this.plugin.getKothHologram().update(this);
+            this.plugin.getScoreBoardManager().update();
 
         } else if (this.currentPlayer != null && !cuboid.contains(this.currentPlayer.getLocation())) {
 
@@ -432,6 +434,7 @@ public class ZKoth extends ZUtils implements Koth {
             if (event.isCancelled()) return;
 
             this.plugin.getKothHologram().update(this);
+            this.plugin.getScoreBoardManager().update();
             broadcast(Message.EVENT_LOOSE);
 
             if (this.timerTask != null) {
@@ -475,6 +478,7 @@ public class ZKoth extends ZUtils implements Koth {
 
         // this.changeBlocks(Config.onePersonneCapturingMaterial, false);
         this.plugin.getKothHologram().update(this);
+        this.plugin.getScoreBoardManager().update();
 
         scheduleFix(this.plugin, 0, 1000, (task, isCancelled) -> {
 
@@ -496,6 +500,7 @@ public class ZKoth extends ZUtils implements Koth {
                 if (!this.currentPlayer.isValid() || !this.currentPlayer.isOnline() || !cuboid.contains(this.currentPlayer.getLocation())) {
                     this.currentPlayer = null;
                     this.plugin.getKothHologram().update(this);
+                    this.plugin.getScoreBoardManager().update();
                 }
             }
 
@@ -522,6 +527,7 @@ public class ZKoth extends ZUtils implements Koth {
                 }
 
                 this.plugin.getKothHologram().update(this);
+                this.plugin.getScoreBoardManager().update();
                 return;
 
             }
@@ -542,6 +548,7 @@ public class ZKoth extends ZUtils implements Koth {
                 }
 
                 this.plugin.getKothHologram().update(this);
+                this.plugin.getScoreBoardManager().update();
 
                 switch (this.kothType) {
                     case CAPTURE:
@@ -571,8 +578,6 @@ public class ZKoth extends ZUtils implements Koth {
         broadcast(Message.EVENT_WIN);
 
         this.plugin.getScoreBoardManager().clearBoard();
-
-        /* Gestion des loots */
 
         this.endCommands.forEach(command -> {
             if (command.contains("%online-player%")) {

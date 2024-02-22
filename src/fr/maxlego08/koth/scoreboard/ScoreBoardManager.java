@@ -72,6 +72,12 @@ public class ScoreBoardManager extends ZUtils {
         });
     }
 
+    public void update(){
+        this.boards.forEach((player, board) -> {
+            board.updateLines(this.lines.accept(player));
+        });
+    }
+
     public FastBoard createBoard(Player player, String title) {
 
         if (this.hasBoard(player)) {
@@ -211,7 +217,7 @@ public class ScoreBoardManager extends ZUtils {
      */
     public void setLinesAndSchedule(CollectionConsumer<Player> lines) {
         this.lines = lines;
-        this.schedule();
+        // this.schedule();
     }
 
     public KothScoreboard getScoreboard() {

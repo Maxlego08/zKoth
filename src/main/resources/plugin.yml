@@ -5,4 +5,21 @@ website: https://www.spigotmc.org/resources/76749/
 description: Default plugin developed by GroupeZ
 version: 3.0.0
 api-version: 1.13
+softdepend:
+  - PlaceholderAPI
+  - FeatherBoard
+  - TAB
+  - TitleManager
+  - SternalBoard
+  - Guilds
+  - Factions
+  - FactionsX
+  - SuperiorSkyblock2
+  - LegacyFactions
+  - UltimateFactions
+  - Multiverse-Core
+  - SimpleClan
+  - zSchedulers
+  - DecentHolograms
+  - HuskTowns
 commands:

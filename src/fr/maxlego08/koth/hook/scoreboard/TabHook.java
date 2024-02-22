@@ -1,5 +1,6 @@
 package fr.maxlego08.koth.hook.scoreboard;
 
+import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.api.KothScoreboard;
 import me.neznamy.tab.api.TabAPI;
 import me.neznamy.tab.api.TabPlayer;
@@ -11,9 +12,9 @@ import org.bukkit.plugin.Plugin;
 import java.util.function.Consumer;
 
 public class TabHook implements KothScoreboard {
-    private final Plugin plugin;
+    private final KothPlugin plugin;
 
-    public TabHook(Plugin plugin) {
+    public TabHook(KothPlugin plugin) {
         super();
         this.plugin = plugin;
     }

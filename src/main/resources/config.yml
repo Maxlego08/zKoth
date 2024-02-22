@@ -11,9 +11,15 @@
 # /zkoth - zkoth.use - Displays the list of commands
 # /zkoth reload - zkoth.reload - Reload configuration files
 # /zkoth axe - zkoth.axe - Getting the selection axe
+# /zkoth create <koth name> [<koth type>] [<capture/score] - zkoth.create - Create koth
 #
 # Placeholders:
 #
 #
+# Supported Scoreboard Plugin:
+# - FeatherBoard
+# - SternalBoard
+# - Tab
+# - TitleManager
 #
 #########################################################################################################

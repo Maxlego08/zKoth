@@ -2,6 +2,7 @@ package fr.maxlego08.koth.hook.scoreboard;
 
 import com.xism4.sternalboard.SternalBoardPlugin;
 import com.xism4.sternalboard.managers.ScoreboardManager;
+import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.api.KothScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -13,7 +14,7 @@ public class SternalBoardHook implements KothScoreboard {
 
     private final ScoreboardManager manager;
 
-    public SternalBoardHook(Plugin plugin) {
+    public SternalBoardHook(KothPlugin plugin) {
         super();
         this.manager = ((SternalBoardPlugin) Bukkit.getPluginManager().getPlugin("SternalBoard")).getScoreboardManager();
     }

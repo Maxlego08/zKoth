@@ -1,9 +1,13 @@
 package fr.maxlego08.koth;
 
+import fr.maxlego08.koth.api.KothScoreboard;
 import fr.maxlego08.koth.command.commands.CommandKoth;
+import fr.maxlego08.koth.hook.ScoreboardPlugin;
+import fr.maxlego08.koth.hook.scoreboard.DefaultHook;
 import fr.maxlego08.koth.placeholder.LocalPlaceholder;
 import fr.maxlego08.koth.save.MessageLoader;
 import fr.maxlego08.koth.zcore.ZPlugin;
+import fr.maxlego08.koth.zcore.logger.Logger;
 
 /**
  * System to create your plugins very simply Projet:
@@ -14,6 +18,7 @@ import fr.maxlego08.koth.zcore.ZPlugin;
 public class KothPlugin extends ZPlugin {
 
     private KothManager kothManager;
+    private KothScoreboard kothScoreboard = new DefaultHook();
 
     @Override
     public void onEnable() {
@@ -36,6 +41,14 @@ public class KothPlugin extends ZPlugin {
 
         this.loadFiles();
 
+        for (ScoreboardPlugin value : ScoreboardPlugin.values()) {
+            if (value.isEnable()) {
+                kothScoreboard = value.init(this);
+                Logger.info("Register " + value.getPluginName() + " scoreboard implementation.", Logger.LogType.INFO);
+                break;
+            }
+        }
+
         this.postEnable();
     }
 
@@ -50,6 +63,10 @@ public class KothPlugin extends ZPlugin {
     }
 
     public KothManager getKothManager() {
-        return kothManager;
+        return this.kothManager;
+    }
+
+    public KothScoreboard getKothScoreboard() {
+        return this.kothScoreboard;
     }
 }

@@ -1,5 +1,6 @@
 package fr.maxlego08.koth.hook.scoreboard;
 
+import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.api.KothScoreboard;
 import io.puharesource.mc.titlemanager.api.v2.TitleManagerAPI;
 import org.bukkit.Bukkit;
@@ -10,6 +11,10 @@ import java.util.function.Consumer;
 public class TitleManagerHook implements KothScoreboard {
 
     private TitleManagerAPI api;
+
+    public TitleManagerHook(KothPlugin plugin){
+
+    }
 
     @Override
     public void toggle(Player player, Consumer<Player> after) {

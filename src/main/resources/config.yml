@@ -17,6 +17,7 @@
 # /zkoth stop <koth name> - zkoth.stop - Stop a koth
 # /zkoth move <koth name> - zkoth.stop - Move a koth
 # /zkoth version - no permission - Show plugin version
+# /zkoth list - zkoth.list - Get koth list
 #
 # Placeholders:
 #

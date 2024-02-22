@@ -11,14 +11,18 @@ import fr.maxlego08.koth.hook.teams.NoneHook;
 import fr.maxlego08.koth.loader.KothLoader;
 import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.logger.Logger;
+import fr.maxlego08.koth.zcore.utils.Cuboid;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
 import fr.maxlego08.koth.zcore.utils.builder.ItemBuilder;
 import fr.maxlego08.koth.zcore.utils.loader.Loader;
 import fr.maxlego08.koth.zcore.utils.storage.Persist;
 import fr.maxlego08.koth.zcore.utils.storage.Savable;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -216,4 +220,56 @@ public class KothManager extends ZUtils implements Savable {
     public List<Koth> getKoths() {
         return this.koths;
     }
+
+    public void sendKothList(CommandSender sender) {
+
+        if (koths.isEmpty()) {
+            message(sender, Message.LIST_EMPTY);
+            return;
+        }
+
+        if (sender instanceof ConsoleCommandSender) {
+
+            String string = toList(koths.stream().map(Koth::getName).collect(Collectors.toList()), "§8", "§7");
+            message(sender, Message.LIST_CONSOLE, "%koth%", string);
+
+        } else {
+
+            Player player = (Player) sender;
+            message(player, Message.LIST_PLAYER);
+            koths.forEach(koth -> buildKothMessage(player, koth));
+        }
+    }
+
+    private void buildKothMessage(Player player, Koth koth) {
+
+        TextComponent component = buildTextComponent("§f§l» §7" + koth.getName() + " ");
+
+        Cuboid cuboid = koth.getCuboid();
+        Location center = cuboid.getCenter();
+        String location = center.getWorld().getName() + ", " + center.getBlockX() + ", " + center.getBlockY() + ", " + center.getBlockZ();
+
+        setHoverMessage(component, "§7Location: §f" + location);
+        setClickAction(component, ClickEvent.Action.SUGGEST_COMMAND, "/zkoth info " + koth.getName());
+
+        TextComponent spawn = buildTextComponent("§8(§aSpawn§8)");
+        setClickAction(spawn, ClickEvent.Action.SUGGEST_COMMAND, "/zkoth spawn " + koth.getName());
+        setHoverMessage(spawn, "§7Click for spawn koth");
+
+        TextComponent now = buildTextComponent(" §8(§eSpawn now§8)");
+        setClickAction(now, ClickEvent.Action.SUGGEST_COMMAND, "/zkoth now " + koth.getName());
+        setHoverMessage(now, "§7Click for spawn koth now");
+
+        TextComponent delete = buildTextComponent(" §8(§cDelete§8)");
+        setClickAction(delete, ClickEvent.Action.SUGGEST_COMMAND, "/zkoth delete " + koth.getName());
+        setHoverMessage(delete, "§7Click for delete koth");
+
+        component.addExtra(spawn);
+        component.addExtra(now);
+        component.addExtra(delete);
+
+        player.spigot().sendMessage(component);
+
+    }
+
 }

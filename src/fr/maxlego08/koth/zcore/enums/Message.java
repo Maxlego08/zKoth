@@ -51,6 +51,7 @@ public enum Message {
     DESCRIPTION_MOVE("Move a koth"),
     DESCRIPTION_AXE("Getting the selection axe"),
     DESCRIPTION_CREATE("Create new koth"),
+    DESCRIPTION_LIST("Get koth list"),
 
     AXE_RECEIVE("§7You have just received the axe for zone selection."),
     AXE_NAME("§6✤ §7zKoth axe §6✤"),
@@ -123,6 +124,10 @@ public enum Message {
     EVENT_EVERYSECONDS(MessageType.ACTION, "§d%playerName% §7- §8[§f%classicProgress%§8] §7- §b%classicPercent%§f%"),
 
     MOVE_SUCCESS("§7You have just moved the koth §f%name%§7."),
+
+    LIST_CONSOLE("§fKoths§8: §f%koth%"),
+    LIST_PLAYER("§fKoths§8: §8(§7Use your mouse)"),
+    LIST_EMPTY("§fKoths§8: §cempty"),
 
     ;
 

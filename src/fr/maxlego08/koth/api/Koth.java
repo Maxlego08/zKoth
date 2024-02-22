@@ -1,5 +1,6 @@
 package fr.maxlego08.koth.api;
 
+import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
 import fr.maxlego08.koth.zcore.utils.Cuboid;
 import org.bukkit.Location;
 
@@ -32,4 +33,8 @@ public interface Koth {
     int getCaptureSeconds();
 
     void setCaptureSeconds(int captureSeconds);
+
+    ScoreboardConfiguration getCooldownScoreboard();
+
+    ScoreboardConfiguration getStartScoreboard();
 }

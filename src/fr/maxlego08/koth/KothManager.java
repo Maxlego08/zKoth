@@ -109,7 +109,7 @@ public class KothManager extends ZUtils implements Savable {
         }
 
         String fileName = name.replace(" ", "_");
-        Koth koth = new ZKoth(fileName, kothType, name, capture, minLocation, maxLocation, new ArrayList<>(), new ArrayList<>());
+        Koth koth = new ZKoth(fileName, kothType, name, capture, minLocation, maxLocation);
 
         KothCreateEvent event = new KothCreateEvent(koth);
         event.call();

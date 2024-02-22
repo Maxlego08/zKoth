@@ -91,6 +91,14 @@
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>krypton</id>
+            <url>https://repo.kryptonmc.org/releases</url>
+        </repository>
+        <repository>
+            <id>william278.net</id>
+            <url>https://repo.william278.net/releases</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -126,6 +134,36 @@
             <groupId>fr.mrmicky</groupId>
             <artifactId>fastboard</artifactId>
             <version>2.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.booksaw</groupId>
+            <artifactId>BetterTeams</artifactId>
+            <version>4.8.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.MrUniverse44</groupId>
+            <artifactId>ScaredClansAPI</artifactId>
+            <version>0.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.neznamy</groupId>
+            <artifactId>tab-api</artifactId>
+            <version>4.0.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.william278</groupId>
+            <artifactId>husktowns</artifactId>
+            <version>2.6.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.angeschossen</groupId>
+            <artifactId>LandsAPI</artifactId>
+            <version>6.44.6</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

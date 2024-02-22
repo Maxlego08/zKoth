@@ -2,6 +2,7 @@ package fr.maxlego08.koth;
 
 import fr.maxlego08.koth.api.Koth;
 import fr.maxlego08.koth.api.KothType;
+import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
 import fr.maxlego08.koth.zcore.utils.Cuboid;
 import org.bukkit.Location;
 
@@ -12,6 +13,8 @@ public class ZKoth implements Koth {
 
     private final String fileName;
     private final KothType kothType;
+    private final ScoreboardConfiguration cooldownScoreboard;
+    private final ScoreboardConfiguration startScoreboard;
     private String name;
     private int captureSeconds;
     private Location minLocation;
@@ -19,7 +22,7 @@ public class ZKoth implements Koth {
     private List<String> startCommands = new ArrayList<>();
     private List<String> endCommands = new ArrayList<>();
 
-    public ZKoth(String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands) {
+    public ZKoth(String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands, ScoreboardConfiguration cooldownScoreboard, ScoreboardConfiguration startScoreboard) {
         this.fileName = fileName;
         this.kothType = kothType;
         this.name = name;
@@ -28,6 +31,19 @@ public class ZKoth implements Koth {
         this.maxLocation = maxLocation;
         this.startCommands = startCommands;
         this.endCommands = endCommands;
+        this.startScoreboard = startScoreboard;
+        this.cooldownScoreboard = cooldownScoreboard;
+    }
+
+    public ZKoth(String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation) {
+        this.fileName = fileName;
+        this.kothType = kothType;
+        this.name = name;
+        this.captureSeconds = captureSeconds;
+        this.minLocation = minLocation;
+        this.maxLocation = maxLocation;
+        this.startScoreboard = new ScoreboardConfiguration();
+        this.cooldownScoreboard = new ScoreboardConfiguration();
     }
 
     @Override
@@ -95,5 +111,15 @@ public class ZKoth implements Koth {
     @Override
     public void setCaptureSeconds(int captureSeconds) {
         this.captureSeconds = captureSeconds;
+    }
+
+    @Override
+    public ScoreboardConfiguration getCooldownScoreboard() {
+        return this.cooldownScoreboard;
+    }
+
+    @Override
+    public ScoreboardConfiguration getStartScoreboard() {
+        return this.startScoreboard;
     }
 }

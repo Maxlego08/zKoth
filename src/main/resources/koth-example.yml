@@ -1,0 +1,51 @@
+
+name: test
+
+type: CAPTURE
+capture: 30
+
+startCommands: []
+
+endCommands: []
+
+minLocation:
+  world: world
+  x: 81
+  y: 121
+  z: 12
+
+manLocation:
+  world: world
+  x: 77
+  y: 123
+  z: 8
+
+scoreboard:
+  cooldown:
+    enable: false
+    title: "&f&l⌈ &7&ozKoth &f&l⌋"
+    lines:
+    - "&r"
+    - "&6&l⟣ &fKoth: &b%name%"
+    - "&6&l⟣ &fCoordinate: &b%x% %y% %z%"
+    - "&6&l⟣ &fStarts in: &d%capture%"
+    - "&1"
+    - "&6&l⟣ &fhttps://groupez.dev"
+  start:
+    enable: false
+    title: "&f&l⌈ &7&ozKoth &f&l⌋"
+    lines:
+    - "&r"
+    - "&6&l⟣ &fKoth: &b%name%"
+    - "&6&l⟣ &b%x% %y% %z%"
+    - "&6&l⟣ &fFaction: &b%faction%"
+    - "&0"
+    - "&6&l⟣ &fTime: &d%capture%"
+    - "&b"
+    - "&6&l⟣ &fPoints: &b%points%&f/&a%maxPoints%"
+    - "&6&l⟣ &fPercent: &b%pointsPercent%&7%"
+    - "&6&l⟣ &fTimer: &b%timer%"
+    - "&6&l⟣ &fTimer: &b%timerSeconds%&f/&a%maxTimerSeconds%"
+    - "&6&l⟣ &fPercent: &b%timerPercent%&7%"
+    - "&1"
+    - "&6&l⟣ &fhttps://groupez.dev"

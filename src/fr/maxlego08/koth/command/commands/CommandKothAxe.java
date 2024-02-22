@@ -14,6 +14,7 @@ public class CommandKothAxe extends VCommand {
 		this.setPermission(Permission.ZKOTH_AXE);
 		this.addSubCommand("axe");
 		this.setDescription(Message.DESCRIPTION_AXE);
+		this.onlyPlayers();
 	}
 
 	@Override

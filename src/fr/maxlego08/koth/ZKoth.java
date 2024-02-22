@@ -43,6 +43,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -58,6 +59,7 @@ public class ZKoth extends ZUtils implements Koth {
     private final ScoreboardConfiguration startScoreboard;
     private final int cooldownStart;
     private final int stopAfterSeconds;
+    private final int randomItemStacks;
     private final Map<UUID, Integer> playersValues = new HashMap<>();
     private final boolean enableStartCapMessage;
     private final boolean enableLooseCapMessage;
@@ -79,7 +81,7 @@ public class ZKoth extends ZUtils implements Koth {
     private TimerTask timerTaskStop;
     private DiscordWebhookConfig discordWebhookConfig;
 
-    public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands, ScoreboardConfiguration cooldownScoreboard, ScoreboardConfiguration startScoreboard, int cooldownStart, int stopAfterSeconds, boolean enableStartCapMessage, boolean enableLooseCapMessage, boolean enableEverySecondsCapMessage, HologramConfig hologramConfig, List<ItemStack> itemStacks, KothLootType kothLootType, DiscordWebhookConfig discordWebhookConfig) {
+    public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands, ScoreboardConfiguration cooldownScoreboard, ScoreboardConfiguration startScoreboard, int cooldownStart, int stopAfterSeconds, boolean enableStartCapMessage, boolean enableLooseCapMessage, boolean enableEverySecondsCapMessage, HologramConfig hologramConfig, List<ItemStack> itemStacks, KothLootType kothLootType, DiscordWebhookConfig discordWebhookConfig, int randomItemStacks) {
         this.plugin = plugin;
         this.fileName = fileName;
         this.kothType = kothType;
@@ -100,6 +102,7 @@ public class ZKoth extends ZUtils implements Koth {
         this.itemStacks = itemStacks;
         this.kothLootType = kothLootType;
         this.discordWebhookConfig = discordWebhookConfig;
+        this.randomItemStacks = randomItemStacks;
     }
 
     public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation) {
@@ -121,6 +124,7 @@ public class ZKoth extends ZUtils implements Koth {
         this.discordWebhookConfig = null;
         this.itemStacks = new ArrayList<>();
         this.kothLootType = KothLootType.NONE;
+        this.randomItemStacks = 0;
     }
 
     @Override
@@ -596,25 +600,23 @@ public class ZKoth extends ZUtils implements Koth {
                     location.getBlock().setType(Material.CHEST);
                     Chest chest = (Chest) location.getBlock().getState();
 
-                    this.getItemStacks().forEach(itemStack -> chest.getInventory().addItem(itemStack));
+                    this.getRandomItemStacks().forEach(itemStack -> chest.getInventory().addItem(itemStack));
 
                     Bukkit.getScheduler().runTaskLater(this.plugin, () -> location.getBlock().setType(Material.AIR), 20L * Config.removeChestSec);
                     break;
                 case DROP:
                     location.add(0.5, 0.3, 0.5);
-                    this.getItemStacks().forEach(itemStack -> {
-
+                    this.getRandomItemStacks().forEach(itemStack -> {
                         Item item = world.dropItem(location, itemStack);
                         Vector vector = item.getVelocity();
                         vector.setZ(0);
                         vector.setY(0.5);
                         vector.setX(0);
                         item.setVelocity(vector);
-
                     });
                     break;
                 case INVENTORY:
-                    this.getItemStacks().forEach(itemStack -> give(this.currentPlayer, itemStack));
+                    this.getRandomItemStacks().forEach(itemStack -> give(this.currentPlayer, itemStack));
                     break;
                 default:
                     break;
@@ -759,5 +761,16 @@ public class ZKoth extends ZUtils implements Koth {
     @Override
     public HologramConfig getHologramConfig() {
         return this.hologramConfig;
+    }
+
+
+    @Override
+    public List<ItemStack> getRandomItemStacks() {
+        List<ItemStack> itemStacks = new ArrayList<>(this.itemStacks);
+        if (this.randomItemStacks <= 0) {
+            return itemStacks;
+        }
+        Collections.shuffle(itemStacks, new Random());
+        return itemStacks.stream().limit(this.randomItemStacks).collect(Collectors.toList());
     }
 }

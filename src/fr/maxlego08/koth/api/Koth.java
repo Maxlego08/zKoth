@@ -79,4 +79,6 @@ public interface Koth {
     void setItemStacks(List<ItemStack> itemStacks);
 
     KothLootType getLootType();
+
+    List<ItemStack> getRandomItemStacks();
 }

@@ -134,6 +134,8 @@ webhook:
       #   inline: false
 
 loot:
+  # Takes 10 items from the list of items, to put all the items you must put -1
+  randomItemStacks: 3
   # Available type :
   # DROP
   # CHEST

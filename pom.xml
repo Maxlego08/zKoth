@@ -165,5 +165,26 @@
             <version>6.44.6</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.ShieldCommunity</groupId>
+            <artifactId>SternalBoard</artifactId>
+            <version>2.2.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/SternalBoard-2.2.8-all.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>be.maximvdw.featherboard</groupId>
+            <artifactId>FeatherBoard</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/FeatherBoard.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>io.puharesource.mc.titlemanager</groupId>
+            <artifactId>TitleManager</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/TitleManager-2.3.6.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>

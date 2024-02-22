@@ -1,5 +1,6 @@
 package fr.maxlego08.koth.zcore.utils.loader;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +27,7 @@ public class ItemStackLoader extends ZUtils implements Loader<ItemStack> {
 	/**
 	 * Load ItemStack
 	 */
-	public ItemStack load(YamlConfiguration configuration, String path) {
+	public ItemStack load(YamlConfiguration configuration, String path, File file) {
 
 		int data = configuration.getInt(path + "data", 0);
 		int amount = configuration.getInt(path + "amount", 1);

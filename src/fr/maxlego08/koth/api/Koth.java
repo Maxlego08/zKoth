@@ -7,7 +7,11 @@ import java.util.List;
 
 public interface Koth {
 
+    String getFileName();
+
     String getName();
+
+    void setName(String name);
 
     Location getMinLocation();
 
@@ -23,4 +27,7 @@ public interface Koth {
 
     void move(Location minLocation, Location maxLocation);
 
+    int getCaptureSeconds();
+
+    void setCaptureSeconds(int captureSeconds);
 }

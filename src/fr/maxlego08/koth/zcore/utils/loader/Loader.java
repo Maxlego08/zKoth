@@ -2,6 +2,8 @@ package fr.maxlego08.koth.zcore.utils.loader;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
+
 public interface Loader<T> {
 
 	/**
@@ -11,7 +13,7 @@ public interface Loader<T> {
 	 * @param path
 	 * @return element
 	 */
-	T load(YamlConfiguration configuration, String path);
+	T load(YamlConfiguration configuration, String path, File file);
 	
 	/**
 	 * Save object to yml

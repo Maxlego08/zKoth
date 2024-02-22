@@ -5,6 +5,7 @@ import fr.maxlego08.koth.command.VCommand;
 import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.enums.Permission;
 import fr.maxlego08.koth.zcore.utils.commands.CommandType;
+import org.bukkit.inventory.ItemStack;
 
 public class CommandKothAxe extends VCommand {
 
@@ -18,9 +19,9 @@ public class CommandKothAxe extends VCommand {
 	@Override
 	protected CommandType perform(KothPlugin plugin) {
 
-		plugin.reloadConfig();
-		plugin.reloadFiles();
-		message(sender, Message.RELOAD);
+		ItemStack itemStack = this.manager.getKothAxe();
+		this.player.getInventory().addItem(itemStack);
+		message(this.sender, Message.AXE_RECEIVE);
 		
 		return CommandType.SUCCESS;
 	}

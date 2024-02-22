@@ -11,6 +11,8 @@ public class CommandKoth extends VCommand {
 		super(plugin);
 		this.setPermission(Permission.ZKOTH_USE);
 		this.addSubCommand(new CommandKothReload(plugin));
+		this.addSubCommand(new CommandKothAxe(plugin));
+		this.addSubCommand(new CommandKothCreate(plugin));
 	}
 
 	@Override

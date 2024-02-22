@@ -45,6 +45,7 @@ public enum Message {
 
     DESCRIPTION_RELOAD("Reload configuration files"),
     DESCRIPTION_AXE("Getting the selection axe"),
+    DESCRIPTION_CREATE("Create new koth"),
 
     AXE_RECEIVE("§7You have just received the axe for zone selection."),
     AXE_NAME("§6✤ §7zKoth axe §6✤"),
@@ -60,6 +61,14 @@ public enum Message {
     AXE_POS2("§7You have just put the second position in §f%world%§7, §f%x%§7, §f%y%§7, §f%z%§7."),
     AXE_ERROR("§cYour selection is invalid, you must have at least 2 blocks of height."),
     AXE_VALID("§aYour selection is valid, you can create a koth with the command §f/koth create <name>§a."),
+
+    CREATE_SUCCESS("§7You just created the koth §f%name%§7."),
+    CREATE_ERROR_SELECTION("§cYou must select a zone with the command §b/zkoth axe§c."),
+    CREATE_ERROR_SIZE("§cYour selection is invalid, you must have at least 2 blocks of height."),
+
+    ALREADY_EXIST("§cThe koth §f%name% §calready exists."),
+    KOTH_SIZE("§cYour koth is too small, you can't create one that small. Then you will come on discord for support when the problem comes from you."),
+    DOESNT_EXIST("§cThe koth §f%name% §cdoesnt exists."),
 
     ;
 

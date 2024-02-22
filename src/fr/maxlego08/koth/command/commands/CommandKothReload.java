@@ -19,9 +19,9 @@ public class CommandKothReload extends VCommand {
 	@Override
 	protected CommandType perform(KothPlugin plugin) {
 
-		ItemStack itemStack = this.manager.getKothAxe();
-		this.player.getInventory().addItem(itemStack);
-		message(this.sender, Message.AXE_RECEIVE);
+		plugin.reloadConfig();
+		plugin.reloadFiles();
+		message(sender, Message.RELOAD);
 		
 		return CommandType.SUCCESS;
 	}

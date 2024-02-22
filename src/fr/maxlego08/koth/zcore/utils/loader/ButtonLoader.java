@@ -1,5 +1,6 @@
 package fr.maxlego08.koth.zcore.utils.loader;
 
+import java.io.File;
 import java.util.List;
 
 import fr.maxlego08.koth.zcore.utils.ZUtils;
@@ -12,7 +13,7 @@ import org.bukkit.material.MaterialData;
 public class ButtonLoader extends ZUtils implements Loader<Button> {
 
 	@Override
-	public Button load(YamlConfiguration configuration, String path) {
+	public Button load(YamlConfiguration configuration, String path, File file) {
 
 		String name = configuration.getString(path + "name") == null ? null
 				: color(configuration.getString(path + "name"));

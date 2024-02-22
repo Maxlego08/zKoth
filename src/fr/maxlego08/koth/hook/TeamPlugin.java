@@ -2,6 +2,7 @@ package fr.maxlego08.koth.hook;
 
 import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.api.KothTeam;
+import fr.maxlego08.koth.hook.teams.BetterTeamHook;
 import fr.maxlego08.koth.hook.teams.HuskTownHook;
 import fr.maxlego08.koth.hook.teams.LandHook;
 import fr.maxlego08.koth.hook.teams.SuperiorSkyblock2Hook;
@@ -15,6 +16,7 @@ public enum TeamPlugin {
     LANDS("Lands", LandHook.class),
     HUSKTOWN("HuskTowns", HuskTownHook.class),
     SUPERIORSKYBLOCK("SuperiorSkyblock2", SuperiorSkyblock2Hook.class),
+    BETTERTEAMS("BetterTeams", BetterTeamHook.class),
 
     ;
 

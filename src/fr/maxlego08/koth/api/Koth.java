@@ -3,6 +3,7 @@ package fr.maxlego08.koth.api;
 import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
 import fr.maxlego08.koth.zcore.utils.Cuboid;
+import fr.maxlego08.koth.zcore.utils.interfaces.CollectionConsumer;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -58,5 +59,8 @@ public interface Koth {
     boolean isEnableStartCapMessage();
 
     boolean isEnableLooseCapMessage();
+
     boolean isEnableEverySecondsCapMessage();
+
+    CollectionConsumer<Player> onScoreboard();
 }

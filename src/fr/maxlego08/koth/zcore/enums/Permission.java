@@ -6,7 +6,7 @@ public enum Permission {
 	ZKOTH_RELOAD,
 	ZKOTH_NOW,
 	ZKOTH_AXE,
-	ZKOTH_CREATE;
+	ZKOTH_CREATE, ZKOTH_SPAWN;
 
 	private String permission;
 

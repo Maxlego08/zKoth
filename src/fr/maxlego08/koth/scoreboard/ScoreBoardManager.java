@@ -1,26 +1,29 @@
 package fr.maxlego08.koth.scoreboard;
 
+import fr.maxlego08.koth.KothPlugin;
+import fr.maxlego08.koth.api.KothScoreboard;
+import fr.maxlego08.koth.save.Config;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
 import fr.maxlego08.koth.zcore.utils.interfaces.CollectionConsumer;
 import fr.mrmicky.fastboard.FastBoard;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.function.Consumer;
 
 public class ScoreBoardManager extends ZUtils {
 
-    private final Plugin plugin;
-    private final Map<Player, FastBoard> boards = new HashMap<Player, FastBoard>();
-    private final long schedulerMillisecond;
+    private final ConcurrentMap<Player, FastBoard> boards = new ConcurrentHashMap<>();
+    private final KothPlugin plugin;
     private boolean isRunning = false;
     private CollectionConsumer<Player> lines;
+    private KothScoreboard scoreboard;
 
-    public ScoreBoardManager(Plugin plugin, long schedulerMillisecond) {
-        super();
-        this.schedulerMillisecond = schedulerMillisecond;
+    public ScoreBoardManager(KothPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -29,49 +32,46 @@ public class ScoreBoardManager extends ZUtils {
      */
     public void schedule() {
 
-        if (this.isRunning) {
+        if (isRunning)
             return;
-        }
 
-        this.isRunning = true;
+        isRunning = true;
 
-        scheduleFix(this.plugin, this.schedulerMillisecond, (task, canRun) -> {
+        scheduleFix(plugin, Config.schedulerMillisecond, (task, canRun) -> {
 
             // If the task cannot continue then we do not update the scoreboard
             if (!canRun)
                 return;
 
-            if (!this.isRunning) {
+            if (!isRunning) {
                 task.cancel();
                 return;
             }
 
             // if the addition of the lines is null then we stop the task
-            if (this.lines == null) {
+            if (lines == null) {
                 task.cancel();
                 return;
             }
 
             Iterator<FastBoard> iterator = this.boards.values().iterator();
             while (iterator.hasNext()) {
-                FastBoard b = iterator.next();
-                if (b.isDeleted() || !b.getPlayer().isOnline()) {
-                    this.boards.remove(b.getPlayer());
+                try {
+                    FastBoard b = iterator.next();
+                    if (b.isDeleted() || !b.getPlayer().isOnline()) {
+                        this.boards.remove(b.getPlayer());
+                    }
+                } catch (Exception ignored) {
                 }
             }
 
-            this.boards.forEach((player, board) -> board.updateLines(this.lines.accept(player)));
+            this.boards.forEach((player, board) -> {
+                board.updateLines(this.lines.accept(player));
+            });
 
         });
     }
 
-    /**
-     * Create a scoreboard for a player
-     *
-     * @param player
-     * @param title
-     * @return {@link FastBoard}
-     */
     public FastBoard createBoard(Player player, String title) {
 
         if (this.hasBoard(player)) {
@@ -86,17 +86,30 @@ public class ScoreBoardManager extends ZUtils {
         }
 
         this.boards.put(player, board);
+        this.scoreboard.hide(player, create(board, player, title));
 
         return board;
 
     }
 
-    /**
-     * Delete player board
-     *
-     * @param player
-     * @return
-     */
+    private Consumer<Player> create(FastBoard current, Player player, String title) {
+        return p -> {
+
+            if (current != null)
+                current.delete();
+            this.boards.remove(player);
+
+            FastBoard board = new FastBoard(player);
+            board.updateTitle(title);
+
+            if (this.lines != null) {
+                board.updateLines(this.lines.accept(player));
+            }
+
+            this.boards.put(player, board);
+        };
+    }
+
     public boolean delete(Player player) {
 
         if (!this.hasBoard(player)) {
@@ -106,10 +119,11 @@ public class ScoreBoardManager extends ZUtils {
         FastBoard board = getBoard(player);
         if (!board.isDeleted()) {
             board.delete();
-            return true;
         }
 
-        return false;
+        Bukkit.getScheduler().runTaskLater(this.plugin, () -> this.scoreboard.toggle(player, p -> {
+        }), 10);
+        return true;
     }
 
     /**
@@ -117,40 +131,33 @@ public class ScoreBoardManager extends ZUtils {
      *
      * @param player
      * @param title
-     * @return boolean
+     * @return
      */
     public boolean updateTitle(Player player, String title) {
-
-        if (!hasBoard(player)) {
+        if (!this.hasBoard(player)) {
             return false;
         }
-
         FastBoard board = getBoard(player);
-        if (!board.isDeleted()) {
-            board.updateTitle(title);
-            return true;
-        }
-        return false;
+        board.updateTitle(title);
+        return true;
+    }
+
+    public void clearBoard() {
+        this.isRunning = false;
+        this.boards.keySet().forEach(this::delete);
+        this.boards.clear();
     }
 
     public boolean updateLine(Player player, int line, String string) {
-
-        if (!hasBoard(player)) {
+        if (!this.hasBoard(player)) {
             return false;
         }
-
         FastBoard board = getBoard(player);
-        if (!board.isDeleted()) {
-            board.updateLine(line, string);
-            return true;
-        }
-        return false;
+        board.updateLine(line, string);
+        return true;
     }
 
     /**
-     * Check if player has board
-     *
-     * @param player
      * @return {@link Boolean}
      */
     public boolean hasBoard(Player player) {
@@ -158,9 +165,6 @@ public class ScoreBoardManager extends ZUtils {
     }
 
     /**
-     * Return player's board
-     *
-     * @param player
      * @return {@link FastBoard}
      */
     public FastBoard getBoard(Player player) {
@@ -172,13 +176,6 @@ public class ScoreBoardManager extends ZUtils {
      */
     public Map<Player, FastBoard> getBoards() {
         return this.boards;
-    }
-
-    /**
-     * @return the schedulerMillisecond
-     */
-    public long getSchedulerMillisecond() {
-        return this.schedulerMillisecond;
     }
 
     /**
@@ -215,6 +212,14 @@ public class ScoreBoardManager extends ZUtils {
     public void setLinesAndSchedule(CollectionConsumer<Player> lines) {
         this.lines = lines;
         this.schedule();
+    }
+
+    public KothScoreboard getScoreboard() {
+        return scoreboard;
+    }
+
+    public void setScoreboard(KothScoreboard scoreboard) {
+        this.scoreboard = scoreboard;
     }
 
 }

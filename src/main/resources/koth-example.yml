@@ -23,9 +23,12 @@ enableLooseCapMessage: true
 # - %centerX% - Center location X
 # - %centerY% - Center location Y
 # - %centerZ% - Center location Z
+# - %spawnSeconds% - Second before koth spawn
+# - %spawnFormat% - Time format before koth spawn
 startCommands: []
 
 # Available placeholders:
+# - %online-player% - Allows to run the order to all online players of the team
 # - %name% - Koth name
 # - %world% - World name
 # - %minX% - Min location X
@@ -37,7 +40,12 @@ startCommands: []
 # - %centerX% - Center location X
 # - %centerY% - Center location Y
 # - %centerZ% - Center location Z
+# - %spawnSeconds% - Second before koth spawn
+# - %spawnFormat% - Time format before koth spawn
 # - %playerName% - Current player name
+# - %teamName% - Current player team name
+# - %captureSeconds% - Capture seconds (only for CAPTURE type)
+# - %captureFormat% - Capture time format (only for CAPTURE type)
 endCommands: []
 
 minLocation:
@@ -54,30 +62,27 @@ manLocation:
 
 scoreboard:
   cooldown:
-    enable: false
+    enable: true
     title: "&f&l⌈ &7&ozKoth &f&l⌋"
     lines:
-    - "&r"
-    - "&6&l⟣ &fKoth: &b%name%"
-    - "&6&l⟣ &fCoordinate: &b%x% %y% %z%"
-    - "&6&l⟣ &fStarts in: &d%capture%"
-    - "&1"
-    - "&6&l⟣ &fhttps://groupez.dev"
+      - "&r"
+      - "#16db47Location:"
+      - " #636363◊ #ffffffX: %centerX% Y: %centerY% Z: %centerZ%"
+      - "&r"
+      - "#16db47Starts in:"
+      - " #636363◊ #ffffff%spawnFormat%"
+      - "&r"
   start:
-    enable: false
+    enable: true
     title: "&f&l⌈ &7&ozKoth &f&l⌋"
     lines:
-    - "&r"
-    - "&6&l⟣ &fKoth: &b%name%"
-    - "&6&l⟣ &b%x% %y% %z%"
-    - "&6&l⟣ &fFaction: &b%faction%"
-    - "&0"
-    - "&6&l⟣ &fTime: &d%capture%"
-    - "&b"
-    - "&6&l⟣ &fPoints: &b%points%&f/&a%maxPoints%"
-    - "&6&l⟣ &fPercent: &b%pointsPercent%&7%"
-    - "&6&l⟣ &fTimer: &b%timer%"
-    - "&6&l⟣ &fTimer: &b%timerSeconds%&f/&a%maxTimerSeconds%"
-    - "&6&l⟣ &fPercent: &b%timerPercent%&7%"
-    - "&1"
-    - "&6&l⟣ &fhttps://groupez.dev"
+      - "&r"
+      - "#16db47Location"
+      - " #636363◊ #ffffffX: %centerX% Y: %centerY% Z: %centerZ%"
+      - "&r"
+      - "#16db47Player:"
+      - " #636363◊ #ffffff%playerName%"
+      - "&r"
+      - "#16db47Time left:"
+      - " #636363◊ #ffffff%captureFormat%"
+      - "&r"

@@ -66,13 +66,14 @@ public class KothManager extends ZUtils implements Savable {
         File[] files = this.folder.listFiles((dir, name) -> name.endsWith(".yml"));
         if (files == null) return;
 
+        this.koths.clear();
+
         for (File file : files) {
             YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
             Koth koth = this.kothLoader.load(configuration, "", file);
             this.koths.add(koth);
         }
-
-        System.out.println(koths);
+        Logger.info("Load " + this.koths.size() + " koths");
     }
 
     public Optional<Selection> getSelection(UUID uuid) {
@@ -171,13 +172,5 @@ public class KothManager extends ZUtils implements Savable {
 
         Koth koth = optional.get();
         koth.spawn(sender, now);
-
-        /*if (Config.enableScoreboard) {
-
-            this.manager.setLinesAndSchedule(koth.onScoreboard());
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                this.manager.createBoard(player, Config.scoreboardTitle);
-            }
-        }*/
     }
 }

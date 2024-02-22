@@ -13,6 +13,7 @@
 # /zkoth axe - zkoth.axe - Getting the selection axe
 # /zkoth create <koth name> [<koth type>] [<capture/score] - zkoth.create - Create koth
 # /zkoth now <koth name> - zkoth.now - Spawn a koth without cooldown
+# /zkoth spawn <koth name> - zkoth.now - Spawn a koth
 #
 # Placeholders:
 #
@@ -62,3 +63,7 @@ displayMessageKothCap:
   - 1
 
 noPlayer: 'X'
+
+noFaction: 'X'
+
+schedulerMillisecond: 1000

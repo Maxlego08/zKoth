@@ -13,9 +13,11 @@ public class Config {
 	public static boolean enableDebug = true;
 	public static boolean enableDebugTime = false;
 	public static long playerMoveEventCooldown = 50;
+	public static long schedulerMillisecond = 1000;
 	public static List<Integer> displayMessageCooldown = Arrays.asList(300, 120, 60, 30, 10, 5, 4, 3, 2, 1);
 	public static List<Integer> displayMessageKothCap = Arrays.asList(300, 120, 60, 30, 10, 5, 4, 3, 2, 1);
     public static String noPlayer = "X";
+    public static String noFaction = "X";
 
     /**
 	 * static Singleton instance.
@@ -55,6 +57,8 @@ public class Config {
 		displayMessageCooldown = configuration.getIntegerList("displayMessageCooldown");
 		displayMessageKothCap = configuration.getIntegerList("displayMessageKothCap");
 		noPlayer = configuration.getString("noPlayer", "X");
+		noFaction = configuration.getString("noFaction", "X");
+		schedulerMillisecond = configuration.getLong("schedulerMillisecond", 1000);
 	}
 
 }

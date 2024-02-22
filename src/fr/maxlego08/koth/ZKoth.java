@@ -14,9 +14,14 @@ import fr.maxlego08.koth.api.events.KothWinEvent;
 import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
 import fr.maxlego08.koth.hook.teams.NoneHook;
 import fr.maxlego08.koth.save.Config;
+import fr.maxlego08.koth.scoreboard.ScoreBoardManager;
 import fr.maxlego08.koth.zcore.enums.Message;
+import fr.maxlego08.koth.zcore.logger.Logger;
 import fr.maxlego08.koth.zcore.utils.Cuboid;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
+import fr.maxlego08.koth.zcore.utils.builder.TimerBuilder;
+import fr.maxlego08.koth.zcore.utils.interfaces.CollectionConsumer;
+import fr.mrmicky.fastboard.FastBoard;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -26,6 +31,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +39,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class ZKoth extends ZUtils implements Koth {
 
@@ -60,9 +67,7 @@ public class ZKoth extends ZUtils implements Koth {
     private TimerTask timerTask;
     private TimerTask timerTaskStop;
 
-    public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation,
-                 List<String> startCommands, List<String> endCommands, ScoreboardConfiguration cooldownScoreboard, ScoreboardConfiguration startScoreboard,
-                 int cooldownStart, int stopAfterSeconds, boolean enableStartCapMessage, boolean enableLooseCapMessage, boolean enableEverySecondsCapMessage) {
+    public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands, ScoreboardConfiguration cooldownScoreboard, ScoreboardConfiguration startScoreboard, int cooldownStart, int stopAfterSeconds, boolean enableStartCapMessage, boolean enableLooseCapMessage, boolean enableEverySecondsCapMessage) {
         this.plugin = plugin;
         this.fileName = fileName;
         this.kothType = kothType;
@@ -247,6 +252,7 @@ public class ZKoth extends ZUtils implements Koth {
         this.timerTask = null;
         this.remainingSeconds = null;
         this.playersValues.clear();
+        this.plugin.getScoreBoardManager().clearBoard();
         // this.resetBlocks();
         if (this.timerTaskStop != null) this.timerTaskStop.cancel();
 
@@ -263,6 +269,14 @@ public class ZKoth extends ZUtils implements Koth {
         event.call();
 
         if (event.isCancelled()) return;
+
+        if (this.cooldownScoreboard.isEnable()) {
+            ScoreBoardManager scoreBoardManager = this.plugin.getScoreBoardManager();
+            scoreBoardManager.setLinesAndSchedule(onScoreboard());
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                scoreBoardManager.createBoard(player, color(this.cooldownScoreboard.getTitle()));
+            }
+        }
 
         this.timerTask = scheduleFix(this.plugin, 0, Config.enableDebug ? 10 : 1000, (task, isCancelled) -> {
 
@@ -304,7 +318,28 @@ public class ZKoth extends ZUtils implements Koth {
 
         this.remainingSeconds = new AtomicInteger(this.captureSeconds);
 
-        this.broadcast(Message.EVENT_START);
+        broadcast(Message.EVENT_START);
+
+        ScoreBoardManager scoreBoardManager = this.plugin.getScoreBoardManager();
+        if (!this.cooldownScoreboard.isEnable() && this.startScoreboard.isEnable()) {
+            scoreBoardManager.setLinesAndSchedule(onScoreboard());
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                scoreBoardManager.createBoard(player, color(this.startScoreboard.getTitle()));
+            }
+        } else if (this.cooldownScoreboard.isEnable() && this.startScoreboard.isEnable()) {
+            if (scoreBoardManager.getBoards().isEmpty()) {
+                scoreBoardManager.setLinesAndSchedule(onScoreboard());
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    scoreBoardManager.createBoard(player, color(this.startScoreboard.getTitle()));
+                }
+            } else {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    FastBoard board = scoreBoardManager.getBoard(player);
+                    if (board == null) scoreBoardManager.createBoard(player, color(this.startScoreboard.getTitle()));
+                    else board.updateTitle(color(this.startScoreboard.getTitle()));
+                }
+            }
+        }
 
         // this.changeBlocks(Config.noOneCapturingMaterial, true);
 
@@ -318,9 +353,7 @@ public class ZKoth extends ZUtils implements Koth {
             @Override
             public void run() {
                 // plugin.getHologram().end(koth);
-                Bukkit.getScheduler().runTask(plugin, () -> {
-                    stop(Bukkit.getConsoleSender());
-                });
+                Bukkit.getScheduler().runTask(plugin, () -> stop(Bukkit.getConsoleSender()));
             }
         };
         timer.schedule(this.timerTaskStop, this.stopAfterSeconds * 1000L);
@@ -381,8 +414,7 @@ public class ZKoth extends ZUtils implements Koth {
 
     private void startCap(Player player) {
 
-        if (this.currentPlayer == null)
-            return;
+        if (this.currentPlayer == null) return;
 
         KothCatchEvent event = new KothCatchEvent(this, player, this.captureSeconds);
         event.call();
@@ -421,8 +453,7 @@ public class ZKoth extends ZUtils implements Koth {
             int currentRemainingSeconds = this.remainingSeconds.get();
 
             if (this.currentPlayer != null) {
-                if (!this.currentPlayer.isValid() || !this.currentPlayer.isOnline()
-                        || !cuboid.contains(this.currentPlayer.getLocation())) {
+                if (!this.currentPlayer.isValid() || !this.currentPlayer.isOnline() || !cuboid.contains(this.currentPlayer.getLocation())) {
                     this.currentPlayer = null;
                     // this.plugin.getHologram().update(this);
                 }
@@ -497,6 +528,8 @@ public class ZKoth extends ZUtils implements Koth {
         task.cancel();
         broadcast(Message.EVENT_WIN);
 
+        this.plugin.getScoreBoardManager().clearBoard();
+
         /* Gestion des loots */
 
         this.endCommands.forEach(command -> {
@@ -559,8 +592,7 @@ public class ZKoth extends ZUtils implements Koth {
         this.remainingSeconds = null;
         this.playersValues.clear();
         // this.resetBlocks();
-        if (this.timerTaskStop != null)
-            this.timerTaskStop.cancel();
+        if (this.timerTaskStop != null) this.timerTaskStop.cancel();
     }
 
     public int getValue(Player player) {
@@ -581,9 +613,57 @@ public class ZKoth extends ZUtils implements Koth {
         }
     }
 
+    private void broadcast(Message message) {
+
+        switch (message.getType()) {
+            case ACTION: {
+                if (message.getMessage() == null) {
+                    Logger.info(message.name() + " is null, check your config plz !", Logger.LogType.ERROR);
+                    return;
+                }
+                String realMessage = replaceMessage(message.getMessage());
+                this.broadcastAction(realMessage);
+                break;
+            }
+            case CENTER: {
+                if (message.getMessages().size() == 0) {
+                    String realMessage = replaceMessage(message.getMessage());
+                    broadcastCenterMessage(Collections.singletonList(realMessage));
+                } else {
+                    broadcastCenterMessage(message.getMessages().stream().map(this::replaceMessage).collect(Collectors.toList()));
+                }
+                break;
+            }
+            case TCHAT: {
+                if (message.getMessages().size() == 0) this.broadcast(replaceMessage(message.getMessage()));
+                else message.getMessages().forEach(m -> this.broadcast(replaceMessage(m)));
+                break;
+            }
+            case TITLE: {
+                String title = replaceMessage(message.getTitle());
+                String subTitle = replaceMessage(message.getSubTitle());
+                int fadeInTime = message.getStart();
+                int showTime = message.getTime();
+                int fadeOutTime = message.getEnd();
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    this.title(player, title, subTitle, fadeInTime, showTime, fadeOutTime);
+                }
+                break;
+            }
+            case NONE:
+            default:
+                break;
+        }
+    }
+
     private String replaceMessage(String string) {
 
         string = string.replace("%playerName%", this.currentPlayer != null ? this.currentPlayer.getName() : Config.noPlayer);
+        string = string.replace("%teamName%", this.currentPlayer != null ? this.currentPlayer.getName() : Config.noPlayer);
+
+        int seconds = this.remainingSeconds == null ? this.captureSeconds : this.remainingSeconds.get();
+        string = string.replace("%captureFormat%", TimerBuilder.getStringTime(seconds));
+        string = string.replace("%captureSeconds%", String.valueOf(seconds));
 
         return replaceKothInformations(string);
     }
@@ -591,6 +671,9 @@ public class ZKoth extends ZUtils implements Koth {
     private String replaceKothInformations(String string) {
 
         Location centerLocation = getCenter();
+        int seconds = this.remainingSeconds == null ? this.captureSeconds : this.remainingSeconds.get();
+        string = string.replace("%spawnSeconds%", String.valueOf(seconds));
+        string = string.replace("%spawnFormat%", TimerBuilder.getStringTime(seconds));
 
         string = string.replace("%name%", this.name);
         string = string.replace("%world%", centerLocation.getWorld().getName());
@@ -607,4 +690,11 @@ public class ZKoth extends ZUtils implements Koth {
         return string;
     }
 
+    @Override
+    public CollectionConsumer<Player> onScoreboard() {
+        return player -> {
+            ScoreboardConfiguration scoreboard = (this.kothStatus == KothStatus.COOLDOWN) ? this.cooldownScoreboard : this.startScoreboard;
+            return scoreboard.getLines().stream().map(e -> color(papi(replaceMessage(e), player))).collect(Collectors.toList());
+        };
+    }
 }

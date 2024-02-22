@@ -7,6 +7,7 @@ import fr.maxlego08.koth.hook.scoreboard.DefaultHook;
 import fr.maxlego08.koth.placeholder.LocalPlaceholder;
 import fr.maxlego08.koth.save.Config;
 import fr.maxlego08.koth.save.MessageLoader;
+import fr.maxlego08.koth.scoreboard.ScoreBoardManager;
 import fr.maxlego08.koth.storage.StorageManager;
 import fr.maxlego08.koth.zcore.ZPlugin;
 import fr.maxlego08.koth.zcore.logger.Logger;
@@ -19,6 +20,7 @@ import fr.maxlego08.koth.zcore.logger.Logger;
  */
 public class KothPlugin extends ZPlugin {
 
+    private final ScoreBoardManager scoreBoardManager = new ScoreBoardManager(this);
     private KothManager kothManager;
     private StorageManager storageManager;
     private KothScoreboard kothScoreboard = new DefaultHook();
@@ -53,6 +55,7 @@ public class KothPlugin extends ZPlugin {
                 break;
             }
         }
+        this.scoreBoardManager.setScoreboard(this.kothScoreboard);
 
         this.postEnable();
     }
@@ -77,5 +80,9 @@ public class KothPlugin extends ZPlugin {
 
     public StorageManager getStorageManager() {
         return this.storageManager;
+    }
+
+    public ScoreBoardManager getScoreBoardManager() {
+        return scoreBoardManager;
     }
 }

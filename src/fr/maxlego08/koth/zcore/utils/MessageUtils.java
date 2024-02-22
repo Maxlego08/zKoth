@@ -126,6 +126,10 @@ public abstract class MessageUtils extends LocationUtils {
 		message(Bukkit.getConsoleSender(), message, args);
 	}
 
+	protected void broadcast(String message) {
+		Bukkit.broadcastMessage(Message.PREFIX.msg() + message);
+	}
+
 	/**
 	 * 
 	 * @param player

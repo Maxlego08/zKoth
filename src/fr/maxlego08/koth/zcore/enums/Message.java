@@ -45,6 +45,7 @@ public enum Message {
 
     DESCRIPTION_RELOAD("Reload configuration files"),
     DESCRIPTION_NOW("Spawn a koth without cooldown"),
+    DESCRIPTION_SPAWN("Spawn a koth with cooldown"),
     DESCRIPTION_AXE("Getting the selection axe"),
     DESCRIPTION_CREATE("Create new koth"),
 
@@ -74,8 +75,8 @@ public enum Message {
     EVENT_START(MessageType.CENTER,
             "§8§m-+------------------------------+-",
             "",
-            "§fThe koth §b%name% §has just appeared!",
-            "§fCoordinate§8: §7%x%, %y%, %z%.",
+            "§fThe koth §b%name% §fhas just appeared!",
+            "§fCoordinate§8: §7%centerX%, %centerY%, %centerZ%.",
             "",
             "§8§m-+------------------------------+-"
     ),
@@ -83,7 +84,7 @@ public enum Message {
     EVENT_WIN(MessageType.CENTER,
             "§8§m-+------------------------------+-",
             "",
-            "§d%player% §fof faction §7%faction% §fhas just captured",
+            "§d%playerName% §fof faction §7%playerName% §fhas just captured",
             "§fthe koth, and §nwins§f the event!",
             "",
             "§8§m-+------------------------------+-"
@@ -92,8 +93,8 @@ public enum Message {
     EVENT_COOLDOWN(MessageType.CENTER,
             "§8§m-+------------------------------+-",
             "",
-            "§fThe koth §n%name%§f will appear in §d%capture%",
-            "§fCoordinate§8: §7%x%, %y%, %z%.",
+            "§fThe koth §n%name%§f will appear in §d%spawnFormat%",
+            "§fCoordinate§8: §7%centerX%, %centerY%, %centerZ%.",
             "",
             "§8§m-+------------------------------+-"
     ),
@@ -113,10 +114,10 @@ public enum Message {
     EVENT_PLAYER("Person"),
     EVENT_DISABLE("§cThe event is not enable."),
 
-    EVENT_CATCH(MessageType.ACTION, "§d%player% §fjust started capturing the koth §n%name%§f. §8(§7%x%, %y%, %z%§8)"),
-    EVENT_LOOSE(MessageType.ACTION, "§d%player% §fjust loose koth §n%name%§f. §8(§7%x%, %y%, %z%§8)"),
-    EVENT_TIMER(MessageType.ACTION, "§fAnother §b%capture% §fbefore §d%player% §fwins the koth §n%name%§e. §8(§7%x%, %y%, %z%§8)"),
-    EVENT_EVERYSECONDS(MessageType.ACTION, "§d%player% §7- §8[§f%classicProgress%§8] §7- §b%classicPercent%§f%"),
+    EVENT_CATCH(MessageType.ACTION, "§d%playerName% §fjust started capturing the koth §n%name%§f. §8(§7%centerX%, %centerY%, %centerZ%§8)"),
+    EVENT_LOOSE(MessageType.ACTION, "§d%playerName% §fjust loose koth §n%name%§f. §8(§7%centerX%, %centerY%, %centerZ%§8)"),
+    EVENT_TIMER(MessageType.ACTION, "§fAnother §b%captureFormat% §fbefore §d%playerName% §fwins the koth §n%name%§e. §8(§7%centerX%, %centerY%, %centerZ%§8)"),
+    EVENT_EVERYSECONDS(MessageType.ACTION, "§d%playerName% §7- §8[§f%classicProgress%§8] §7- §b%classicPercent%§f%"),
 
     ;
 

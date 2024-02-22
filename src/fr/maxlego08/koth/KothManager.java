@@ -146,7 +146,7 @@ public class KothManager extends ZUtils implements Savable {
         this.saveKoth(koth);
     }
 
-    private Optional<Koth> getKoth(String name) {
+    public Optional<Koth> getKoth(String name) {
         return this.koths.stream().filter(koth -> name != null && koth.getFileName().equalsIgnoreCase(name)).findFirst();
     }
 
@@ -211,5 +211,9 @@ public class KothManager extends ZUtils implements Savable {
         message(player, Message.MOVE_SUCCESS, "%name%", name);
 
         this.saveKoth(koth);
+    }
+
+    public List<Koth> getKoths() {
+        return this.koths;
     }
 }

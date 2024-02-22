@@ -9,6 +9,8 @@ public enum Plugins {
 	CITIZENS("Citizens"),
 	TRANSLATIONAPI("TranslationAPI"),
 	ZTRANSLATOR("zTranslator"),
+
+	ZSCHEDULERS("zSchedulers"),
 	
 	;
 

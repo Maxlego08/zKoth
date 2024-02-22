@@ -7,10 +7,12 @@ import fr.maxlego08.koth.hook.scoreboard.DefaultHook;
 import fr.maxlego08.koth.placeholder.LocalPlaceholder;
 import fr.maxlego08.koth.save.Config;
 import fr.maxlego08.koth.save.MessageLoader;
+import fr.maxlego08.koth.scheduler.ZkothImplementation;
 import fr.maxlego08.koth.scoreboard.ScoreBoardManager;
 import fr.maxlego08.koth.storage.StorageManager;
 import fr.maxlego08.koth.zcore.ZPlugin;
 import fr.maxlego08.koth.zcore.logger.Logger;
+import fr.maxlego08.koth.zcore.utils.plugins.Plugins;
 
 /**
  * System to create your plugins very simply Projet:
@@ -56,6 +58,12 @@ public class KothPlugin extends ZPlugin {
             }
         }
         this.scoreBoardManager.setScoreboard(this.kothScoreboard);
+
+        if (this.isEnable(Plugins.ZSCHEDULERS)) {
+            Logger.info("Register zScheduler implementation", Logger.LogType.INFO);
+            ZkothImplementation implementation = new ZkothImplementation(this);
+            implementation.register();
+        }
 
         this.postEnable();
     }

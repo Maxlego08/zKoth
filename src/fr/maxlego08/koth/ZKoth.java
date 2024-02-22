@@ -1,6 +1,7 @@
 package fr.maxlego08.koth;
 
 import fr.maxlego08.koth.api.Koth;
+import fr.maxlego08.koth.api.KothType;
 import fr.maxlego08.koth.zcore.utils.Cuboid;
 import org.bukkit.Location;
 
@@ -10,6 +11,7 @@ import java.util.List;
 public class ZKoth implements Koth {
 
     private final String fileName;
+    private final KothType kothType;
     private String name;
     private int captureSeconds;
     private Location minLocation;
@@ -17,8 +19,9 @@ public class ZKoth implements Koth {
     private List<String> startCommands = new ArrayList<>();
     private List<String> endCommands = new ArrayList<>();
 
-    public ZKoth(String fileName, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands) {
+    public ZKoth(String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands) {
         this.fileName = fileName;
+        this.kothType = kothType;
         this.name = name;
         this.captureSeconds = captureSeconds;
         this.minLocation = minLocation;
@@ -33,8 +36,18 @@ public class ZKoth implements Koth {
     }
 
     @Override
+    public KothType getKothType() {
+        return this.kothType;
+    }
+
+    @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -75,17 +88,12 @@ public class ZKoth implements Koth {
     }
 
     @Override
-    public void setName(String name) {
-        this.name = name;
+    public int getCaptureSeconds() {
+        return captureSeconds;
     }
 
     @Override
     public void setCaptureSeconds(int captureSeconds) {
         this.captureSeconds = captureSeconds;
-    }
-
-    @Override
-    public int getCaptureSeconds() {
-        return captureSeconds;
     }
 }

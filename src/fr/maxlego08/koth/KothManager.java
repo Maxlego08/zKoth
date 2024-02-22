@@ -1,6 +1,7 @@
 package fr.maxlego08.koth;
 
 import fr.maxlego08.koth.api.Koth;
+import fr.maxlego08.koth.api.KothType;
 import fr.maxlego08.koth.api.events.KothCreateEvent;
 import fr.maxlego08.koth.loader.KothLoader;
 import fr.maxlego08.koth.zcore.enums.Message;
@@ -93,7 +94,7 @@ public class KothManager extends ZUtils implements Savable {
     }
 
 
-    public void createKoth(Player player, String name, Location minLocation, Location maxLocation, int captureSeconds) {
+    public void createKoth(Player player, String name, Location minLocation, Location maxLocation, int capture, KothType kothType) {
 
         Optional<Koth> optional = getKoth(name);
         if (optional.isPresent()) {
@@ -108,7 +109,7 @@ public class KothManager extends ZUtils implements Savable {
         }
 
         String fileName = name.replace(" ", "_");
-        Koth koth = new ZKoth(fileName, name, captureSeconds, minLocation, maxLocation, new ArrayList<>(), new ArrayList<>());
+        Koth koth = new ZKoth(fileName, kothType, name, capture, minLocation, maxLocation, new ArrayList<>(), new ArrayList<>());
 
         KothCreateEvent event = new KothCreateEvent(koth);
         event.call();

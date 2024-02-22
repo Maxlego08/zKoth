@@ -2,6 +2,7 @@ package fr.maxlego08.koth.loader;
 
 import fr.maxlego08.koth.ZKoth;
 import fr.maxlego08.koth.api.Koth;
+import fr.maxlego08.koth.api.KothType;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
 import fr.maxlego08.koth.zcore.utils.loader.Loader;
 import org.bukkit.Location;
@@ -18,6 +19,7 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
     public Koth load(YamlConfiguration configuration, String path, File file) {
 
         String fileName = getFileNameWithoutExtension(file);
+        KothType kothType = KothType.valueOf(configuration.getString("type", KothType.CAPTURE.name()).toUpperCase());
         String name = configuration.getString("name");
         int captureSeconds = configuration.getInt("capture");
         List<String> startCommands = configuration.getStringList("startCommands");
@@ -25,12 +27,13 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
         Location minLocation = locationLoader.load(configuration, "minLocation.", file);
         Location manLocation = locationLoader.load(configuration, "maxLocation.", file);
 
-        return new ZKoth(fileName, name, captureSeconds, minLocation, manLocation, startCommands, endCommands);
+        return new ZKoth(fileName, kothType, name, captureSeconds, minLocation, manLocation, startCommands, endCommands);
     }
 
     @Override
     public void save(Koth object, YamlConfiguration configuration, String path) {
 
+        configuration.set("type", object.getKothType().name());
         configuration.set("name", object.getName());
         configuration.set("capture", object.getCaptureSeconds());
         configuration.set("startCommands", object.getStartCommands());

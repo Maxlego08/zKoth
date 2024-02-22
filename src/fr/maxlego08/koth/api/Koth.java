@@ -9,6 +9,8 @@ public interface Koth {
 
     String getFileName();
 
+    KothType getKothType();
+
     String getName();
 
     void setName(String name);

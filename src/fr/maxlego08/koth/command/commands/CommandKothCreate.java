@@ -2,13 +2,16 @@ package fr.maxlego08.koth.command.commands;
 
 import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.Selection;
+import fr.maxlego08.koth.api.KothType;
 import fr.maxlego08.koth.command.VCommand;
 import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.enums.Permission;
 import fr.maxlego08.koth.zcore.utils.commands.CommandType;
 import org.bukkit.Location;
 
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class CommandKothCreate extends VCommand {
 
@@ -19,6 +22,7 @@ public class CommandKothCreate extends VCommand {
         this.setDescription(Message.DESCRIPTION_CREATE);
         this.setConsoleCanUse(false);
         this.addRequireArg("name");
+        this.addOptionalArg("type", (a, b) -> Arrays.stream(KothType.values()).map(e -> e.name().toLowerCase()).collect(Collectors.toList()));
         this.addOptionalArg("capture/score");
     }
 
@@ -26,7 +30,8 @@ public class CommandKothCreate extends VCommand {
     protected CommandType perform(KothPlugin plugin) {
 
         String name = argAsString(0);
-        int captureSeconds = argAsInteger(1, 30);
+        KothType kothType = KothType.valueOf(argAsString(1, KothType.SCORE.name()).toUpperCase());
+        int capture = argAsInteger(2, 30);
 
         Optional<Selection> optional = this.manager.getSelection(this.player.getUniqueId());
 
@@ -53,7 +58,7 @@ public class CommandKothCreate extends VCommand {
 
         Location minLocation = selection.getRightLocation();
         Location maxLocation = selection.getLeftLocation();
-        this.manager.createKoth(this.player, name, minLocation, maxLocation, captureSeconds);
+        this.manager.createKoth(this.player, name, minLocation, maxLocation, capture, kothType);
 
         return CommandType.SUCCESS;
     }

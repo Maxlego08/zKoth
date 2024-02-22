@@ -22,13 +22,35 @@
 # /zkoth loot <koth name> [<page>] - zkoth.loot - Change loot for a koth
 #
 # Placeholders:
-#
+# %zkoth_world% - Current koth world
+# %zkoth_name% - Current koth name
+# %zkoth_min_x% - Current koth min X
+# %zkoth_min_y% - Current koth min Y
+# %zkoth_min_z% - Current koth min Z
+# %zkoth_max_x% - Current koth max X
+# %zkoth_max_y% - Current koth max Y
+# %zkoth_max_z% - Current koth max Z
+# %zkoth_center_x% - Current koth center X
+# %zkoth_center_y% - Current koth center Y
+# %zkoth_center_z% - Current koth center Z
+# %zkoth_spawn_seconds% - Current koth spawn seconds
+# %zkoth_spawn_format% - Current koth spawn seconds formatted
+# %zkoth_capture_seconds% - Current koth capture seconds
+# %zkoth_capture_format% - Current koth capture seconds formatted
+# %zkoth_player_name% - Current koth capture player name
+# %zkoth_team_name% - Current koth capture player team name
 #
 # Supported Scoreboard Plugin:
 # - FeatherBoard
 # - SternalBoard
 # - Tab
 # - TitleManager
+#
+# Supported Teams Plugin:
+# - Lands
+# - HuskTown
+# - SuperiorSkyblock2
+# - BetterTeams
 #
 #########################################################################################################
 
@@ -71,6 +93,8 @@ displayMessageKothCap:
 noPlayer: 'X'
 
 noFaction: 'X'
+
+noKoth: 'X'
 
 schedulerMillisecond: 1000
 

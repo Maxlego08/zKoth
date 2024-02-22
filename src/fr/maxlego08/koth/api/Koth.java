@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public interface Koth {
 
@@ -83,4 +84,8 @@ public interface Koth {
     List<ItemStack> getRandomItemStacks();
 
     int getRandomItemStack();
+
+    AtomicInteger getRemainingSeconds();
+
+    Player getCurrentPlayer();
 }

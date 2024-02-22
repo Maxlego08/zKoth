@@ -18,6 +18,7 @@ public class Config {
 	public static List<Integer> displayMessageKothCap = Arrays.asList(300, 120, 60, 30, 10, 5, 4, 3, 2, 1);
     public static String noPlayer = "X";
     public static String noFaction = "X";
+    public static String noKoth = "X";
 	public static int removeChestSec = 120;
 
     /**
@@ -59,6 +60,7 @@ public class Config {
 		displayMessageKothCap = configuration.getIntegerList("displayMessageKothCap");
 		noPlayer = configuration.getString("noPlayer", "X");
 		noFaction = configuration.getString("noFaction", "X");
+		noFaction = configuration.getString("noKoth", "X");
 		schedulerMillisecond = configuration.getLong("schedulerMillisecond", 1000);
 		removeChestSec = configuration.getInt("removeChestSec", 120);
 	}

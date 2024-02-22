@@ -73,6 +73,9 @@ public class KothPlugin extends ZPlugin {
             this.kothHologram = new DecentHologram();
         }
 
+        KothPlaceholder kothPlaceholder = new KothPlaceholder(this.kothManager);
+        kothPlaceholder.register();
+
         this.postEnable();
     }
 

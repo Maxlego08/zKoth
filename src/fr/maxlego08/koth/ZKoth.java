@@ -704,7 +704,7 @@ public class ZKoth extends ZUtils implements Koth {
         if (string == null) return null;
 
         string = string.replace("%playerName%", this.currentPlayer != null ? this.currentPlayer.getName() : Config.noPlayer);
-        string = string.replace("%teamName%", this.currentPlayer != null ? this.currentPlayer.getName() : Config.noPlayer);
+        string = string.replace("%teamName%", this.currentPlayer != null ? this.kothTeam.getFactionTag(this.currentPlayer) : Config.noFaction);
 
         int seconds = this.remainingSeconds == null ? this.captureSeconds : this.remainingSeconds.get();
         string = string.replace("%captureFormat%", TimerBuilder.getStringTime(seconds));
@@ -782,5 +782,15 @@ public class ZKoth extends ZUtils implements Koth {
     @Override
     public int getRandomItemStack() {
         return this.randomItemStacks;
+    }
+
+    @Override
+    public AtomicInteger getRemainingSeconds() {
+        return this.remainingSeconds;
+    }
+
+    @Override
+    public Player getCurrentPlayer() {
+        return this.currentPlayer;
     }
 }

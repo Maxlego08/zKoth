@@ -38,6 +38,8 @@ public class KothPlugin extends ZPlugin {
 
         this.preEnable();
 
+        this.saveResource("koth-example.yml", true);
+
         this.storageManager = new StorageManager(this);
         this.kothManager = new KothManager(this);
 

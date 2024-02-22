@@ -1,7 +1,9 @@
 package fr.maxlego08.koth;
 
+import fr.maxlego08.koth.api.KothHologram;
 import fr.maxlego08.koth.api.KothScoreboard;
 import fr.maxlego08.koth.command.commands.CommandKoth;
+import fr.maxlego08.koth.hologram.DecentHologram;
 import fr.maxlego08.koth.hook.ScoreboardPlugin;
 import fr.maxlego08.koth.hook.scoreboard.DefaultHook;
 import fr.maxlego08.koth.placeholder.LocalPlaceholder;
@@ -26,6 +28,7 @@ public class KothPlugin extends ZPlugin {
     private KothManager kothManager;
     private StorageManager storageManager;
     private KothScoreboard kothScoreboard = new DefaultHook();
+    private KothHologram kothHologram;
 
     @Override
     public void onEnable() {
@@ -65,6 +68,11 @@ public class KothPlugin extends ZPlugin {
             implementation.register();
         }
 
+        if (this.isEnable(Plugins.DH)) {
+            Logger.info("Register DecentHologram implementation", Logger.LogType.INFO);
+            this.kothHologram = new DecentHologram();
+        }
+
         this.postEnable();
     }
 
@@ -73,6 +81,8 @@ public class KothPlugin extends ZPlugin {
 
         this.preDisable();
 
+        this.kothHologram.onDisable();
+        this.scoreBoardManager.setRunning(false);
         this.saveFiles();
 
         this.postDisable();
@@ -92,5 +102,9 @@ public class KothPlugin extends ZPlugin {
 
     public ScoreBoardManager getScoreBoardManager() {
         return scoreBoardManager;
+    }
+
+    public KothHologram getKothHologram() {
+        return kothHologram;
     }
 }

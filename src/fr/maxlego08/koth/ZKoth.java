@@ -11,6 +11,7 @@ import fr.maxlego08.koth.api.events.KothSpawnEvent;
 import fr.maxlego08.koth.api.events.KothStartEvent;
 import fr.maxlego08.koth.api.events.KothStopEvent;
 import fr.maxlego08.koth.api.events.KothWinEvent;
+import fr.maxlego08.koth.api.utils.HologramConfig;
 import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
 import fr.maxlego08.koth.hook.teams.NoneHook;
 import fr.maxlego08.koth.save.Config;
@@ -54,6 +55,7 @@ public class ZKoth extends ZUtils implements Koth {
     private final boolean enableStartCapMessage;
     private final boolean enableLooseCapMessage;
     private final boolean enableEverySecondsCapMessage;
+    private final HologramConfig hologramConfig;
     private String name;
     private int captureSeconds;
     private Location minLocation;
@@ -67,7 +69,7 @@ public class ZKoth extends ZUtils implements Koth {
     private TimerTask timerTask;
     private TimerTask timerTaskStop;
 
-    public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands, ScoreboardConfiguration cooldownScoreboard, ScoreboardConfiguration startScoreboard, int cooldownStart, int stopAfterSeconds, boolean enableStartCapMessage, boolean enableLooseCapMessage, boolean enableEverySecondsCapMessage) {
+    public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands, ScoreboardConfiguration cooldownScoreboard, ScoreboardConfiguration startScoreboard, int cooldownStart, int stopAfterSeconds, boolean enableStartCapMessage, boolean enableLooseCapMessage, boolean enableEverySecondsCapMessage, HologramConfig hologramConfig) {
         this.plugin = plugin;
         this.fileName = fileName;
         this.kothType = kothType;
@@ -84,6 +86,7 @@ public class ZKoth extends ZUtils implements Koth {
         this.enableStartCapMessage = enableStartCapMessage;
         this.enableLooseCapMessage = enableLooseCapMessage;
         this.enableEverySecondsCapMessage = enableEverySecondsCapMessage;
+        this.hologramConfig = hologramConfig;
     }
 
     public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation) {
@@ -101,6 +104,7 @@ public class ZKoth extends ZUtils implements Koth {
         this.enableStartCapMessage = true;
         this.enableLooseCapMessage = true;
         this.enableEverySecondsCapMessage = false;
+        this.hologramConfig = new HologramConfig(false, new ArrayList<>(), getCenter());
     }
 
     @Override
@@ -250,7 +254,7 @@ public class ZKoth extends ZUtils implements Koth {
         // this.resetBlocks();
         if (this.timerTaskStop != null) this.timerTaskStop.cancel();
 
-        // this.plugin.getHologram().end(this);
+        this.plugin.getKothHologram().end(this);
     }
 
     @Override
@@ -357,13 +361,13 @@ public class ZKoth extends ZUtils implements Koth {
         this.timerTaskStop = new TimerTask() {
             @Override
             public void run() {
-                // plugin.getHologram().end(koth);
+                // plugin.getKothHologram().end(koth);
                 Bukkit.getScheduler().runTask(plugin, () -> stop(Bukkit.getConsoleSender()));
             }
         };
         timer.schedule(this.timerTaskStop, this.stopAfterSeconds * 1000L);
 
-        // this.plugin.getHologram().start(this);
+        this.plugin.getKothHologram().start(this);
 
         /*if (Config.discordWebhookConfig != null) {
             Config.discordWebhookConfig.send(this.plugin, this);
@@ -389,7 +393,7 @@ public class ZKoth extends ZUtils implements Koth {
 
             this.currentPlayer = player;
             this.startCap(player);
-            // this.plugin.getHologram().update(this);
+            this.plugin.getKothHologram().update(this);
 
         } else if (this.currentPlayer != null && !cuboid.contains(this.currentPlayer.getLocation())) {
 
@@ -398,7 +402,7 @@ public class ZKoth extends ZUtils implements Koth {
 
             if (event.isCancelled()) return;
 
-            // this.plugin.getHologram().update(this);
+            this.plugin.getKothHologram().update(this);
             broadcast(Message.EVENT_LOOSE);
 
             if (this.timerTask != null) {
@@ -439,7 +443,7 @@ public class ZKoth extends ZUtils implements Koth {
         Cuboid cuboid = getCuboid();
 
         // this.changeBlocks(Config.onePersonneCapturingMaterial, false);
-        // this.plugin.getHologram().update(this);
+        this.plugin.getKothHologram().update(this);
 
         scheduleFix(this.plugin, 0, 1000, (task, isCancelled) -> {
 
@@ -460,7 +464,7 @@ public class ZKoth extends ZUtils implements Koth {
             if (this.currentPlayer != null) {
                 if (!this.currentPlayer.isValid() || !this.currentPlayer.isOnline() || !cuboid.contains(this.currentPlayer.getLocation())) {
                     this.currentPlayer = null;
-                    // this.plugin.getHologram().update(this);
+                    this.plugin.getKothHologram().update(this);
                 }
             }
 
@@ -486,7 +490,7 @@ public class ZKoth extends ZUtils implements Koth {
                     broadcast(Message.EVENT_LOOSE);
                 }
 
-                // this.plugin.getHologram().update(this);
+                this.plugin.getKothHologram().update(this);
                 return;
 
             }
@@ -517,7 +521,7 @@ public class ZKoth extends ZUtils implements Koth {
                         break;
                 }
 
-                // this.plugin.getHologram().update(this);
+                this.plugin.getKothHologram().update(this);
             }
         });
     }
@@ -529,7 +533,7 @@ public class ZKoth extends ZUtils implements Koth {
 
         if (kothWinEvent.isCancelled()) return;
 
-        // this.plugin.getHologram().end(this);
+        this.plugin.getKothHologram().end(this);
         task.cancel();
         broadcast(Message.EVENT_WIN);
 
@@ -661,7 +665,8 @@ public class ZKoth extends ZUtils implements Koth {
         }
     }
 
-    private String replaceMessage(String string) {
+    @Override
+    public String replaceMessage(String string) {
 
         string = string.replace("%playerName%", this.currentPlayer != null ? this.currentPlayer.getName() : Config.noPlayer);
         string = string.replace("%teamName%", this.currentPlayer != null ? this.currentPlayer.getName() : Config.noPlayer);
@@ -701,5 +706,10 @@ public class ZKoth extends ZUtils implements Koth {
             ScoreboardConfiguration scoreboard = (this.kothStatus == KothStatus.COOLDOWN) ? this.cooldownScoreboard : this.startScoreboard;
             return scoreboard.getLines().stream().map(e -> color(papi(replaceMessage(e), player))).collect(Collectors.toList());
         };
+    }
+
+    @Override
+    public HologramConfig getHologramConfig() {
+        return this.hologramConfig;
     }
 }

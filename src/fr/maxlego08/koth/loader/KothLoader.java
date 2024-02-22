@@ -4,6 +4,7 @@ import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.ZKoth;
 import fr.maxlego08.koth.api.Koth;
 import fr.maxlego08.koth.api.KothType;
+import fr.maxlego08.koth.api.utils.HologramConfig;
 import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
 import fr.maxlego08.koth.zcore.utils.loader.Loader;
@@ -18,6 +19,7 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
     private final KothPlugin plugin;
     private final Loader<Location> locationLoader = new LocationLoader();
     private final Loader<ScoreboardConfiguration> scoreboardLoaderLoader = new ScoreboardLoader();
+    private final Loader<HologramConfig> hologramConfigLoader = new HologramLoader();
 
     public KothLoader(KothPlugin plugin) {
         this.plugin = plugin;
@@ -41,9 +43,10 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
         Location maxLocation = locationLoader.load(configuration, "maxLocation.", file);
         ScoreboardConfiguration cooldownScoreboard = scoreboardLoaderLoader.load(configuration, "scoreboard.cooldown.", file);
         ScoreboardConfiguration startScoreboard = scoreboardLoaderLoader.load(configuration, "scoreboard.start.", file);
+        HologramConfig hologramConfig = hologramConfigLoader.load(configuration, "hologram.", file);
 
         return new ZKoth(this.plugin, fileName, kothType, name, captureSeconds, minLocation, maxLocation, startCommands, endCommands, cooldownScoreboard,
-                startScoreboard, cooldownStart, stopAfterSeconds, enableStartCapMessage, enableLooseCapMessage, enableEverySecondsCapMessage);
+                startScoreboard, cooldownStart, stopAfterSeconds, enableStartCapMessage, enableLooseCapMessage, enableEverySecondsCapMessage, hologramConfig);
     }
 
     @Override
@@ -63,6 +66,7 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
         locationLoader.save(koth.getMaxLocation(), configuration, "maxLocation.");
         scoreboardLoaderLoader.save(koth.getCooldownScoreboard(), configuration, "scoreboard.cooldown.");
         scoreboardLoaderLoader.save(koth.getStartScoreboard(), configuration, "scoreboard.start.");
+        hologramConfigLoader.save(koth.getHologramConfig(), configuration, "hologram.");
 
     }
 }

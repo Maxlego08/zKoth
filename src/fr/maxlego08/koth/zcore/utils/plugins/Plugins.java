@@ -9,7 +9,7 @@ public enum Plugins {
 	CITIZENS("Citizens"),
 	TRANSLATIONAPI("TranslationAPI"),
 	ZTRANSLATOR("zTranslator"),
-
+	DH("DecentHolograms"),
 	ZSCHEDULERS("zSchedulers"),
 	
 	;

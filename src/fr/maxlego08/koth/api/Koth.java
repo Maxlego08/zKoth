@@ -1,6 +1,7 @@
 package fr.maxlego08.koth.api;
 
 import fr.maxlego08.koth.KothPlugin;
+import fr.maxlego08.koth.api.utils.HologramConfig;
 import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
 import fr.maxlego08.koth.zcore.utils.Cuboid;
 import fr.maxlego08.koth.zcore.utils.interfaces.CollectionConsumer;
@@ -65,4 +66,8 @@ public interface Koth {
     boolean isEnableEverySecondsCapMessage();
 
     CollectionConsumer<Player> onScoreboard();
+
+    HologramConfig getHologramConfig();
+
+    String replaceMessage(String string);
 }

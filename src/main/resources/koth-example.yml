@@ -51,15 +51,15 @@ endCommands: []
 
 minLocation:
   world: world
-  x: 81
-  y: 121
-  z: 12
+  x: 0
+  y: 0
+  z: 0
 
 manLocation:
   world: world
-  x: 77
-  y: 123
-  z: 8
+  x: 0
+  y: 0
+  z: 0
 
 scoreboard:
   cooldown:
@@ -87,3 +87,14 @@ scoreboard:
       - "#16db47Time left:"
       - " #636363◊ #ffffff%captureFormat%"
       - "&r"
+
+hologram:
+  enable: false
+  lines:
+    - "&fCoordinate: &b%centerX% %centerY% %centerZ%"
+    - ""
+    - "&fTimer: &b%captureFormat%"
+  world: world
+  x: 0
+  y: 0
+  z: 0

@@ -1,9 +1,11 @@
 package fr.maxlego08.koth;
 
+import fr.maxlego08.koth.api.Koth;
 import fr.maxlego08.koth.board.Board;
 import fr.maxlego08.koth.board.ColorBoard;
 import fr.maxlego08.koth.board.EmptyBoard;
 import fr.maxlego08.koth.listener.ListenerAdapter;
+import fr.maxlego08.koth.save.Config;
 import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.utils.nms.NMSUtils;
 import org.bukkit.Bukkit;
@@ -12,11 +14,13 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Shulker;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.List;
 import java.util.Optional;
 
 public class KothListener extends ListenerAdapter {
@@ -24,6 +28,7 @@ public class KothListener extends ListenerAdapter {
     private final KothPlugin plugin;
     private final KothManager manager;
     private final Board board = NMSUtils.isHexColor() ? new ColorBoard() : new EmptyBoard();
+    private long playerMoveEventCooldown = 0;
 
     public KothListener(KothPlugin plugin, KothManager manager) {
         this.plugin = plugin;
@@ -81,6 +86,17 @@ public class KothListener extends ListenerAdapter {
             if (selection.isValid()) {
                 message(player, selection.isCorrect() ? Message.AXE_VALID : Message.AXE_ERROR);
             }
+        }
+    }
+
+    @Override
+    protected void onMove(PlayerMoveEvent event, Player player) {
+
+        if (System.currentTimeMillis() > this.playerMoveEventCooldown) {
+
+            this.playerMoveEventCooldown = System.currentTimeMillis() + Config.playerMoveEventCooldown;
+            List<Koth> koths = this.manager.getActiveKoths();
+            koths.forEach(koth -> koth.playerMove(player, this.manager.getKothTeam()));
         }
     }
 }

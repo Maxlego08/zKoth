@@ -1,5 +1,6 @@
 package fr.maxlego08.koth.loader;
 
+import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.ZKoth;
 import fr.maxlego08.koth.api.Koth;
 import fr.maxlego08.koth.api.KothType;
@@ -14,8 +15,13 @@ import java.util.List;
 
 public class KothLoader extends ZUtils implements Loader<Koth> {
 
+    private final KothPlugin plugin;
     private final Loader<Location> locationLoader = new LocationLoader();
     private final Loader<ScoreboardConfiguration> scoreboardLoaderLoader = new ScoreboardLoader();
+
+    public KothLoader(KothPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public Koth load(YamlConfiguration configuration, String path, File file) {
@@ -24,6 +30,11 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
         KothType kothType = KothType.valueOf(configuration.getString("type", KothType.CAPTURE.name()).toUpperCase());
         String name = configuration.getString("name");
         int captureSeconds = configuration.getInt("capture");
+        int cooldownStart = configuration.getInt("cooldownStart");
+        int stopAfterSeconds = configuration.getInt("stopAfterSeconds");
+        boolean enableStartCapMessage = configuration.getBoolean("enableStartCapMessage", true);
+        boolean enableLooseCapMessage = configuration.getBoolean("enableLooseCapMessage", true);
+        boolean enableEverySecondsCapMessage = configuration.getBoolean("enableEverySecondsCapMessage", false);
         List<String> startCommands = configuration.getStringList("startCommands");
         List<String> endCommands = configuration.getStringList("endCommands");
         Location minLocation = locationLoader.load(configuration, "minLocation.", file);
@@ -31,7 +42,8 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
         ScoreboardConfiguration cooldownScoreboard = scoreboardLoaderLoader.load(configuration, "scoreboard.cooldown.", file);
         ScoreboardConfiguration startScoreboard = scoreboardLoaderLoader.load(configuration, "scoreboard.start.", file);
 
-        return new ZKoth(fileName, kothType, name, captureSeconds, minLocation, manLocation, startCommands, endCommands, cooldownScoreboard, startScoreboard);
+        return new ZKoth(this.plugin, fileName, kothType, name, captureSeconds, minLocation, manLocation, startCommands, endCommands, cooldownScoreboard,
+                startScoreboard, cooldownStart, stopAfterSeconds, enableStartCapMessage, enableLooseCapMessage, enableEverySecondsCapMessage);
     }
 
     @Override
@@ -40,8 +52,13 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
         configuration.set("type", koth.getKothType().name());
         configuration.set("name", koth.getName());
         configuration.set("capture", koth.getCaptureSeconds());
+        configuration.set("cooldownStart", koth.getCooldownStart());
+        configuration.set("stopAfterSeconds", koth.getStopAfterSeconds());
         configuration.set("startCommands", koth.getStartCommands());
         configuration.set("endCommands", koth.getEndCommands());
+        configuration.set("enableStartCapMessage", koth.isEnableStartCapMessage());
+        configuration.set("enableLooseCapMessage", koth.isEnableLooseCapMessage());
+        configuration.set("enableEverySecondsCapMessage", koth.isEnableEverySecondsCapMessage());
         locationLoader.save(koth.getMinLocation(), configuration, "minLocation.");
         locationLoader.save(koth.getMaxLocation(), configuration, "manLocation.");
         scoreboardLoaderLoader.save(koth.getCooldownScoreboard(), configuration, "scoreboard.cooldown.");

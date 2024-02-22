@@ -5,6 +5,7 @@ import fr.maxlego08.koth.command.commands.CommandKoth;
 import fr.maxlego08.koth.hook.ScoreboardPlugin;
 import fr.maxlego08.koth.hook.scoreboard.DefaultHook;
 import fr.maxlego08.koth.placeholder.LocalPlaceholder;
+import fr.maxlego08.koth.save.Config;
 import fr.maxlego08.koth.save.MessageLoader;
 import fr.maxlego08.koth.storage.StorageManager;
 import fr.maxlego08.koth.zcore.ZPlugin;
@@ -42,6 +43,7 @@ public class KothPlugin extends ZPlugin {
 
         this.addListener(new KothListener(this, this.kothManager));
 
+        Config.getInstance().load(this);
         this.loadFiles();
 
         for (ScoreboardPlugin value : ScoreboardPlugin.values()) {

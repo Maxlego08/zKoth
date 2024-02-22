@@ -1,14 +1,23 @@
 package fr.maxlego08.koth.save;
 
+import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.zcore.utils.storage.Persist;
 import fr.maxlego08.koth.zcore.utils.storage.Savable;
+import org.bukkit.configuration.file.YamlConfiguration;
 
-public class Config implements Savable {
+import java.util.Arrays;
+import java.util.List;
+
+public class Config {
 
 	public static boolean enableDebug = true;
 	public static boolean enableDebugTime = false;
-	
-	/**
+	public static long playerMoveEventCooldown = 50;
+	public static List<Integer> displayMessageCooldown = Arrays.asList(300, 120, 60, 30, 10, 5, 4, 3, 2, 1);
+	public static List<Integer> displayMessageKothCap = Arrays.asList(300, 120, 60, 30, 10, 5, 4, 3, 2, 1);
+    public static String noPlayer = "X";
+
+    /**
 	 * static Singleton instance.
 	 */
 	private static volatile Config instance;
@@ -35,12 +44,17 @@ public class Config implements Savable {
 		return instance;
 	}
 
-	public void save(Persist persist) {
-		persist.save(getInstance());
-	}
+	public void load(KothPlugin plugin) {
 
-	public void load(Persist persist) {
-		persist.loadOrSaveDefault(getInstance(), Config.class);
+		YamlConfiguration configuration = (YamlConfiguration) plugin.getConfig();
+
+		enableDebug = configuration.getBoolean("enableDebug", false);
+		enableDebugTime = configuration.getBoolean("enableDebugTime", false);
+		playerMoveEventCooldown = configuration.getInt("playerMoveEventCooldown", 50);
+
+		displayMessageCooldown = configuration.getIntegerList("displayMessageCooldown");
+		displayMessageKothCap = configuration.getIntegerList("displayMessageKothCap");
+		noPlayer = configuration.getString("noPlayer", "X");
 	}
 
 }

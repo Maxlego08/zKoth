@@ -70,6 +70,53 @@ public enum Message {
     KOTH_SIZE("§cYour koth is too small, you can't create one that small. Then you will come on discord for support when the problem comes from you."),
     DOESNT_EXIST("§cThe koth §f%name% §cdoesnt exists."),
 
+    EVENT_START(MessageType.CENTER,
+            "§8§m-+------------------------------+-",
+            "",
+            "§fThe koth §b%name% §has just appeared!",
+            "§fCoordinate§8: §7%x%, %y%, %z%.",
+            "",
+            "§8§m-+------------------------------+-"
+    ),
+
+    EVENT_WIN(MessageType.CENTER,
+            "§8§m-+------------------------------+-",
+            "",
+            "§d%player% §fof faction §7%faction% §fhas just captured",
+            "§fthe koth, and §nwins§f the event!",
+            "",
+            "§8§m-+------------------------------+-"
+    ),
+
+    EVENT_COOLDOWN(MessageType.CENTER,
+            "§8§m-+------------------------------+-",
+            "",
+            "§fThe koth §n%name%§f will appear in §d%capture%",
+            "§fCoordinate§8: §7%x%, %y%, %z%.",
+            "",
+            "§8§m-+------------------------------+-"
+    ),
+
+    EVENT_STOP(MessageType.CENTER,
+            "§8§m-+------------------------------+-",
+            "",
+            "§fkoth §n%name%§f has just been stopped.",
+            "",
+            "§8§m-+------------------------------+-"),
+
+    SPAWN_ERROR("§cImpossible to spawn the koth, positions is wrong. You have to do §b/zkoth move §8<§aname§8>§c."),
+    SPAWN_COOLDOWN("§cThe countdown to the appearance of the koth is already underway"),
+    SPAWN_ALREADY("§cThe koth is running."),
+
+    EVENT_FACION("No faction"),
+    EVENT_PLAYER("Person"),
+    EVENT_DISABLE("§cThe event is not enable."),
+
+    EVENT_CATCH(MessageType.ACTION, "§d%player% §fjust started capturing the koth §n%name%§f. §8(§7%x%, %y%, %z%§8)"),
+    EVENT_LOOSE(MessageType.ACTION, "§d%player% §fjust loose koth §n%name%§f. §8(§7%x%, %y%, %z%§8)"),
+    EVENT_TIMER(MessageType.ACTION, "§fAnother §b%capture% §fbefore §d%player% §fwins the koth §n%name%§e. §8(§7%x%, %y%, %z%§8)"),
+    EVENT_EVERYSECONDS(MessageType.ACTION, "§d%player% §7- §8[§f%classicProgress%§8] §7- §b%classicPercent%§f%"),
+
     ;
 
 

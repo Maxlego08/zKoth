@@ -23,3 +23,41 @@
 # - TitleManager
 #
 #########################################################################################################
+
+# Displays more information in the console, if you have a problem please enable this option and send errors to support.
+enableDebug: false
+
+# Enables time debugs, is used to measure plugin performance
+enableDebugTime: false
+
+# Number of milliseconds between each PlayerMoveEvent action
+# Allows to cooldown the player not to overload the plugin
+playerMoveEventCooldown: 50
+
+# Display a message during koth cooldown
+displayMessageCooldown:
+  - 300
+  - 120
+  - 60
+  - 30
+  - 10
+  - 5
+  - 4
+  - 3
+  - 2
+  - 1
+
+# Display a message during koth cap
+displayMessageKothCap:
+  - 300
+  - 120
+  - 60
+  - 30
+  - 10
+  - 5
+  - 4
+  - 3
+  - 2
+  - 1
+
+noPlayer: 'X'

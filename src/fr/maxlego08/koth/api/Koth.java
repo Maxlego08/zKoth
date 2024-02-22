@@ -1,8 +1,11 @@
 package fr.maxlego08.koth.api;
 
+import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
 import fr.maxlego08.koth.zcore.utils.Cuboid;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -37,4 +40,23 @@ public interface Koth {
     ScoreboardConfiguration getCooldownScoreboard();
 
     ScoreboardConfiguration getStartScoreboard();
+
+    KothStatus getStatus();
+
+    void spawn(CommandSender sender, boolean now);
+
+    void spawn(boolean now);
+
+    void stop(CommandSender sender);
+
+    void playerMove(Player player, KothTeam kothTeam);
+
+    int getCooldownStart();
+
+    int getStopAfterSeconds();
+
+    boolean isEnableStartCapMessage();
+
+    boolean isEnableLooseCapMessage();
+    boolean isEnableEverySecondsCapMessage();
 }

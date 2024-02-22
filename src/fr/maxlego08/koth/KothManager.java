@@ -1,6 +1,7 @@
 package fr.maxlego08.koth;
 
 import fr.maxlego08.koth.api.Koth;
+import fr.maxlego08.koth.api.KothStatus;
 import fr.maxlego08.koth.api.KothTeam;
 import fr.maxlego08.koth.api.KothType;
 import fr.maxlego08.koth.api.events.KothCreateEvent;
@@ -28,10 +29,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class KothManager extends ZUtils implements Savable {
 
-    private final Loader<Koth> kothLoader = new KothLoader();
+    private final Loader<Koth> kothLoader;
     private final List<Koth> koths = new ArrayList<>();
     private final Map<UUID, Selection> selections = new HashMap<>();
     private final KothPlugin plugin;
@@ -40,6 +42,7 @@ public class KothManager extends ZUtils implements Savable {
 
     public KothManager(KothPlugin plugin) {
         this.plugin = plugin;
+        this.kothLoader = new KothLoader(plugin);
         this.folder = new File(plugin.getDataFolder(), "koths");
         if (!this.folder.exists()) this.folder.mkdir();
 
@@ -121,7 +124,7 @@ public class KothManager extends ZUtils implements Savable {
         }
 
         String fileName = name.replace(" ", "_");
-        Koth koth = new ZKoth(fileName, kothType, name, capture, minLocation, maxLocation);
+        Koth koth = new ZKoth(this.plugin, fileName, kothType, name, capture, minLocation, maxLocation);
 
         KothCreateEvent event = new KothCreateEvent(koth);
         event.call();
@@ -143,5 +146,13 @@ public class KothManager extends ZUtils implements Savable {
 
     public KothTeam getKothTeam() {
         return kothTeam;
+    }
+
+    public List<Koth> getActiveKoths() {
+        return koths.stream().filter(koth -> koth.getStatus() == KothStatus.START).collect(Collectors.toList());
+    }
+
+    public List<Koth> getEnableKoths() {
+        return koths.stream().filter(koth -> koth.getStatus() == KothStatus.COOLDOWN).collect(Collectors.toList());
     }
 }

@@ -4,8 +4,40 @@ name: test
 type: CAPTURE
 capture: 30
 
+cooldownStart: 300
+
+stopAfterSeconds: 3600
+
+enableStartCapMessage: true
+enableLooseCapMessage: true
+
+# Available placeholders:
+# - %name% - Koth name
+# - %world% - World name
+# - %minX% - Min location X
+# - %minY% - Min location Y
+# - %minZ% - Min location Z
+# - %maxX% - Max location X
+# - %maxY% - Max location Y
+# - %maxZ% - Max location Z
+# - %centerX% - Center location X
+# - %centerY% - Center location Y
+# - %centerZ% - Center location Z
 startCommands: []
 
+# Available placeholders:
+# - %name% - Koth name
+# - %world% - World name
+# - %minX% - Min location X
+# - %minY% - Min location Y
+# - %minZ% - Min location Z
+# - %maxX% - Max location X
+# - %maxY% - Max location Y
+# - %maxZ% - Max location Z
+# - %centerX% - Center location X
+# - %centerY% - Center location Y
+# - %centerZ% - Center location Z
+# - %playerName% - Current player name
 endCommands: []
 
 minLocation:

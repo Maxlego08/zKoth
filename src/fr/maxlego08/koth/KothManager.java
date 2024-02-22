@@ -243,14 +243,13 @@ public class KothManager extends ZUtils implements Savable {
 
     private void buildKothMessage(Player player, Koth koth) {
 
-        TextComponent component = buildTextComponent("§f§l» §7" + koth.getName() + " ");
+        TextComponent component = buildTextComponent("§7§l» §f" + koth.getName() + " ");
 
         Cuboid cuboid = koth.getCuboid();
         Location center = cuboid.getCenter();
         String location = center.getWorld().getName() + ", " + center.getBlockX() + ", " + center.getBlockY() + ", " + center.getBlockZ();
 
         setHoverMessage(component, "§7Location: §f" + location);
-        setClickAction(component, ClickEvent.Action.SUGGEST_COMMAND, "/zkoth info " + koth.getName());
 
         TextComponent spawn = buildTextComponent("§8(§aSpawn§8)");
         setClickAction(spawn, ClickEvent.Action.SUGGEST_COMMAND, "/zkoth spawn " + koth.getName());
@@ -272,4 +271,19 @@ public class KothManager extends ZUtils implements Savable {
 
     }
 
+    public void deleteKoth(CommandSender sender, String name) {
+
+        Optional<Koth> optional = getKoth(name);
+        if (!optional.isPresent()) {
+            message(sender, Message.DOESNT_EXIST, "%name%", name);
+            return;
+        }
+
+        Koth koth = optional.get();
+        koths.remove(koth);
+        message(sender, Message.DELETE_SUCCESS, "%name%", name);
+
+        File file = new File(folder, koth.getFileName() + ".yml");
+        file.delete();
+    }
 }

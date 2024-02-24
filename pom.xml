@@ -112,6 +112,10 @@
             <id>bg-repo</id>
             <url>https://repo.bg-software.com/repository/api/</url>
         </repository>
+        <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.org/repository/maven-public</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -224,6 +228,12 @@
             <version>4.1.4-STABLE</version>
             <systemPath>${basedir}/libs/SaberFactions.jar</systemPath>
             <scope>system</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
+            <artifactId>SimpleClans</artifactId>
+            <version>2.15.2</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

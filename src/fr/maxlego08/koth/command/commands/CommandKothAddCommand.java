@@ -24,7 +24,7 @@ public class CommandKothAddCommand extends VCommand {
     @Override
     protected CommandType perform(KothPlugin plugin) {
 
-        if (this.args.length < 2) return CommandType.SYNTAX_ERROR;
+        if (this.args.length < 3) return CommandType.SYNTAX_ERROR;
 
         String name = argAsString(0);
         String type = argAsString(1);
@@ -34,7 +34,7 @@ public class CommandKothAddCommand extends VCommand {
         }
 
         StringBuilder command = new StringBuilder();
-        for (int index = 2; index != this.args.length; index++) {
+        for (int index = 3; index != this.args.length; index++) {
             command.append(this.args[index]).append(" ");
         }
 

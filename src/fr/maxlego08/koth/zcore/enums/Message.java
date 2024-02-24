@@ -91,7 +91,7 @@ public enum Message {
     EVENT_WIN(MessageType.CENTER,
             "§8§m-+------------------------------+-",
             "",
-            "§d%playerName% §fof faction §7%playerName% §fhas just captured",
+            "§d%playerName% §fof faction §7%teamName% §fhas just captured",
             "§fthe koth, and §nwins§f the event!",
             "",
             "§8§m-+------------------------------+-"

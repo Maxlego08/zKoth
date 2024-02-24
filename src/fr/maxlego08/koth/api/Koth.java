@@ -88,4 +88,6 @@ public interface Koth {
     AtomicInteger getRemainingSeconds();
 
     Player getCurrentPlayer();
+
+    void updateDisplay();
 }

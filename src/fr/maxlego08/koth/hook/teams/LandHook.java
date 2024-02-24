@@ -24,7 +24,7 @@ public class LandHook implements KothTeam {
     }
 
     @Override
-    public String getFactionTag(Player player) {
+    public String getTeamName(Player player) {
         Optional<? extends Land> optional = getLandByPlayer(player);
         return optional.map(Land::getName).orElseGet(player::getName);
     }

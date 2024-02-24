@@ -209,5 +209,12 @@
             <version>2022.9</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.SaberLLC</groupId>
+            <artifactId>Saber-Factions</artifactId>
+            <version>4.1.4-STABLE</version>
+            <systemPath>${basedir}/libs/SaberFactions.jar</systemPath>
+            <scope>system</scope>
+        </dependency>
     </dependencies>
 </project>

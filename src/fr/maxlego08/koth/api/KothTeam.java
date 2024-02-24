@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface KothTeam extends Listener {
 
-    String getFactionTag(Player player);
+    String getTeamName(Player player);
 
     List<Player> getOnlinePlayer(Player player);
 

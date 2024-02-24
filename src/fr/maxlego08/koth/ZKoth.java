@@ -538,8 +538,8 @@ public class ZKoth extends ZUtils implements Koth {
 
             } else {
 
-                KothCapEvent capEvent = new KothCapEvent(this, player, this.remainingSeconds.get(), this.kothTeam.getFactionTag(player));
-                capEvent.callEvent();
+                KothCapEvent capEvent = new KothCapEvent(this, player, this.remainingSeconds.get(), this.kothTeam.getTeamName(player));
+                capEvent.call();
 
                 if (Config.displayMessageKothCap.contains(currentRemainingSeconds)) {
                     broadcast(Message.EVENT_TIMER);
@@ -704,7 +704,9 @@ public class ZKoth extends ZUtils implements Koth {
         if (string == null) return null;
 
         string = string.replace("%playerName%", this.currentPlayer != null ? this.currentPlayer.getName() : Config.noPlayer);
-        string = string.replace("%teamName%", this.currentPlayer != null ? this.kothTeam.getFactionTag(this.currentPlayer) : Config.noFaction);
+        string = string.replace("%teamName%", this.currentPlayer != null ? this.kothTeam.getTeamName(this.currentPlayer) : Config.noFaction);
+        string = string.replace("%teamId%", this.currentPlayer != null ? this.kothTeam.getTeamId(this.currentPlayer) : Config.noFaction);
+        string = string.replace("%teamLeader%", this.currentPlayer != null ? this.kothTeam.getTeamName(this.currentPlayer) : Config.noFaction);
 
         int seconds = this.remainingSeconds == null ? this.captureSeconds : this.remainingSeconds.get();
         string = string.replace("%captureFormat%", TimerBuilder.getStringTime(seconds));

@@ -4,6 +4,7 @@ import fr.maxlego08.koth.api.KothHologram;
 import fr.maxlego08.koth.api.KothScoreboard;
 import fr.maxlego08.koth.command.commands.CommandKoth;
 import fr.maxlego08.koth.hologram.DecentHologram;
+import fr.maxlego08.koth.hologram.EmptyHologram;
 import fr.maxlego08.koth.hook.ScoreboardPlugin;
 import fr.maxlego08.koth.hook.scoreboard.DefaultHook;
 import fr.maxlego08.koth.placeholder.LocalPlaceholder;
@@ -28,7 +29,7 @@ public class KothPlugin extends ZPlugin {
     private KothManager kothManager;
     private StorageManager storageManager;
     private KothScoreboard kothScoreboard = new DefaultHook();
-    private KothHologram kothHologram;
+    private KothHologram kothHologram = new EmptyHologram();
 
     @Override
     public void onEnable() {

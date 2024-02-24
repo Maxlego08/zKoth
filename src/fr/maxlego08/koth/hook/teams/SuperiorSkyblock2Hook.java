@@ -28,7 +28,7 @@ public class SuperiorSkyblock2Hook implements KothTeam {
     }
 
     @Override
-    public String getFactionTag(Player player) {
+    public String getTeamName(Player player) {
         Island island = getIsland(player);
         return island == null ? player.getName() : getIsland(player).getName();
     }

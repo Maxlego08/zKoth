@@ -193,6 +193,13 @@
       <scope>system</scope>
       <systemPath>${basedir}/libs/DecentHolograms-2.8.6.jar</systemPath>
     </dependency>
+    <dependency>
+      <groupId>com.github.SaberLLC</groupId>
+      <artifactId>Saber-Factions</artifactId>
+      <version>4.1.4-STABLE</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/libs/SaberFactions.jar</systemPath>
+    </dependency>
   </dependencies>
   <properties>
     <maven.compiler.target>8</maven.compiler.target>

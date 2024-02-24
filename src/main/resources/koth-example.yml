@@ -1,34 +1,4 @@
-
-name: test
-
-type: CAPTURE
-capture: 30
-
-cooldownStart: 300
-
-stopAfterSeconds: 3600
-
-enableStartCapMessage: true
-enableLooseCapMessage: true
-
 # Available placeholders:
-# - %name% - Koth name
-# - %world% - World name
-# - %minX% - Min location X
-# - %minY% - Min location Y
-# - %minZ% - Min location Z
-# - %maxX% - Max location X
-# - %maxY% - Max location Y
-# - %maxZ% - Max location Z
-# - %centerX% - Center location X
-# - %centerY% - Center location Y
-# - %centerZ% - Center location Z
-# - %spawnSeconds% - Second before koth spawn
-# - %spawnFormat% - Time format before koth spawn
-startCommands: []
-
-# Available placeholders:
-# You can use these placeholders for scoreboards and messages.
 # - %online-player% - Allows to run the order to all online players of the team
 # - %name% - Koth name
 # - %world% - World name
@@ -45,16 +15,46 @@ startCommands: []
 # - %spawnFormat% - Time format before koth spawn
 # - %playerName% - Current player name
 # - %teamName% - Current player team name
+# - %teamId% - Current player team id
+# - %teamLeader% - Current player team leader name
 # - %captureSeconds% - Capture seconds (only for CAPTURE type)
 # - %captureFormat% - Capture time format (only for CAPTURE type)
+
+# Koth display name
+name: test
+
+# Koth type
+type: CAPTURE
+
+# Capture time or score to achieve
+capture: 30
+
+# Time in seconds to spawn koth with /koth spawn command
+cooldownStart: 300
+
+# Time in seconds to automatically stop koth
+stopAfterSeconds: 3600
+
+# Activate the message when a player starts capturing the koth
+enableStartCapMessage: true
+
+# Activate the message when a player loses the koth capture
+enableLooseCapMessage: true
+
+# Commands that will be executed when the koth is launched
+startCommands: []
+
+# Commands that will be executed when the koth is won by a player
 endCommands: []
 
+# First location
 minLocation:
   world: world
   x: 0
   y: 0
   z: 0
 
+# Second location
 manLocation:
   world: world
   x: 0

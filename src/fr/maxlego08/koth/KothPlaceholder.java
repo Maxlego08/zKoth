@@ -1,6 +1,7 @@
 package fr.maxlego08.koth;
 
 import fr.maxlego08.koth.api.Koth;
+import fr.maxlego08.koth.api.KothStatus;
 import fr.maxlego08.koth.placeholder.LocalPlaceholder;
 import fr.maxlego08.koth.save.Config;
 import fr.maxlego08.koth.zcore.utils.ReturnConsumer;
@@ -36,7 +37,23 @@ public class KothPlaceholder {
         this.register("capture_seconds", koth -> TimerBuilder.getStringTime(koth.getRemainingSeconds() == null ? koth.getCaptureSeconds() : koth.getRemainingSeconds().get()));
 
         this.register("player_name", koth -> koth.getCurrentPlayer() != null ? koth.getCurrentPlayer().getName() : Config.noPlayer);
-        this.register("team_name", koth -> koth.getCurrentPlayer() != null ? kothManager.getKothTeam().getFactionTag(koth.getCurrentPlayer()) : Config.noFaction);
+        this.register("team_name", koth -> koth.getCurrentPlayer() != null ? this.kothManager.getKothTeam().getTeamName(koth.getCurrentPlayer()) : Config.noFaction);
+        this.register("team_leader", koth -> koth.getCurrentPlayer() != null ? this.kothManager.getKothTeam().getLeaderName(koth.getCurrentPlayer()) : Config.noFaction);
+        this.register("team_id", koth -> koth.getCurrentPlayer() != null ? this.kothManager.getKothTeam().getTeamId(koth.getCurrentPlayer()) : Config.noFaction);
+
+        LocalPlaceholder placeholder = LocalPlaceholder.getInstance();
+        placeholder.register("active_", (player, args) -> {
+            Optional<Koth> optional = this.kothManager.getKoth(args);
+            return String.valueOf(optional.filter(koth -> koth.getStatus() != KothStatus.STOP).isPresent());
+        });
+        placeholder.register("cooldown_", (player, args) -> {
+            Optional<Koth> optional = this.kothManager.getKoth(args);
+            return String.valueOf(optional.filter(koth -> koth.getStatus() == KothStatus.COOLDOWN).isPresent());
+        });
+        placeholder.register("start_", (player, args) -> {
+            Optional<Koth> optional = this.kothManager.getKoth(args);
+            return String.valueOf(optional.filter(koth -> koth.getStatus() == KothStatus.START).isPresent());
+        });
     }
 
     private void register(String key, ReturnConsumer<Koth> consumer) {

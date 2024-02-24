@@ -421,8 +421,7 @@ public class ZKoth extends ZUtils implements Koth {
 
             this.currentPlayer = player;
             this.startCap(player);
-            this.plugin.getKothHologram().update(this);
-            this.plugin.getScoreBoardManager().update();
+            updateDisplay();
 
         } else if (this.currentPlayer != null && !cuboid.contains(this.currentPlayer.getLocation())) {
 
@@ -433,8 +432,6 @@ public class ZKoth extends ZUtils implements Koth {
 
             if (event.isCancelled()) return;
 
-            this.plugin.getKothHologram().update(this);
-            this.plugin.getScoreBoardManager().update();
             broadcast(Message.EVENT_LOOSE);
 
             if (this.timerTask != null) {
@@ -445,6 +442,8 @@ public class ZKoth extends ZUtils implements Koth {
             this.remainingSeconds = new AtomicInteger(this.captureSeconds);
             this.timerTask = null;
             this.currentPlayer = null;
+
+            updateDisplay();
         }
     }
 
@@ -477,8 +476,7 @@ public class ZKoth extends ZUtils implements Koth {
         Cuboid cuboid = getCuboid();
 
         // this.changeBlocks(Config.onePersonneCapturingMaterial, false);
-        this.plugin.getKothHologram().update(this);
-        this.plugin.getScoreBoardManager().update();
+        updateDisplay();
 
         scheduleFix(this.plugin, 0, 1000, (task, isCancelled) -> {
 
@@ -499,8 +497,7 @@ public class ZKoth extends ZUtils implements Koth {
             if (this.currentPlayer != null) {
                 if (!this.currentPlayer.isValid() || !this.currentPlayer.isOnline() || !cuboid.contains(this.currentPlayer.getLocation())) {
                     this.currentPlayer = null;
-                    this.plugin.getKothHologram().update(this);
-                    this.plugin.getScoreBoardManager().update();
+                    updateDisplay();
                 }
             }
 
@@ -526,8 +523,7 @@ public class ZKoth extends ZUtils implements Koth {
                     broadcast(Message.EVENT_LOOSE);
                 }
 
-                this.plugin.getKothHologram().update(this);
-                this.plugin.getScoreBoardManager().update();
+                updateDisplay();
                 return;
 
             }
@@ -538,8 +534,8 @@ public class ZKoth extends ZUtils implements Koth {
 
             } else {
 
-                KothCapEvent capEvent = new KothCapEvent(this, player, this.remainingSeconds.get(), this.kothTeam.getFactionTag(player));
-                capEvent.callEvent();
+                KothCapEvent capEvent = new KothCapEvent(this, player, this.remainingSeconds.get(), this.kothTeam.getTeamName(player));
+                capEvent.call();
 
                 if (Config.displayMessageKothCap.contains(currentRemainingSeconds)) {
                     broadcast(Message.EVENT_TIMER);
@@ -547,8 +543,7 @@ public class ZKoth extends ZUtils implements Koth {
                     broadcast(Message.EVENT_EVERYSECONDS);
                 }
 
-                this.plugin.getKothHologram().update(this);
-                this.plugin.getScoreBoardManager().update();
+                updateDisplay();
 
                 switch (this.kothType) {
                     case CAPTURE:
@@ -573,10 +568,10 @@ public class ZKoth extends ZUtils implements Koth {
 
         this.discordWebhookConfig.send(this.plugin, this, KothEvent.WIN);
 
-        this.plugin.getKothHologram().end(this);
         task.cancel();
         broadcast(Message.EVENT_WIN);
 
+        this.plugin.getKothHologram().end(this);
         this.plugin.getScoreBoardManager().clearBoard();
 
         this.endCommands.forEach(command -> {
@@ -704,7 +699,9 @@ public class ZKoth extends ZUtils implements Koth {
         if (string == null) return null;
 
         string = string.replace("%playerName%", this.currentPlayer != null ? this.currentPlayer.getName() : Config.noPlayer);
-        string = string.replace("%teamName%", this.currentPlayer != null ? this.kothTeam.getFactionTag(this.currentPlayer) : Config.noFaction);
+        string = string.replace("%teamName%", this.currentPlayer != null ? this.kothTeam.getTeamName(this.currentPlayer) : Config.noFaction);
+        string = string.replace("%teamId%", this.currentPlayer != null ? this.kothTeam.getTeamId(this.currentPlayer) : Config.noFaction);
+        string = string.replace("%teamLeader%", this.currentPlayer != null ? this.kothTeam.getTeamName(this.currentPlayer) : Config.noFaction);
 
         int seconds = this.remainingSeconds == null ? this.captureSeconds : this.remainingSeconds.get();
         string = string.replace("%captureFormat%", TimerBuilder.getStringTime(seconds));
@@ -792,5 +789,11 @@ public class ZKoth extends ZUtils implements Koth {
     @Override
     public Player getCurrentPlayer() {
         return this.currentPlayer;
+    }
+
+    @Override
+    public void updateDisplay() {
+        this.plugin.getKothHologram().update(this);
+        this.plugin.getScoreBoardManager().update();
     }
 }

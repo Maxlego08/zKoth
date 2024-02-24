@@ -300,4 +300,21 @@ public class KothManager extends ZUtils implements Savable {
         KothHolder kothHolder = new KothHolder(koth, page);
         kothHolder.open(player);
     }
+
+    public void addCommand(CommandSender sender, String name, String type, StringBuilder command) {
+
+        Optional<Koth> optional = getKoth(name);
+        if (!optional.isPresent()) {
+            message(sender, Message.DOESNT_EXIST, "%name%", name);
+            return;
+        }
+
+        Koth koth = optional.get();
+
+        if (type.equalsIgnoreCase("start")) koth.getStartCommands().add(command.toString());
+        else koth.getEndCommands().add(command.toString());
+
+        message(sender, Message.COMMAND_CREATE, "%command%", command);
+        this.saveKoth(koth);
+    }
 }

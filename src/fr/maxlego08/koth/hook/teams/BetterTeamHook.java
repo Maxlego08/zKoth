@@ -20,7 +20,7 @@ public class BetterTeamHook implements KothTeam {
     }
 
     @Override
-    public String getFactionTag(Player player) {
+    public String getTeamName(Player player) {
         Team team = Team.getTeam(player);
         return team == null ? player.getName() : team.getName();
     }

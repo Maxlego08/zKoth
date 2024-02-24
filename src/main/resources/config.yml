@@ -20,6 +20,7 @@
 # /zkoth version - no permission - Show plugin version
 # /zkoth list - zkoth.list - Get koth list
 # /zkoth loot <koth name> [<page>] - zkoth.loot - Change loot for a koth
+# /zkoth addcommand <koth name> <start/win> <command> - zkoth.command.add - Add new command
 #
 # Placeholders:
 # %zkoth_world% - Current koth world
@@ -39,6 +40,11 @@
 # %zkoth_capture_format% - Current koth capture seconds formatted
 # %zkoth_player_name% - Current koth capture player name
 # %zkoth_team_name% - Current koth capture player team name
+# %zkoth_team_id% - Current koth capture player team id
+# %zkoth_team_leader% - Current koth capture player team leader name
+# %zkoth_active_<koth name>% - Lets you know if a koth is active
+# %zkoth_cooldown_<koth name>% - Lets you know if a koth is in cooldown
+# %zkoth_start_<koth name>% - Lets you know if a koth is start
 #
 # Supported Scoreboard Plugin:
 # - FeatherBoard
@@ -51,6 +57,10 @@
 # - HuskTown
 # - SuperiorSkyblock2
 # - BetterTeams
+# - SaberFaction
+# - FactionUUID
+#
+# Need scheduler ? Use zScheduler: https://www.spigotmc.org/resources/zschedulers.112705/
 #
 #########################################################################################################
 

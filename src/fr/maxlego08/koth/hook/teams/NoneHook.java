@@ -10,7 +10,7 @@ public class NoneHook implements KothTeam {
 
 
     @Override
-    public String getFactionTag(Player player) {
+    public String getTeamName(Player player) {
         return player.getName();
     }
 

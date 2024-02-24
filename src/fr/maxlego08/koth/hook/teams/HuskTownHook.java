@@ -34,7 +34,7 @@ public class HuskTownHook implements KothTeam {
     }
 
     @Override
-    public String getFactionTag(Player player) {
+    public String getTeamName(Player player) {
         Optional<Town> optional = getTown(player);
         if (optional.isPresent()) return optional.get().getName();
         return player.getName();

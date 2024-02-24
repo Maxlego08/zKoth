@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>fr.maxlego08.koth</groupId>
     <artifactId>zKoth</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>8</maven.compiler.source>
@@ -11,6 +11,15 @@
     </properties>
     <build>
         <sourceDirectory>src</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>src/main/resources/</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>*.yml</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -208,6 +217,13 @@
             <artifactId>SuperiorSkyblockAPI</artifactId>
             <version>2022.9</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.SaberLLC</groupId>
+            <artifactId>Saber-Factions</artifactId>
+            <version>4.1.4-STABLE</version>
+            <systemPath>${basedir}/libs/SaberFactions.jar</systemPath>
+            <scope>system</scope>
         </dependency>
     </dependencies>
 </project>

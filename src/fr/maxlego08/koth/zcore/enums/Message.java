@@ -77,6 +77,7 @@ public enum Message {
     ALREADY_EXIST("§cThe koth §f%name% §calready exists."),
     KOTH_SIZE("§cYour koth is too small, you can't create one that small. Then you will come on discord for support when the problem comes from you."),
     DOESNT_EXIST("§cThe koth §f%name% §cdoesnt exists."),
+    COMMAND_CREATE("§7You have just added the command §8\"§f%command%§8\""),
 
     EVENT_START(MessageType.CENTER,
             "§8§m-+------------------------------+-",
@@ -90,7 +91,7 @@ public enum Message {
     EVENT_WIN(MessageType.CENTER,
             "§8§m-+------------------------------+-",
             "",
-            "§d%playerName% §fof faction §7%playerName% §fhas just captured",
+            "§d%playerName% §fof faction §7%teamName% §fhas just captured",
             "§fthe koth, and §nwins§f the event!",
             "",
             "§8§m-+------------------------------+-"

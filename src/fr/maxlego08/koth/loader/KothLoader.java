@@ -68,8 +68,10 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
         List<ItemStack> itemStacks = configuration.getStringList("loot.items").stream().map(ItemStackUtils::deserializeItemStack).collect(Collectors.toList());
         int randomItemStacks = configuration.getInt("loot.random", 0);
 
+        List<String> blacklistTeamId = configuration.getStringList("blacklistTeamId");
+
         return new ZKoth(this.plugin, fileName, kothType, name, captureSeconds, minLocation, maxLocation, startCommands, endCommands, cooldownScoreboard,
-                startScoreboard, cooldownStart, stopAfterSeconds, enableStartCapMessage, enableLooseCapMessage, enableEverySecondsCapMessage, hologramConfig, itemStacks, kothLootType, discordWebhookConfig, randomItemStacks);
+                startScoreboard, cooldownStart, stopAfterSeconds, enableStartCapMessage, enableLooseCapMessage, enableEverySecondsCapMessage, hologramConfig, itemStacks, kothLootType, discordWebhookConfig, randomItemStacks, blacklistTeamId);
     }
 
     @Override

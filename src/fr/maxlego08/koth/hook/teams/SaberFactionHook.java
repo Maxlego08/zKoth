@@ -1,9 +1,11 @@
 package fr.maxlego08.koth.hook.teams;
 
+import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.event.FactionDisbandEvent;
 import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.api.KothTeam;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
@@ -18,23 +20,24 @@ public class SaberFactionHook implements KothTeam {
     }
 
     @Override
-    public String getTeamName(Player player) {
-        return FPlayers.getInstance().getByPlayer(player).getFaction().getTag();
+    public String getTeamName(OfflinePlayer player) {
+        return FPlayers.getInstance().getByOfflinePlayer(player).getFaction().getTag();
     }
 
     @Override
-    public List<Player> getOnlinePlayer(Player player) {
-        return FPlayers.getInstance().getByPlayer(player).getFaction().getOnlinePlayers();
+    public List<Player> getOnlinePlayer(OfflinePlayer player) {
+        return FPlayers.getInstance().getByOfflinePlayer(player).getFaction().getOnlinePlayers();
     }
 
     @Override
-    public String getLeaderName(Player player) {
-        return FPlayers.getInstance().getByPlayer(player).getFaction().getFPlayerAdmin().getName();
+    public String getLeaderName(OfflinePlayer player) {
+        FPlayer fPlayer = FPlayers.getInstance().getByOfflinePlayer(player).getFaction().getFPlayerAdmin();
+        return fPlayer == null ? player.getName() : fPlayer.getName();
     }
 
     @Override
-    public String getTeamId(Player player) {
-        return FPlayers.getInstance().getByPlayer(player).getFactionId();
+    public String getTeamId(OfflinePlayer player) {
+        return FPlayers.getInstance().getByOfflinePlayer(player).getFactionId();
     }
 
     @EventHandler

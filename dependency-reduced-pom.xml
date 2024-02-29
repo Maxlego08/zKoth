@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>fr.maxlego08.koth</groupId>
   <artifactId>zKoth</artifactId>
-  <version>3.0.1</version>
+  <version>3.0.2</version>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <resources>
@@ -106,6 +106,10 @@
       <id>bg-repo</id>
       <url>https://repo.bg-software.com/repository/api/</url>
     </repository>
+    <repository>
+      <id>codemc-repo</id>
+      <url>https://repo.codemc.org/repository/maven-public</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
@@ -172,6 +176,12 @@
       <groupId>com.bgsoftware</groupId>
       <artifactId>SuperiorSkyblockAPI</artifactId>
       <version>2022.9</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
+      <artifactId>SimpleClans</artifactId>
+      <version>2.15.2</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

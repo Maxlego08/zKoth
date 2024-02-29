@@ -6,6 +6,7 @@ import me.angeschossen.lands.api.LandsIntegration;
 import me.angeschossen.lands.api.events.LandDeleteEvent;
 import me.angeschossen.lands.api.land.Land;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
@@ -24,36 +25,36 @@ public class LandHook implements KothTeam {
     }
 
     @Override
-    public String getTeamName(Player player) {
+    public String getTeamName(OfflinePlayer player) {
         Optional<? extends Land> optional = getLandByPlayer(player);
         return optional.map(Land::getName).orElseGet(player::getName);
     }
 
     @Override
-    public List<Player> getOnlinePlayer(Player player) {
+    public List<Player> getOnlinePlayer(OfflinePlayer player) {
 
         Optional<? extends Land> optional = getLandByPlayer(player);
         if (optional.isPresent()) {
             return new ArrayList<>(optional.get().getOnlinePlayers());
         }
 
-        return Collections.singletonList(player);
+        return Collections.singletonList(player.getPlayer());
     }
 
-    private Optional<? extends Land> getLandByPlayer(Player player) {
+    private Optional<? extends Land> getLandByPlayer(OfflinePlayer player) {
         LandsIntegration api = LandsIntegration.of(this.plugin);
         return api.getLandPlayer(player.getUniqueId()).getLands().stream().findFirst();
     }
 
     @Override
-    public String getLeaderName(Player player) {
+    public String getLeaderName(OfflinePlayer player) {
         Optional<? extends Land> optional = getLandByPlayer(player);
         if (optional.isPresent()) return Bukkit.getOfflinePlayer(optional.get().getOwnerUID()).getName();
         return player.getName();
     }
 
     @Override
-    public String getTeamId(Player player) {
+    public String getTeamId(OfflinePlayer player) {
         Optional<? extends Land> optional = getLandByPlayer(player);
         return optional.map(land -> String.valueOf(land.getId())).orElseGet(() -> player.getUniqueId().toString());
     }

@@ -6,6 +6,7 @@ import fr.maxlego08.koth.hook.teams.BetterTeamHook;
 import fr.maxlego08.koth.hook.teams.HuskTownHook;
 import fr.maxlego08.koth.hook.teams.LandHook;
 import fr.maxlego08.koth.hook.teams.SaberFactionHook;
+import fr.maxlego08.koth.hook.teams.SimpleClanHook;
 import fr.maxlego08.koth.hook.teams.SuperiorSkyblock2Hook;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -19,6 +20,7 @@ public enum TeamPlugin {
     SUPERIORSKYBLOCK("SuperiorSkyblock2", SuperiorSkyblock2Hook.class),
     BETTERTEAMS("BetterTeams", BetterTeamHook.class),
     FACTIONS("Factions", SaberFactionHook.class),
+    SIMPLECLANS("SimpleClans", SimpleClanHook.class),
 
     ;
 

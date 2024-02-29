@@ -144,3 +144,9 @@ loot:
   type: NONE
   # Use /koth loot <koth name>
   items: []
+
+
+# Allows blacklist of team IDs so that it does not participate in koth, in this example, teams with ID 0 and -1 are blacklist
+blacklistTeamId:
+  - "0"
+  - "-1"

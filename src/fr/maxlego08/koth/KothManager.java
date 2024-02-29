@@ -20,6 +20,7 @@ import fr.maxlego08.koth.zcore.utils.storage.Persist;
 import fr.maxlego08.koth.zcore.utils.storage.Savable;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -55,10 +56,12 @@ public class KothManager extends ZUtils implements Savable {
 
         for (TeamPlugin value : TeamPlugin.values()) {
             if (value.isEnable()) {
-                kothTeam = value.init(plugin);
+                this.kothTeam = value.init(plugin);
                 Logger.info("Register " + value.getPluginName() + " team implementation.", Logger.LogType.INFO);
             }
         }
+
+        Bukkit.getPluginManager().registerEvents(this.kothTeam, plugin);
     }
 
     @Override

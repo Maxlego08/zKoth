@@ -38,6 +38,15 @@
 # %zkoth_spawn_format% - Current koth spawn seconds formatted
 # %zkoth_capture_seconds% - Current koth capture seconds
 # %zkoth_capture_format% - Current koth capture seconds formatted
+# %zkoth_capture_max_seconds% - Current koth max capture seconds
+# %zkoth_capture_max_formats% - Current koth max capture seconds formatted
+# %zkoth_score% - Score of player
+# %zkoth_score_player_<position>% - Player name at position
+# %zkoth_score_points_<position>% - Points at position
+# %zkoth_score_team_name_<position>% - Team name at position
+# %zkoth_score_team_id_<position>% - Team id at position
+# %zkoth_score_team_leader_<position>% - Team leader name at position
+# %zkoth_score_player_<position>% - Player name at position
 # %zkoth_player_name% - Current koth capture player name
 # %zkoth_team_name% - Current koth capture player team name
 # %zkoth_team_id% - Current koth capture player team id
@@ -59,6 +68,7 @@
 # - BetterTeams
 # - SaberFaction
 # - FactionUUID
+# - SimpleClan
 #
 # Need scheduler ? Use zScheduler: https://www.spigotmc.org/resources/zschedulers.112705/
 #
@@ -109,3 +119,11 @@ noKoth: 'X'
 schedulerMillisecond: 1000
 
 removeChestSec: 120
+
+# Value that will be used for score placeholders if the position does not exist.
+defaultPlayerResult:
+  playerName: "X"
+  points: 0
+  teamName: "X"
+  teamId: "X"
+  teamLeader: "X"

@@ -1,5 +1,7 @@
 # Unreleased
 
+# 3.0.2
+
 - Create placeholder: ``%zkoth_capture_max_seconds%``
 - Create placeholder: ``%zkoth_capture_max_formats%``
 - Create placeholder: ``%zkoth_score``

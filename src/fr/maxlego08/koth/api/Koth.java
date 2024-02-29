@@ -2,6 +2,7 @@ package fr.maxlego08.koth.api;
 
 import fr.maxlego08.koth.api.discord.DiscordWebhookConfig;
 import fr.maxlego08.koth.api.utils.HologramConfig;
+import fr.maxlego08.koth.api.utils.PlayerResult;
 import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
 import fr.maxlego08.koth.zcore.utils.Cuboid;
 import fr.maxlego08.koth.zcore.utils.interfaces.CollectionConsumer;
@@ -290,5 +291,11 @@ public interface Koth {
      * Updates the display elements associated with the KOTH game, such as scoreboards or holograms, based on the current game state.
      */
     void updateDisplay();
+
+    int getScore(Player player);
+
+    PlayerResult getPlayer(int position);
+
+    List<String> getBlacklistTeamId();
 }
 

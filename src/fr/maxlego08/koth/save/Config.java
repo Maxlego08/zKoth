@@ -1,6 +1,7 @@
 package fr.maxlego08.koth.save;
 
 import fr.maxlego08.koth.KothPlugin;
+import fr.maxlego08.koth.api.utils.PlayerResult;
 import fr.maxlego08.koth.zcore.utils.storage.Persist;
 import fr.maxlego08.koth.zcore.utils.storage.Savable;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -20,6 +21,8 @@ public class Config {
     public static String noFaction = "X";
     public static String noKoth = "X";
 	public static int removeChestSec = 120;
+
+	public static PlayerResult defaultPlayerResult = new PlayerResult("X", 0, "X", "X", "X");
 
     /**
 	 * static Singleton instance.
@@ -63,6 +66,14 @@ public class Config {
 		noFaction = configuration.getString("noKoth", "X");
 		schedulerMillisecond = configuration.getLong("schedulerMillisecond", 1000);
 		removeChestSec = configuration.getInt("removeChestSec", 120);
+
+		defaultPlayerResult = new PlayerResult(
+				configuration.getString("defaultPlayerResult.playerName", "X"),
+				configuration.getInt("defaultPlayerResult.points", 0),
+				configuration.getString("defaultPlayerResult.teamName", "X"),
+				configuration.getString("defaultPlayerResult.teamId", "X"),
+				configuration.getString("defaultPlayerResult.teamLeader", "X")
+		);
 	}
 
 }

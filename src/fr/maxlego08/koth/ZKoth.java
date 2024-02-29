@@ -15,6 +15,7 @@ import fr.maxlego08.koth.api.events.KothStartEvent;
 import fr.maxlego08.koth.api.events.KothStopEvent;
 import fr.maxlego08.koth.api.events.KothWinEvent;
 import fr.maxlego08.koth.api.utils.HologramConfig;
+import fr.maxlego08.koth.api.utils.PlayerResult;
 import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
 import fr.maxlego08.koth.hook.teams.NoneHook;
 import fr.maxlego08.koth.save.Config;
@@ -29,6 +30,7 @@ import fr.mrmicky.fastboard.FastBoard;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
@@ -40,6 +42,7 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +69,7 @@ public class ZKoth extends ZUtils implements Koth {
     private final boolean enableEverySecondsCapMessage;
     private final HologramConfig hologramConfig;
     private final KothLootType kothLootType;
+    private final List<String> blacklistTeamId;
     private List<ItemStack> itemStacks;
     private String name;
     private int captureSeconds;
@@ -80,8 +84,9 @@ public class ZKoth extends ZUtils implements Koth {
     private TimerTask timerTask;
     private TimerTask timerTaskStop;
     private DiscordWebhookConfig discordWebhookConfig;
+    private List<PlayerResult> playerResults = new ArrayList<>();
 
-    public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands, ScoreboardConfiguration cooldownScoreboard, ScoreboardConfiguration startScoreboard, int cooldownStart, int stopAfterSeconds, boolean enableStartCapMessage, boolean enableLooseCapMessage, boolean enableEverySecondsCapMessage, HologramConfig hologramConfig, List<ItemStack> itemStacks, KothLootType kothLootType, DiscordWebhookConfig discordWebhookConfig, int randomItemStacks) {
+    public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands, ScoreboardConfiguration cooldownScoreboard, ScoreboardConfiguration startScoreboard, int cooldownStart, int stopAfterSeconds, boolean enableStartCapMessage, boolean enableLooseCapMessage, boolean enableEverySecondsCapMessage, HologramConfig hologramConfig, List<ItemStack> itemStacks, KothLootType kothLootType, DiscordWebhookConfig discordWebhookConfig, int randomItemStacks, List<String> blacklistTeamId) {
         this.plugin = plugin;
         this.fileName = fileName;
         this.kothType = kothType;
@@ -103,6 +108,7 @@ public class ZKoth extends ZUtils implements Koth {
         this.kothLootType = kothLootType;
         this.discordWebhookConfig = discordWebhookConfig;
         this.randomItemStacks = randomItemStacks;
+        this.blacklistTeamId = blacklistTeamId;
     }
 
     public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation) {
@@ -125,6 +131,7 @@ public class ZKoth extends ZUtils implements Koth {
         this.itemStacks = new ArrayList<>();
         this.kothLootType = KothLootType.NONE;
         this.randomItemStacks = 0;
+        this.blacklistTeamId = new ArrayList<>();
     }
 
     @Override
@@ -415,6 +422,9 @@ public class ZKoth extends ZUtils implements Koth {
         if (this.kothStatus != KothStatus.START) return;
 
         this.kothTeam = kothTeam;
+
+        if (this.blacklistTeamId.contains(this.kothTeam.getTeamId(player))) return;
+
         Cuboid cuboid = this.getCuboid();
 
         if (this.currentPlayer == null && cuboid.contains(player.getLocation())) {
@@ -553,6 +563,7 @@ public class ZKoth extends ZUtils implements Koth {
                     case SCORE:
                         // case TIMER:
                         this.playersValues.put(this.currentPlayer.getUniqueId(), this.getValue(this.currentPlayer) + 1);
+                        this.playerResults.clear(); // Clear cache
                         break;
                 }
             }
@@ -796,4 +807,42 @@ public class ZKoth extends ZUtils implements Koth {
         this.plugin.getKothHologram().update(this);
         this.plugin.getScoreBoardManager().update();
     }
+
+    @Override
+    public int getScore(Player player) {
+        return this.playersValues.getOrDefault(player.getUniqueId(), 0);
+    }
+
+    @Override
+    public PlayerResult getPlayer(int position) {
+
+        this.sortScores();
+        System.out.println((this.playerResults.size() > position) + " -< " + this.playerResults.size() +" - " + position);
+        if (this.playerResults.size() > position) return Config.defaultPlayerResult;
+        System.out.println(this.playerResults.get(position - 1));
+        return this.playerResults.get(position - 1);
+    }
+
+    @Override
+    public List<String> getBlacklistTeamId() {
+        return this.blacklistTeamId;
+    }
+
+    private void sortScores() {
+
+        // If the list is not empty, then there is already a cache.
+        if (!this.playerResults.isEmpty()) return;
+
+        this.playerResults = this.playersValues.entrySet().stream().map(entry -> {
+
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(entry.getKey());
+            int points = entry.getValue();
+            String teamName = this.kothTeam.getTeamName(offlinePlayer);
+            String teamLeader = this.kothTeam.getLeaderName(offlinePlayer);
+            String teamId = this.kothTeam.getTeamId(offlinePlayer);
+
+            return new PlayerResult(offlinePlayer.getName(), points, teamName, teamId, teamLeader);
+        }).sorted(Comparator.comparingInt(PlayerResult::getPoints).reversed()).collect(Collectors.toList());
+    }
+
 }

@@ -26,27 +26,27 @@ public class SimpleClanHook implements KothTeam {
         this.clan = (SimpleClans) Bukkit.getServer().getPluginManager().getPlugin("SimpleClans");
     }
 
-    private Optional<Clan> getClan(Player player) {
+    private Optional<Clan> getClan(OfflinePlayer player) {
         ClanPlayer clanPlayer = this.clan.getClanManager().getClanPlayer(player);
         if (clanPlayer == null) return Optional.empty();
         return Optional.ofNullable(clanPlayer.getClan());
     }
 
     @Override
-    public String getTeamName(Player player) {
+    public String getTeamName(OfflinePlayer player) {
         Optional<Clan> optional = getClan(player);
         return optional.isPresent() ? optional.get().getName() : player.getName();
     }
 
     @Override
-    public List<Player> getOnlinePlayer(Player player) {
+    public List<Player> getOnlinePlayer(OfflinePlayer player) {
         Optional<Clan> optional = getClan(player);
         return optional.map(value -> value.getOnlineMembers().stream().map(e -> Bukkit.getOfflinePlayer(e.getUniqueId()))
-                .filter(OfflinePlayer::isOnline).map(OfflinePlayer::getPlayer).collect(Collectors.toList())).orElseGet(() -> Collections.singletonList(player));
+                .filter(OfflinePlayer::isOnline).map(OfflinePlayer::getPlayer).collect(Collectors.toList())).orElseGet(() -> Collections.singletonList(player.getPlayer()));
     }
 
     @Override
-    public String getLeaderName(Player player) {
+    public String getLeaderName(OfflinePlayer player) {
         Optional<Clan> optional = getClan(player);
         if (!optional.isPresent()) return player.getName();
         Clan clan = optional.get();
@@ -54,7 +54,7 @@ public class SimpleClanHook implements KothTeam {
     }
 
     @Override
-    public String getTeamId(Player player) {
+    public String getTeamId(OfflinePlayer player) {
         Optional<Clan> optional = getClan(player);
         return optional.isPresent() ? optional.get().getName() : player.getUniqueId().toString();
     }

@@ -1,6 +1,5 @@
 package fr.maxlego08.koth.hook.teams;
 
-import com.bgsoftware.superiorskyblock.api.SuperiorSkyblock;
 import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import com.bgsoftware.superiorskyblock.api.events.IslandDisbandEvent;
 import com.bgsoftware.superiorskyblock.api.island.Island;
@@ -23,33 +22,33 @@ public class SuperiorSkyblock2Hook implements KothTeam {
         this.plugin = plugin;
     }
 
-    private Island getIsland(Player player) {
-        return SuperiorSkyblockAPI.getPlayer(player).getIsland();
+    private Island getIsland(OfflinePlayer player) {
+        return SuperiorSkyblockAPI.getPlayer(player.getUniqueId()).getIsland();
     }
 
     @Override
-    public String getTeamName(Player player) {
+    public String getTeamName(OfflinePlayer player) {
         Island island = getIsland(player);
         return island == null ? player.getName() : getIsland(player).getName();
     }
 
     @Override
-    public List<Player> getOnlinePlayer(Player player) {
+    public List<Player> getOnlinePlayer(OfflinePlayer player) {
         Island island = getIsland(player);
-        if (island == null) return Collections.singletonList(player);
+        if (island == null) return Collections.singletonList(player.getPlayer());
 
         return island.getIslandMembers(true).stream().map(p -> Bukkit.getOfflinePlayer(p.getUniqueId()))
                 .filter(OfflinePlayer::isOnline).map(OfflinePlayer::getPlayer).collect(Collectors.toList());
     }
 
     @Override
-    public String getLeaderName(Player player) {
+    public String getLeaderName(OfflinePlayer player) {
         Island island = getIsland(player);
         return island != null ? island.getOwner().getName() : player.getName();
     }
 
     @Override
-    public String getTeamId(Player player) {
+    public String getTeamId(OfflinePlayer player) {
         Island island = getIsland(player);
         return island != null ? island.getUniqueId().toString() : player.getUniqueId().toString();
     }

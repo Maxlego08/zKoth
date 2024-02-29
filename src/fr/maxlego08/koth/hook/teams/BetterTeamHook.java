@@ -5,6 +5,7 @@ import com.booksaw.betterTeams.Team;
 import com.booksaw.betterTeams.customEvents.DisbandTeamEvent;
 import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.api.KothTeam;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
@@ -20,25 +21,25 @@ public class BetterTeamHook implements KothTeam {
     }
 
     @Override
-    public String getTeamName(Player player) {
+    public String getTeamName(OfflinePlayer player) {
         Team team = Team.getTeam(player);
         return team == null ? player.getName() : team.getName();
     }
 
     @Override
-    public List<Player> getOnlinePlayer(Player player) {
+    public List<Player> getOnlinePlayer(OfflinePlayer player) {
         Team team = Team.getTeam(player);
-        return team == null ? Collections.singletonList(player) : team.getOnlineMembers();
+        return team == null ? Collections.singletonList(player.getPlayer()) : team.getOnlineMembers();
     }
 
     @Override
-    public String getLeaderName(Player player) {
+    public String getLeaderName(OfflinePlayer player) {
         Team team = Team.getTeam(player);
         return team == null ? player.getName() : team.getMembers().getRank(PlayerRank.OWNER).get(0).getPlayer().getName();
     }
 
     @Override
-    public String getTeamId(Player player) {
+    public String getTeamId(OfflinePlayer player) {
         Team team = Team.getTeam(player);
         return team == null ? player.getUniqueId().toString() : team.getID().toString();
     }

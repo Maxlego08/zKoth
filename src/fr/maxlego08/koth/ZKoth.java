@@ -23,6 +23,7 @@ import fr.maxlego08.koth.scoreboard.ScoreBoardManager;
 import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.logger.Logger;
 import fr.maxlego08.koth.zcore.utils.Cuboid;
+import fr.maxlego08.koth.zcore.utils.ProgressBar;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
 import fr.maxlego08.koth.zcore.utils.builder.TimerBuilder;
 import fr.maxlego08.koth.zcore.utils.interfaces.CollectionConsumer;
@@ -70,6 +71,7 @@ public class ZKoth extends ZUtils implements Koth {
     private final HologramConfig hologramConfig;
     private final KothLootType kothLootType;
     private final List<String> blacklistTeamId;
+    private final ProgressBar progressBar;
     private List<ItemStack> itemStacks;
     private String name;
     private int captureSeconds;
@@ -86,7 +88,7 @@ public class ZKoth extends ZUtils implements Koth {
     private DiscordWebhookConfig discordWebhookConfig;
     private List<PlayerResult> playerResults = new ArrayList<>();
 
-    public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands, ScoreboardConfiguration cooldownScoreboard, ScoreboardConfiguration startScoreboard, int cooldownStart, int stopAfterSeconds, boolean enableStartCapMessage, boolean enableLooseCapMessage, boolean enableEverySecondsCapMessage, HologramConfig hologramConfig, List<ItemStack> itemStacks, KothLootType kothLootType, DiscordWebhookConfig discordWebhookConfig, int randomItemStacks, List<String> blacklistTeamId) {
+    public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands, ScoreboardConfiguration cooldownScoreboard, ScoreboardConfiguration startScoreboard, int cooldownStart, int stopAfterSeconds, boolean enableStartCapMessage, boolean enableLooseCapMessage, boolean enableEverySecondsCapMessage, HologramConfig hologramConfig, List<ItemStack> itemStacks, KothLootType kothLootType, DiscordWebhookConfig discordWebhookConfig, int randomItemStacks, List<String> blacklistTeamId, ProgressBar progressBar) {
         this.plugin = plugin;
         this.fileName = fileName;
         this.kothType = kothType;
@@ -109,6 +111,7 @@ public class ZKoth extends ZUtils implements Koth {
         this.discordWebhookConfig = discordWebhookConfig;
         this.randomItemStacks = randomItemStacks;
         this.blacklistTeamId = blacklistTeamId;
+        this.progressBar = progressBar;
     }
 
     public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation) {
@@ -132,6 +135,7 @@ public class ZKoth extends ZUtils implements Koth {
         this.kothLootType = KothLootType.NONE;
         this.randomItemStacks = 0;
         this.blacklistTeamId = new ArrayList<>();
+        this.progressBar = new ProgressBar(10, '-', "&a", "&7");
     }
 
     @Override
@@ -793,8 +797,8 @@ public class ZKoth extends ZUtils implements Koth {
     }
 
     @Override
-    public AtomicInteger getRemainingSeconds() {
-        return this.remainingSeconds;
+    public int getRemainingSeconds() {
+        return this.remainingSeconds == null ? this.captureSeconds : this.remainingSeconds.get();
     }
 
     @Override
@@ -843,4 +847,8 @@ public class ZKoth extends ZUtils implements Koth {
         }).sorted(Comparator.comparingInt(PlayerResult::getPoints).reversed()).collect(Collectors.toList());
     }
 
+    @Override
+    public ProgressBar getProgressBar() {
+        return this.progressBar;
+    }
 }

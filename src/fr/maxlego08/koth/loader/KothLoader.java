@@ -8,6 +8,7 @@ import fr.maxlego08.koth.api.KothType;
 import fr.maxlego08.koth.api.discord.DiscordWebhookConfig;
 import fr.maxlego08.koth.api.utils.HologramConfig;
 import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
+import fr.maxlego08.koth.zcore.utils.ProgressBar;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
 import fr.maxlego08.koth.zcore.utils.loader.Loader;
 import fr.maxlego08.koth.zcore.utils.nms.ItemStackUtils;
@@ -25,6 +26,7 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
     private final Loader<Location> locationLoader = new LocationLoader();
     private final Loader<ScoreboardConfiguration> scoreboardLoaderLoader = new ScoreboardLoader();
     private final Loader<HologramConfig> hologramConfigLoader = new HologramLoader();
+    private final Loader<ProgressBar> progressBarLoader = new ProgressBarLoader();
 
     public KothLoader(KothPlugin plugin) {
         this.plugin = plugin;
@@ -70,8 +72,10 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
 
         List<String> blacklistTeamId = configuration.getStringList("blacklistTeamId");
 
+        ProgressBar progressBar = progressBarLoader.load(configuration, "progressBar.", file);
+
         return new ZKoth(this.plugin, fileName, kothType, name, captureSeconds, minLocation, maxLocation, startCommands, endCommands, cooldownScoreboard,
-                startScoreboard, cooldownStart, stopAfterSeconds, enableStartCapMessage, enableLooseCapMessage, enableEverySecondsCapMessage, hologramConfig, itemStacks, kothLootType, discordWebhookConfig, randomItemStacks, blacklistTeamId);
+                startScoreboard, cooldownStart, stopAfterSeconds, enableStartCapMessage, enableLooseCapMessage, enableEverySecondsCapMessage, hologramConfig, itemStacks, kothLootType, discordWebhookConfig, randomItemStacks, blacklistTeamId, progressBar);
     }
 
     @Override
@@ -92,11 +96,11 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
         scoreboardLoaderLoader.save(koth.getCooldownScoreboard(), configuration, "scoreboard.cooldown.");
         scoreboardLoaderLoader.save(koth.getStartScoreboard(), configuration, "scoreboard.start.");
         hologramConfigLoader.save(koth.getHologramConfig(), configuration, "hologram.");
+        progressBarLoader.save(koth.getProgressBar(), configuration, "progressBar.");
 
         configuration.set("loot.type", koth.getLootType().name());
         configuration.set("loot.random", koth.getRandomItemStack());
         List<String> items = koth.getItemStacks().stream().map(ItemStackUtils::serializeItemStack).collect(Collectors.toList());
         configuration.set("loot.items", items);
-
     }
 }

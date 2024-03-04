@@ -150,3 +150,10 @@ loot:
 blacklistTeamId:
   - "0"
   - "-1"
+
+# Configuration for the Progress Bar. Use by placeholders
+progressBar:
+  length: 20
+  symbol: "|"
+  completedColor: "#2fedc7"
+  notCompletedColor: "#8f8f8f"

@@ -1149,8 +1149,8 @@ public abstract class ZUtils extends MessageUtils {
         float percent = (float) current / max;
         int progressBars = (int) (totalBars * percent);
 
-        return Strings.repeat(completedColor + symbol, progressBars)
-                + Strings.repeat(notCompletedColor + symbol, totalBars - progressBars);
+        return color(Strings.repeat(completedColor + symbol, progressBars)
+                + Strings.repeat(notCompletedColor + symbol, totalBars - progressBars));
     }
 
     /**
@@ -1162,7 +1162,7 @@ public abstract class ZUtils extends MessageUtils {
      * @return string
      */
     public String getProgressBar(int current, int max, ProgressBar progressBar) {
-        return this.getProgressBar(current, max, progressBar.getLenght(), progressBar.getSymbol(),
+        return this.getProgressBar(current, max, progressBar.getLength(), progressBar.getSymbol(),
                 progressBar.getCompletedColor(), progressBar.getNotCompletedColor());
     }
 

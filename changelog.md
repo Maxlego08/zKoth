@@ -2,6 +2,7 @@
 
 - Fix NMS
 - Fix ``/koth stop``
+- Create placeholder: ``%zkoth_capture_progress_bar%``
 
 # 3.0.2
 

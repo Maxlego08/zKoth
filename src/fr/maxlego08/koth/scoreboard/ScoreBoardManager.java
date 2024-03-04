@@ -32,6 +32,8 @@ public class ScoreBoardManager extends ZUtils {
      */
     public void schedule() {
 
+        if (Config.schedulerMillisecond == 1000) return;
+
         if (isRunning)
             return;
 
@@ -217,7 +219,7 @@ public class ScoreBoardManager extends ZUtils {
      */
     public void setLinesAndSchedule(CollectionConsumer<Player> lines) {
         this.lines = lines;
-        // this.schedule();
+        this.schedule();
     }
 
     public KothScoreboard getScoreboard() {

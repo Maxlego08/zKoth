@@ -5,6 +5,7 @@ import fr.maxlego08.koth.api.utils.HologramConfig;
 import fr.maxlego08.koth.api.utils.PlayerResult;
 import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
 import fr.maxlego08.koth.zcore.utils.Cuboid;
+import fr.maxlego08.koth.zcore.utils.ProgressBar;
 import fr.maxlego08.koth.zcore.utils.interfaces.CollectionConsumer;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -278,7 +279,7 @@ public interface Koth {
      *
      * @return An {@code AtomicInteger} with the remaining seconds.
      */
-    AtomicInteger getRemainingSeconds();
+    int getRemainingSeconds();
 
     /**
      * Gets the current player who is capturing the KOTH.
@@ -297,5 +298,7 @@ public interface Koth {
     PlayerResult getPlayer(int position);
 
     List<String> getBlacklistTeamId();
+
+    ProgressBar getProgressBar();
 }
 

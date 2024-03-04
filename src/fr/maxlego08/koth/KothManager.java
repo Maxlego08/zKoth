@@ -320,4 +320,8 @@ public class KothManager extends ZUtils implements Savable {
         message(sender, Message.COMMAND_CREATE, "%command%", command);
         this.saveKoth(koth);
     }
+
+    public List<String> getActiveNameKoths() {
+        return this.getEnableKoths().stream().map(Koth::getFileName).collect(Collectors.toList());
+    }
 }

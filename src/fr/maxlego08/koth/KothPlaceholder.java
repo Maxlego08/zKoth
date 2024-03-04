@@ -6,12 +6,13 @@ import fr.maxlego08.koth.placeholder.LocalPlaceholder;
 import fr.maxlego08.koth.placeholder.ReturnBiConsumer;
 import fr.maxlego08.koth.save.Config;
 import fr.maxlego08.koth.zcore.utils.ReturnConsumer;
+import fr.maxlego08.koth.zcore.utils.ZUtils;
 import fr.maxlego08.koth.zcore.utils.builder.TimerBuilder;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
 
-public class KothPlaceholder {
+public class KothPlaceholder extends ZUtils {
 
     private final KothManager kothManager;
 
@@ -33,19 +34,24 @@ public class KothPlaceholder {
         this.register("center_y", koth -> String.valueOf(koth.getCenter().getBlockY()));
         this.register("center_z", koth -> String.valueOf(koth.getCenter().getBlockZ()));
 
-        this.register("spawn_seconds", koth -> String.valueOf(koth.getRemainingSeconds() == null ? koth.getCaptureSeconds() : koth.getRemainingSeconds().get()));
-        this.register("spawn_format", koth -> TimerBuilder.getStringTime(koth.getRemainingSeconds() == null ? koth.getCaptureSeconds() : koth.getRemainingSeconds().get()));
-        this.register("capture_format", koth -> String.valueOf(koth.getRemainingSeconds() == null ? koth.getCaptureSeconds() : koth.getRemainingSeconds().get()));
-        this.register("capture_seconds", koth -> TimerBuilder.getStringTime(koth.getRemainingSeconds() == null ? koth.getCaptureSeconds() : koth.getRemainingSeconds().get()));
+        this.register("spawn_seconds", koth -> String.valueOf(koth.getRemainingSeconds()));
+        this.register("spawn_format", koth -> TimerBuilder.getStringTime(koth.getRemainingSeconds()));
+        this.register("capture_format", koth -> String.valueOf(koth.getRemainingSeconds()));
+        this.register("capture_seconds", koth -> TimerBuilder.getStringTime(koth.getRemainingSeconds()));
         this.register("capture_max_seconds", koth -> String.valueOf(koth.getCaptureSeconds()));
         this.register("capture_max_formats", koth -> TimerBuilder.getStringTime(koth.getCaptureSeconds()));
+
+        this.register("capture_progress_bar", koth -> getProgressBar(koth.getCaptureSeconds() - koth.getRemainingSeconds(), koth.getCaptureSeconds(), koth.getProgressBar()));
+        this.registerPosition("progress_bar_score_points_", (position, koth) -> getProgressBar(koth.getPlayer(position).getPoints(), koth.getCaptureSeconds(), koth.getProgressBar()));
 
         this.registerPosition("score_player_", (position, koth) -> koth.getPlayer(position).getPlayerName());
         this.registerPosition("score_points_", (position, koth) -> String.valueOf(koth.getPlayer(position).getPoints()));
         this.registerPosition("score_team_name_", (position, koth) -> koth.getPlayer(position).getTeamName());
         this.registerPosition("score_team_id_", (position, koth) -> koth.getPlayer(position).getTeamId());
         this.registerPosition("score_team_leader_", (position, koth) -> koth.getPlayer(position).getTeamLeader());
+
         this.register("score", (player, koth) -> String.valueOf(koth.getScore(player)));
+        this.register("progress_bar_score", (player, koth) -> getProgressBar(koth.getScore(player), koth.getCaptureSeconds(), koth.getProgressBar()));
 
         this.register("player_name", koth -> koth.getCurrentPlayer() != null ? koth.getCurrentPlayer().getName() : Config.noPlayer);
         this.register("team_name", koth -> koth.getCurrentPlayer() != null ? this.kothManager.getKothTeam().getTeamName(koth.getCurrentPlayer()) : Config.noFaction);

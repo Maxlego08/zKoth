@@ -5,6 +5,7 @@
 - Create placeholder: ``%zkoth_capture_progress_bar%``
 - Create placeholder: ``%zkoth_progress_bar_score_points_<position>%``
 - Create placeholder: ``%zkoth_progress_bar_score%``
+- Change auto-completion for /koth stop
 
 # 3.0.2
 

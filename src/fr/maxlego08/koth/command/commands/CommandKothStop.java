@@ -8,21 +8,21 @@ import fr.maxlego08.koth.zcore.utils.commands.CommandType;
 
 public class CommandKothStop extends VCommand {
 
-	public CommandKothStop(KothPlugin plugin) {
-		super(plugin);
-		this.setPermission(Permission.ZKOTH_STOP);
-		this.addSubCommand("stop");
-		this.setDescription(Message.DESCRIPTION_SPAWN);
-		this.addRequireArg("name", (a,b) -> plugin.getKothManager().getNameKoths());
-	}
+    public CommandKothStop(KothPlugin plugin) {
+        super(plugin);
+        this.setPermission(Permission.ZKOTH_STOP);
+        this.addSubCommand("stop");
+        this.setDescription(Message.DESCRIPTION_SPAWN);
+        this.addRequireArg("name", (a, b) -> plugin.getKothManager().getActiveNameKoths());
+    }
 
-	@Override
-	protected CommandType perform(KothPlugin plugin) {
+    @Override
+    protected CommandType perform(KothPlugin plugin) {
 
-		String name = argAsString(0);
-		this.manager.stopKoth(sender, name);
-		
-		return CommandType.SUCCESS;
-	}
+        String name = argAsString(0);
+        this.manager.stopKoth(sender, name);
+
+        return CommandType.SUCCESS;
+    }
 
 }

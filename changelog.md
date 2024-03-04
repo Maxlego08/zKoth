@@ -1,5 +1,8 @@
 # Unreleased
 
+- Fix NMS
+- Fix ``/koth stop``
+
 # 3.0.2
 
 - Create placeholder: ``%zkoth_capture_max_seconds%``

@@ -291,7 +291,7 @@ public class ZKoth extends ZUtils implements Koth {
     @Override
     public void stop(CommandSender sender) {
 
-        if (this.kothStatus != KothStatus.START) {
+        if (this.kothStatus == KothStatus.STOP) {
             message(sender, Message.EVENT_DISABLE);
             return;
         }
@@ -817,9 +817,7 @@ public class ZKoth extends ZUtils implements Koth {
     public PlayerResult getPlayer(int position) {
 
         this.sortScores();
-        System.out.println((this.playerResults.size() > position) + " -< " + this.playerResults.size() +" - " + position);
         if (this.playerResults.size() > position) return Config.defaultPlayerResult;
-        System.out.println(this.playerResults.get(position - 1));
         return this.playerResults.get(position - 1);
     }
 

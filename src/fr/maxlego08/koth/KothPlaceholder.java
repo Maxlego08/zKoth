@@ -94,28 +94,28 @@ public class KothPlaceholder extends ZUtils {
     }
 
     public String onFirstKoth(ReturnConsumer<Koth> consumer) {
-        Optional<Koth> optional = this.kothManager.getActiveKoths().stream().findFirst();
+        Optional<Koth> optional = this.kothManager.getStartKoths().stream().findFirst();
         if (optional.isPresent()) {
             return consumer.accept(optional.get());
         } else return Config.noKoth;
     }
 
     public String onFirstKoth(Player player, ReturnBiConsumer<Player, Koth, String> consumer) {
-        Optional<Koth> optional = this.kothManager.getActiveKoths().stream().findFirst();
+        Optional<Koth> optional = this.kothManager.getStartKoths().stream().findFirst();
         if (optional.isPresent()) {
             return consumer.accept(player, optional.get());
         } else return Config.noKoth;
     }
 
     public String onFirstKoth(String argument, ReturnBiConsumer<String, Koth, String> consumer) {
-        Optional<Koth> optional = this.kothManager.getActiveKoths().stream().findFirst();
+        Optional<Koth> optional = this.kothManager.getStartKoths().stream().findFirst();
         if (optional.isPresent()) {
             return consumer.accept(argument, optional.get());
         } else return Config.noKoth;
     }
 
     public String onFirstKothPosition(String argument, ReturnBiConsumer<Integer, Koth, String> consumer) {
-        Optional<Koth> optional = this.kothManager.getActiveKoths().stream().findFirst();
+        Optional<Koth> optional = this.kothManager.getStartKoths().stream().findFirst();
         if (optional.isPresent()) {
             try {
                 return consumer.accept(Integer.parseInt(argument), optional.get());

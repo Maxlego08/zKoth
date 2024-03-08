@@ -1,5 +1,8 @@
 # Unreleased
 
+- Fix error with discord webhook on stop
+- Fix problem with placeholder on koth spawn
+
 # 3.0.3
 
 - Fix NMS

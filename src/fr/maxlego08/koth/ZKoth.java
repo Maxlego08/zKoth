@@ -85,7 +85,7 @@ public class ZKoth extends ZUtils implements Koth {
     private AtomicInteger remainingSeconds;
     private TimerTask timerTask;
     private TimerTask timerTaskStop;
-    private DiscordWebhookConfig discordWebhookConfig;
+    private final DiscordWebhookConfig discordWebhookConfig;
     private List<PlayerResult> playerResults = new ArrayList<>();
 
     public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands, ScoreboardConfiguration cooldownScoreboard, ScoreboardConfiguration startScoreboard, int cooldownStart, int stopAfterSeconds, boolean enableStartCapMessage, boolean enableLooseCapMessage, boolean enableEverySecondsCapMessage, HologramConfig hologramConfig, List<ItemStack> itemStacks, KothLootType kothLootType, DiscordWebhookConfig discordWebhookConfig, int randomItemStacks, List<String> blacklistTeamId, ProgressBar progressBar) {
@@ -272,7 +272,7 @@ public class ZKoth extends ZUtils implements Koth {
         event.call();
 
         if (event.isCancelled()) return;
-        this.discordWebhookConfig.send(this.plugin, this, KothEvent.STOP);
+        if (this.discordWebhookConfig != null) this.discordWebhookConfig.send(this.plugin, this, KothEvent.STOP);
 
         broadcast(Message.EVENT_STOP);
 
@@ -314,7 +314,7 @@ public class ZKoth extends ZUtils implements Koth {
 
         if (event.isCancelled()) return;
 
-        this.discordWebhookConfig.send(this.plugin, this, KothEvent.START);
+        if (this.discordWebhookConfig != null) this.discordWebhookConfig.send(this.plugin, this, KothEvent.START);
 
         if (this.cooldownScoreboard.isEnable()) {
             ScoreBoardManager scoreBoardManager = this.plugin.getScoreBoardManager();
@@ -362,7 +362,7 @@ public class ZKoth extends ZUtils implements Koth {
         event.call();
 
         if (event.isCancelled()) return;
-        this.discordWebhookConfig.send(this.plugin, this, KothEvent.SPAWN);
+        if (this.discordWebhookConfig != null) this.discordWebhookConfig.send(this.plugin, this, KothEvent.SPAWN);
 
         this.remainingSeconds = new AtomicInteger(this.captureSeconds);
 
@@ -442,7 +442,7 @@ public class ZKoth extends ZUtils implements Koth {
             KothLooseEvent event = new KothLooseEvent(this.currentPlayer, this);
             event.call();
 
-            this.discordWebhookConfig.send(this.plugin, this, KothEvent.LOOSE);
+            if (this.discordWebhookConfig != null) this.discordWebhookConfig.send(this.plugin, this, KothEvent.LOOSE);
 
             if (event.isCancelled()) return;
 
@@ -478,7 +478,7 @@ public class ZKoth extends ZUtils implements Koth {
             return;
         }
 
-        this.discordWebhookConfig.send(this.plugin, this, KothEvent.START_CAP);
+        if (this.discordWebhookConfig != null) this.discordWebhookConfig.send(this.plugin, this, KothEvent.START_CAP);
 
         if (enableStartCapMessage) {
             broadcast(Message.EVENT_CATCH);
@@ -522,7 +522,8 @@ public class ZKoth extends ZUtils implements Koth {
 
                 if (kothLooseEvent.isCancelled()) return;
 
-                this.discordWebhookConfig.send(this.plugin, this, KothEvent.LOOSE);
+                if (this.discordWebhookConfig != null)
+                    this.discordWebhookConfig.send(this.plugin, this, KothEvent.LOOSE);
 
                 if (this.timerTask != null) {
                     this.timerTask.cancel();
@@ -581,7 +582,7 @@ public class ZKoth extends ZUtils implements Koth {
 
         if (kothWinEvent.isCancelled()) return;
 
-        this.discordWebhookConfig.send(this.plugin, this, KothEvent.WIN);
+        if (this.discordWebhookConfig != null) this.discordWebhookConfig.send(this.plugin, this, KothEvent.WIN);
 
         task.cancel();
         broadcast(Message.EVENT_WIN);

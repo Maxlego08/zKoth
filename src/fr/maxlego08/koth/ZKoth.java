@@ -16,6 +16,7 @@ import fr.maxlego08.koth.api.events.KothStopEvent;
 import fr.maxlego08.koth.api.events.KothWinEvent;
 import fr.maxlego08.koth.api.utils.HologramConfig;
 import fr.maxlego08.koth.api.utils.PlayerResult;
+import fr.maxlego08.koth.api.utils.RandomCommand;
 import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
 import fr.maxlego08.koth.hook.teams.NoneHook;
 import fr.maxlego08.koth.save.Config;
@@ -72,6 +73,9 @@ public class ZKoth extends ZUtils implements Koth {
     private final KothLootType kothLootType;
     private final List<String> blacklistTeamId;
     private final ProgressBar progressBar;
+    private final List<RandomCommand> randomCommands;
+    private final int maxRandomCommands;
+    private final DiscordWebhookConfig discordWebhookConfig;
     private List<ItemStack> itemStacks;
     private String name;
     private int captureSeconds;
@@ -85,10 +89,9 @@ public class ZKoth extends ZUtils implements Koth {
     private AtomicInteger remainingSeconds;
     private TimerTask timerTask;
     private TimerTask timerTaskStop;
-    private final DiscordWebhookConfig discordWebhookConfig;
     private List<PlayerResult> playerResults = new ArrayList<>();
 
-    public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands, ScoreboardConfiguration cooldownScoreboard, ScoreboardConfiguration startScoreboard, int cooldownStart, int stopAfterSeconds, boolean enableStartCapMessage, boolean enableLooseCapMessage, boolean enableEverySecondsCapMessage, HologramConfig hologramConfig, List<ItemStack> itemStacks, KothLootType kothLootType, DiscordWebhookConfig discordWebhookConfig, int randomItemStacks, List<String> blacklistTeamId, ProgressBar progressBar) {
+    public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands, ScoreboardConfiguration cooldownScoreboard, ScoreboardConfiguration startScoreboard, int cooldownStart, int stopAfterSeconds, boolean enableStartCapMessage, boolean enableLooseCapMessage, boolean enableEverySecondsCapMessage, HologramConfig hologramConfig, List<ItemStack> itemStacks, KothLootType kothLootType, DiscordWebhookConfig discordWebhookConfig, int randomItemStacks, List<String> blacklistTeamId, ProgressBar progressBar, List<RandomCommand> randomCommands, int maxRandomCommands) {
         this.plugin = plugin;
         this.fileName = fileName;
         this.kothType = kothType;
@@ -112,6 +115,8 @@ public class ZKoth extends ZUtils implements Koth {
         this.randomItemStacks = randomItemStacks;
         this.blacklistTeamId = blacklistTeamId;
         this.progressBar = progressBar;
+        this.randomCommands = randomCommands;
+        this.maxRandomCommands = maxRandomCommands;
     }
 
     public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation) {
@@ -136,6 +141,8 @@ public class ZKoth extends ZUtils implements Koth {
         this.randomItemStacks = 0;
         this.blacklistTeamId = new ArrayList<>();
         this.progressBar = new ProgressBar(10, '-', "&a", "&7");
+        this.randomCommands = new ArrayList<>();
+        this.maxRandomCommands = 0;
     }
 
     @Override
@@ -575,6 +582,19 @@ public class ZKoth extends ZUtils implements Koth {
         });
     }
 
+    private void dispatchCommand(String command, Player player) {
+        if (command.contains("%online-player%")) {
+            for (Player cPlayer : this.kothTeam.getOnlinePlayer(player)) {
+                String finaleCommand = replaceMessage(command);
+                finaleCommand = finaleCommand.replace("%online-player%", cPlayer.getName());
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), papi(finaleCommand, cPlayer));
+            }
+        } else {
+            command = replaceMessage(command);
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), papi(command, player));
+        }
+    }
+
     public void endKoth(TimerTask task, Cuboid cuboid, Player player) {
 
         KothWinEvent kothWinEvent = new KothWinEvent(this, this.currentPlayer);
@@ -590,18 +610,17 @@ public class ZKoth extends ZUtils implements Koth {
         this.plugin.getKothHologram().end(this);
         this.plugin.getScoreBoardManager().clearBoard();
 
-        this.endCommands.forEach(command -> {
-            if (command.contains("%online-player%")) {
-                for (Player cPlayer : this.kothTeam.getOnlinePlayer(player)) {
-                    String finaleCommand = replaceMessage(command);
-                    finaleCommand = finaleCommand.replace("%online-player%", cPlayer.getName());
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), papi(finaleCommand, cPlayer));
+        this.endCommands.forEach(command -> dispatchCommand(command, player));
+        if (this.maxRandomCommands != 0 && this.randomCommands.size() != 0) {
+            int executedCommands = 0;
+            while (executedCommands < maxRandomCommands) {
+                RandomCommand randomCommand = randomElement(this.randomCommands);
+                if (randomCommand.canUse()) {
+                    randomCommand.getCommands().forEach(command -> dispatchCommand(command, player));
+                    executedCommands++;
                 }
-            } else {
-                command = replaceMessage(command);
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), papi(command, player));
             }
-        });
+        }
 
         Location center = cuboid.getCenter();
         World world = center.getWorld();
@@ -851,5 +870,15 @@ public class ZKoth extends ZUtils implements Koth {
     @Override
     public ProgressBar getProgressBar() {
         return this.progressBar;
+    }
+
+    @Override
+    public List<RandomCommand> getRandomCommands() {
+        return this.randomCommands;
+    }
+
+    @Override
+    public int getMaxRandomCommands() {
+        return this.maxRandomCommands;
     }
 }

@@ -1,5 +1,6 @@
 # Unreleased
 
+- Add random command on koth win
 - Fix error with discord webhook on stop
 - Fix problem with placeholder on koth spawn
 

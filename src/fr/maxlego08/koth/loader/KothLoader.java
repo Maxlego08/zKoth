@@ -7,6 +7,7 @@ import fr.maxlego08.koth.api.KothLootType;
 import fr.maxlego08.koth.api.KothType;
 import fr.maxlego08.koth.api.discord.DiscordWebhookConfig;
 import fr.maxlego08.koth.api.utils.HologramConfig;
+import fr.maxlego08.koth.api.utils.RandomCommand;
 import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
 import fr.maxlego08.koth.zcore.utils.ProgressBar;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
@@ -17,7 +18,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class KothLoader extends ZUtils implements Loader<Koth> {
@@ -74,8 +78,21 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
 
         ProgressBar progressBar = progressBarLoader.load(configuration, "progressBar.", file);
 
-        return new ZKoth(this.plugin, fileName, kothType, name, captureSeconds, minLocation, maxLocation, startCommands, endCommands, cooldownScoreboard,
-                startScoreboard, cooldownStart, stopAfterSeconds, enableStartCapMessage, enableLooseCapMessage, enableEverySecondsCapMessage, hologramConfig, itemStacks, kothLootType, discordWebhookConfig, randomItemStacks, blacklistTeamId, progressBar);
+        List<RandomCommand> randomCommands = new ArrayList<>();
+        int maxRandomCommands = configuration.getInt("randomEndCommands.commandAmount", 0);
+        List<?> list = configuration.getList("randomEndCommands.commands", null);
+        if (list != null) {
+            list.forEach(value -> {
+                if (value instanceof Map<?, ?>) {
+                    Map<?, ?> map = (Map<?, ?>) value;
+                    randomCommands.add(new RandomCommand(((Number) map.get("percent")).intValue(), (List<String>) map.get("commands")));
+                }
+            });
+        }
+
+        System.out.println("COMMANDS " + randomCommands + " - " + maxRandomCommands);
+
+        return new ZKoth(this.plugin, fileName, kothType, name, captureSeconds, minLocation, maxLocation, startCommands, endCommands, cooldownScoreboard, startScoreboard, cooldownStart, stopAfterSeconds, enableStartCapMessage, enableLooseCapMessage, enableEverySecondsCapMessage, hologramConfig, itemStacks, kothLootType, discordWebhookConfig, randomItemStacks, blacklistTeamId, progressBar, randomCommands, maxRandomCommands);
     }
 
     @Override
@@ -88,6 +105,17 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
         configuration.set("stopAfterSeconds", koth.getStopAfterSeconds());
         configuration.set("startCommands", koth.getStartCommands());
         configuration.set("endCommands", koth.getEndCommands());
+
+        configuration.set("randomEndCommands.commandAmount", koth.getMaxRandomCommands());
+        List<Map<String, Object>> endRandomCommands = new ArrayList<>();
+        koth.getRandomCommands().forEach(randomCommand -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("percent", randomCommand.getPercent());
+            map.put("commands", randomCommand.getCommands());
+            endRandomCommands.add(map);
+        });
+        configuration.set("randomEndCommands.commands", endRandomCommands);
+
         configuration.set("enableStartCapMessage", koth.isEnableStartCapMessage());
         configuration.set("enableLooseCapMessage", koth.isEnableLooseCapMessage());
         configuration.set("enableEverySecondsCapMessage", koth.isEnableEverySecondsCapMessage());

@@ -170,6 +170,10 @@ public class KothManager extends ZUtils implements Savable {
         return koths.stream().filter(koth -> koth.getStatus() == KothStatus.COOLDOWN).collect(Collectors.toList());
     }
 
+    public List<Koth> getStartKoths() {
+        return koths.stream().filter(koth -> koth.getStatus() != KothStatus.STOP).collect(Collectors.toList());
+    }
+
     public List<String> getNameKoths() {
         return this.koths.stream().map(Koth::getFileName).collect(Collectors.toList());
     }

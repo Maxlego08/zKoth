@@ -47,6 +47,25 @@ startCommands: []
 # Commands that will be executed when the koth is won by a player
 endCommands: []
 
+# Allows to run random commands at the end of the koth
+randomEndCommands:
+  # Number of commands to execute
+  commandAmount: 2
+  # List of possible commands
+  commands:
+    - percent: 20 # Command percent
+      commands: # Commands list
+        - "bc random command #1"
+    - percent: 20 # Command percent
+      commands: # Commands list
+        - "bc random command #2"
+    - percent: 10 # Command percent
+      commands: # Commands list
+        - "bc random command #3"
+    - percent: 40 # Command percent
+      commands: # Commands list
+        - "bc random command #4"
+
 # First location
 minLocation:
   world: world

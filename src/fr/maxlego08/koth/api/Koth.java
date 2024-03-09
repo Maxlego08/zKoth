@@ -3,6 +3,7 @@ package fr.maxlego08.koth.api;
 import fr.maxlego08.koth.api.discord.DiscordWebhookConfig;
 import fr.maxlego08.koth.api.utils.HologramConfig;
 import fr.maxlego08.koth.api.utils.PlayerResult;
+import fr.maxlego08.koth.api.utils.RandomCommand;
 import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
 import fr.maxlego08.koth.zcore.utils.Cuboid;
 import fr.maxlego08.koth.zcore.utils.ProgressBar;
@@ -13,13 +14,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The Koth interface represents all the essential information and functionalities of a King of the Hill (KOTH) game.
  * It includes methods for managing game settings, locations, statuses, and interactions. This interface is central to
  * the KOTH plugin, providing a comprehensive set of operations for configuring and controlling KOTH games.
- *
+ * <p>
  * Implementing this interface allows for detailed customization and control over the KOTH games, including game dynamics,
  * area definitions, scoreboard configurations, and more. It's designed to facilitate seamless integration with other game
  * management components, such as teams, scoreboards, and holograms, enhancing the overall gameplay experience.
@@ -300,5 +300,9 @@ public interface Koth {
     List<String> getBlacklistTeamId();
 
     ProgressBar getProgressBar();
+
+    List<RandomCommand> getRandomCommands();
+
+    int getMaxRandomCommands();
 }
 

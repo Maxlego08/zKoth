@@ -90,8 +90,6 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
             });
         }
 
-        System.out.println("COMMANDS " + randomCommands + " - " + maxRandomCommands);
-
         return new ZKoth(this.plugin, fileName, kothType, name, captureSeconds, minLocation, maxLocation, startCommands, endCommands, cooldownScoreboard, startScoreboard, cooldownStart, stopAfterSeconds, enableStartCapMessage, enableLooseCapMessage, enableEverySecondsCapMessage, hologramConfig, itemStacks, kothLootType, discordWebhookConfig, randomItemStacks, blacklistTeamId, progressBar, randomCommands, maxRandomCommands);
     }
 

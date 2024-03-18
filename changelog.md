@@ -1,5 +1,9 @@
 # Unreleased
 
+# 3.0.5
+
+- Add Gang+ support
+
 # 3.0.4
 
 - Add random command on koth win

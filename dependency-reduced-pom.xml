@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>fr.maxlego08.koth</groupId>
   <artifactId>zKoth</artifactId>
-  <version>3.0.4</version>
+  <version>3.0.5</version>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <resources>
@@ -218,6 +218,13 @@
       <version>4.1.4-STABLE</version>
       <scope>system</scope>
       <systemPath>${basedir}/libs/SaberFactions.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>com.github.brcdev-minecraft</groupId>
+      <artifactId>gangs-api</artifactId>
+      <version>1.0.0</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/libs/GangsPlus-2.6.4.jar</systemPath>
     </dependency>
   </dependencies>
   <properties>

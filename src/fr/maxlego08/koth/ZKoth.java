@@ -834,7 +834,7 @@ public class ZKoth extends ZUtils implements Koth {
 
     @Override
     public int getScore(Player player) {
-        return this.playersValues.getOrDefault(player.getUniqueId(), 0);
+        return player == null ? 0 : this.playersValues.getOrDefault(player.getUniqueId(), 0);
     }
 
     @Override

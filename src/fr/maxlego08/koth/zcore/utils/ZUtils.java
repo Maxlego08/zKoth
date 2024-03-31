@@ -836,7 +836,7 @@ public abstract class ZUtils extends MessageUtils {
     protected boolean isCooldown(Player player, String cooldown, int timer) {
         if (CooldownBuilder.isCooldown(cooldown, player)) {
             ActionBar.sendActionBar(player,
-                    String.format("�cVous devez attendre encore �6%s �cavant de pouvoir faire cette action.",
+                    String.format("§cVous devez attendre encore §6%s §cavant de pouvoir faire cette action.",
                             timerFormat(player, cooldown)));
             return true;
         }
@@ -850,7 +850,7 @@ public abstract class ZUtils extends MessageUtils {
      * @return
      */
     protected String toList(Stream<String> list) {
-        return toList(list.collect(Collectors.toList()), "�e", "�6");
+        return toList(list.collect(Collectors.toList()), "§e", "§6");
     }
 
     /**
@@ -858,7 +858,7 @@ public abstract class ZUtils extends MessageUtils {
      * @return
      */
     protected String toList(List<String> list) {
-        return toList(list, "�e", "�6�n");
+        return toList(list, "§e", "§6§n");
     }
 
     /**
@@ -889,7 +889,7 @@ public abstract class ZUtils extends MessageUtils {
      */
     protected String removeColor(String message) {
         for (ChatColor color : ChatColor.values())
-            message = message.replace("�" + color.getChar(), "").replace("&" + color.getChar(), "");
+            message = message.replace("§" + color.getChar(), "").replace("&" + color.getChar(), "");
         return message;
     }
 

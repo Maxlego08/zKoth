@@ -1,5 +1,7 @@
 # Unreleased
 
+- Fix /koth stop auto-completion
+
 # 3.0.5
 
 - Add Gang+ support

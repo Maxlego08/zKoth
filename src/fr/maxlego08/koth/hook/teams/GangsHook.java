@@ -1,5 +1,6 @@
 package fr.maxlego08.koth.hook.teams;
 
+import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.api.KothTeam;
 import net.brcdev.gangs.GangsPlugin;
 import net.brcdev.gangs.gang.Gang;
@@ -11,6 +12,13 @@ import java.util.Collections;
 import java.util.List;
 
 public class GangsHook implements KothTeam {
+
+    private final KothPlugin plugin;
+
+    public GangsHook(KothPlugin plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public String getTeamName(OfflinePlayer player) {
         Gang gang = GangsPlugin.getInstance().getGangManager().getPlayersGang(player);

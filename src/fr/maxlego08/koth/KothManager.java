@@ -326,6 +326,6 @@ public class KothManager extends ZUtils implements Savable {
     }
 
     public List<String> getActiveNameKoths() {
-        return this.getEnableKoths().stream().map(Koth::getFileName).collect(Collectors.toList());
+        return this.getActiveKoths().stream().map(Koth::getFileName).collect(Collectors.toList());
     }
 }

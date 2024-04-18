@@ -63,7 +63,7 @@ public class Config {
 		displayMessageKothCap = configuration.getIntegerList("displayMessageKothCap");
 		noPlayer = configuration.getString("noPlayer", "X");
 		noFaction = configuration.getString("noFaction", "X");
-		noFaction = configuration.getString("noKoth", "X");
+		noKoth = configuration.getString("noKoth", "X");
 		schedulerMillisecond = configuration.getLong("schedulerMillisecond", 1000);
 		removeChestSec = configuration.getInt("removeChestSec", 120);
 

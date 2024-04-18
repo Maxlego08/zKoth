@@ -1,4 +1,8 @@
-# Unreleased
+# 3.0.6
+
+- Some fixs
+- Fix /koth stop auto-completion
+- Fix ``noKoth`` configuration
 
 # 3.0.5
 

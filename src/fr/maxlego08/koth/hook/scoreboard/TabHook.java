@@ -7,7 +7,6 @@ import me.neznamy.tab.api.TabPlayer;
 import me.neznamy.tab.api.scoreboard.ScoreboardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import java.util.function.Consumer;
 
@@ -24,8 +23,9 @@ public class TabHook implements KothScoreboard {
         TabAPI api = TabAPI.getInstance();
         TabPlayer tabPlayer = api.getPlayer(player.getUniqueId());
         ScoreboardManager manager = TabAPI.getInstance().getScoreboardManager();
+        System.out.println(tabPlayer + " - " + manager);
         if (tabPlayer != null && manager != null) {
-            manager.toggleScoreboard(tabPlayer, false);
+            manager.toggleScoreboard(tabPlayer, true);
             Bukkit.getScheduler().runTaskLater(this.plugin, () -> after.accept(player), 10);
         }
     }

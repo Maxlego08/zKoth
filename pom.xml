@@ -242,5 +242,11 @@
             <systemPath>${basedir}/libs/GangsPlus-2.6.4.jar</systemPath>
             <scope>system</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.UlrichBR</groupId>
+            <artifactId>UClansV7-API</artifactId>
+            <version>7.7.0-r1</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>

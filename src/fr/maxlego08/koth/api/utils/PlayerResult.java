@@ -35,4 +35,15 @@ public class PlayerResult {
     public String getTeamLeader() {
         return teamLeader;
     }
+
+    @Override
+    public String toString() {
+        return "PlayerResult{" +
+                "playerName='" + playerName + '\'' +
+                ", points=" + points +
+                ", teamName='" + teamName + '\'' +
+                ", teamId='" + teamId + '\'' +
+                ", teamLeader='" + teamLeader + '\'' +
+                '}';
+    }
 }

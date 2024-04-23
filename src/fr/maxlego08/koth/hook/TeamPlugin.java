@@ -9,6 +9,7 @@ import fr.maxlego08.koth.hook.teams.LandHook;
 import fr.maxlego08.koth.hook.teams.SaberFactionHook;
 import fr.maxlego08.koth.hook.teams.SimpleClanHook;
 import fr.maxlego08.koth.hook.teams.SuperiorSkyblock2Hook;
+import fr.maxlego08.koth.hook.teams.UltimateClan;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -23,6 +24,7 @@ public enum TeamPlugin {
     FACTIONS("Factions", SaberFactionHook.class),
     SIMPLECLANS("SimpleClans", SimpleClanHook.class),
     GANGSPLUS("GangsPlus", GangsHook.class),
+    ULTIMATE_CLANS("UltimateClans", UltimateClan.class),
 
     ;
 

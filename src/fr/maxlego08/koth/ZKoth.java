@@ -841,7 +841,7 @@ public class ZKoth extends ZUtils implements Koth {
     public PlayerResult getPlayer(int position) {
 
         this.sortScores();
-        if (this.playerResults.size() > position) return Config.defaultPlayerResult;
+        if (this.playerResults.isEmpty() || position > this.playerResults.size()) return Config.defaultPlayerResult;
         return this.playerResults.get(position - 1);
     }
 

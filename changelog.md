@@ -1,3 +1,7 @@
+# Unreleased
+
+- Fix errors with Placeholders
+
 # 3.0.6
 
 - Some fixs

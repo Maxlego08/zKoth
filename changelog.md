@@ -1,3 +1,10 @@
+# Unreleased
+
+# 3.0.7
+
+- Add Ultimate Clan support
+- Fix errors with Placeholders
+
 # 3.0.6
 
 - Some fixs

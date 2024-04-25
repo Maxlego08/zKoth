@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>fr.maxlego08.koth</groupId>
     <artifactId>zKoth</artifactId>
-    <version>3.0.6</version>
+    <version>3.0.7</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>8</maven.compiler.source>
@@ -241,6 +241,12 @@
             <version>1.0.0</version>
             <systemPath>${basedir}/libs/GangsPlus-2.6.4.jar</systemPath>
             <scope>system</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.UlrichBR</groupId>
+            <artifactId>UClansV7-API</artifactId>
+            <version>7.7.0-r1</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

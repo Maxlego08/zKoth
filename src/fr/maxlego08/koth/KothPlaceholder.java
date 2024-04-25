@@ -120,9 +120,14 @@ public class KothPlaceholder extends ZUtils {
             try {
                 return consumer.accept(Integer.parseInt(argument), optional.get());
             } catch (Exception exception) {
+                if (Config.enableDebug) {
+                    exception.printStackTrace();
+                }
                 return consumer.accept(-1, optional.get());
             }
-        } else return Config.noKoth;
+        } else {
+            return Config.noKoth;
+        }
     }
 
 }

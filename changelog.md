@@ -1,5 +1,6 @@
 # Unreleased
 
+- Add Ultimate Clan support
 - Fix errors with Placeholders
 
 # 3.0.6

@@ -1,5 +1,7 @@
 # Unreleased
 
+- Update HuskTown API
+
 # 3.0.7
 
 - Add Ultimate Clan support

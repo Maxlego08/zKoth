@@ -17,8 +17,6 @@ import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
-import fr.maxlego08.koth.zcore.utils.nms.NMSUtils;
-
 /**
  * 
  * Based on
@@ -111,12 +109,6 @@ public class PlayerSkin {
 	}
 
 	public static String getMethodName() {
-		double version = NMSUtils.getNMSVersion();
-		if (version == 1.18) {
-			return "fp";
-		} else if (version == 1.19) {
-			return "fz";
-		}
 		return "getProfile";
 	}
 

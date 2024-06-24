@@ -3,6 +3,7 @@ package fr.maxlego08.koth.zcore.utils;
 import java.lang.reflect.Constructor;
 import java.util.List;
 
+import fr.maxlego08.koth.zcore.utils.nms.NmsVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -10,7 +11,6 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import fr.maxlego08.koth.zcore.enums.Message;
-import fr.maxlego08.koth.zcore.utils.nms.NMSUtils;
 import fr.maxlego08.koth.zcore.utils.players.ActionBar;
 
 /**
@@ -179,7 +179,7 @@ public abstract class MessageUtils extends LocationUtils {
 	 */
 	protected void title(Player player, String title, String subtitle, int fadeInTime, int showTime, int fadeOutTime) {
 
-		if (NMSUtils.isNewVersion()) {
+		if (NmsVersion.nmsVersion.isNewMaterial()) {
 			player.sendTitle(title, subtitle, fadeInTime, showTime, fadeOutTime);
 			return;
 		}

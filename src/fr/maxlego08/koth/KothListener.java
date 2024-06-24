@@ -8,7 +8,7 @@ import fr.maxlego08.koth.inventory.KothHolder;
 import fr.maxlego08.koth.listener.ListenerAdapter;
 import fr.maxlego08.koth.save.Config;
 import fr.maxlego08.koth.zcore.enums.Message;
-import fr.maxlego08.koth.zcore.utils.nms.NMSUtils;
+import fr.maxlego08.koth.zcore.utils.nms.NmsVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -32,7 +32,7 @@ public class KothListener extends ListenerAdapter {
 
     private final KothPlugin plugin;
     private final KothManager manager;
-    private final Board board = NMSUtils.isHexColor() ? new ColorBoard() : new EmptyBoard();
+    private final Board board = NmsVersion.nmsVersion.isHexVersion() ? new ColorBoard() : new EmptyBoard();
     private long playerMoveEventCooldown = 0;
 
     public KothListener(KothPlugin plugin, KothManager manager) {
@@ -49,7 +49,7 @@ public class KothListener extends ListenerAdapter {
 
             event.setCancelled(true);
 
-            if (NMSUtils.isTwoHand() && event.getHand() == EquipmentSlot.OFF_HAND) return;
+            if (!NmsVersion.nmsVersion.isOneHand() && event.getHand() == EquipmentSlot.OFF_HAND) return;
 
             Optional<Selection> optional = this.manager.getSelection(player.getUniqueId());
             Selection selection = null;
@@ -66,7 +66,7 @@ public class KothListener extends ListenerAdapter {
 
             LivingEntity entity = null;
 
-            if (NMSUtils.isHexColor()) {
+            if (NmsVersion.nmsVersion.isHexVersion()) {
 
                 Shulker shulker = location.getWorld().spawn(location, Shulker.class);
                 shulker.setInvulnerable(true);

@@ -29,15 +29,7 @@ public class HuskTownHook implements KothTeam {
     }
 
     private Optional<Town> getTown(OfflinePlayer player) {
-        if (this.towns.containsKey(player.getUniqueId())) return Optional.of(this.towns.get(player.getUniqueId()));
-
-        Optional<Member> optional = HuskTownsAPI.getInstance().getUserTown(player.getPlayer());
-        if (optional.isPresent()) {
-            Member member = optional.get();
-            this.towns.put(player.getUniqueId(), member.town());
-            return Optional.of(member.town());
-        }
-        return Optional.empty();
+        return HuskTownsAPI.getInstance().getTowns().stream().filter(e -> e.getMembers().containsKey(player.getUniqueId())).findFirst();
     }
 
     @Override

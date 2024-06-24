@@ -74,7 +74,7 @@ public class ScoreBoardManager extends ZUtils {
         });
     }
 
-    public void update(){
+    public void update() {
         this.boards.forEach((player, board) -> {
             board.updateLines(this.lines.accept(player));
         });
@@ -108,7 +108,7 @@ public class ScoreBoardManager extends ZUtils {
             this.boards.remove(player);
 
             FastBoard board = new FastBoard(player);
-            board.updateTitle(title);
+            board.updateTitle(papi(title, player));
 
             if (this.lines != null) {
                 board.updateLines(this.lines.accept(player));

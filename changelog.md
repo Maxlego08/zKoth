@@ -1,5 +1,8 @@
 # Unreleased
 
+- Update HuskTown API
+- Fix scoreboard title with PlaceholderApi
+
 # 3.0.7
 
 - Add Ultimate Clan support

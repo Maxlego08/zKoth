@@ -23,6 +23,7 @@ import fr.maxlego08.koth.save.Config;
 import fr.maxlego08.koth.scoreboard.ScoreBoardManager;
 import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.logger.Logger;
+import fr.maxlego08.koth.zcore.utils.ColorTransformer;
 import fr.maxlego08.koth.zcore.utils.Cuboid;
 import fr.maxlego08.koth.zcore.utils.ProgressBar;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
@@ -784,7 +785,7 @@ public class ZKoth extends ZUtils implements Koth {
         string = string.replace("%centerY%", String.valueOf(centerLocation.getBlockY()));
         string = string.replace("%centerZ%", String.valueOf(centerLocation.getBlockZ()));
 
-        return string;
+        return ColorTransformer.transformColors(string);
     }
 
     @Override

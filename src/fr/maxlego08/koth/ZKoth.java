@@ -785,7 +785,7 @@ public class ZKoth extends ZUtils implements Koth {
         string = string.replace("%centerY%", String.valueOf(centerLocation.getBlockY()));
         string = string.replace("%centerZ%", String.valueOf(centerLocation.getBlockZ()));
 
-        return ColorTransformer.transformColors(string);
+        return string;
     }
 
     @Override

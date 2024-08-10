@@ -2,6 +2,7 @@ package fr.maxlego08.koth.hook.teams;
 
 import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.api.KothTeam;
+import fr.maxlego08.koth.zcore.utils.ColorTransformer;
 import me.ulrich.clans.Clans;
 import me.ulrich.clans.data.ClanData;
 import me.ulrich.clans.events.ClanDeleteEvent;
@@ -28,7 +29,7 @@ public class UltimateClan implements KothTeam {
     @Override
     public String getTeamName(OfflinePlayer player) {
         Optional<ClanData> optional = this.clans.getPlayerAPI().getPlayerClan(player.getUniqueId());
-        return optional.isPresent() ? optional.get().getTag() : player.getName();
+        return optional.isPresent() ? ColorTransformer.transformColors(optional.get().getTag()) : player.getName();
     }
 
     @Override

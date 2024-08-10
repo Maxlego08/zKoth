@@ -23,6 +23,7 @@ import fr.maxlego08.koth.save.Config;
 import fr.maxlego08.koth.scoreboard.ScoreBoardManager;
 import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.logger.Logger;
+import fr.maxlego08.koth.zcore.utils.ColorTransformer;
 import fr.maxlego08.koth.zcore.utils.Cuboid;
 import fr.maxlego08.koth.zcore.utils.ProgressBar;
 import fr.maxlego08.koth.zcore.utils.ZUtils;

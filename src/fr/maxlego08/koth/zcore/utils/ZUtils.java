@@ -540,6 +540,9 @@ public abstract class ZUtils extends MessageUtils {
      */
     protected String color(String message) {
         if (message == null) return null;
+
+        message = ColorTransformer.transformColors(message);
+
         if (NmsVersion.nmsVersion.isHexVersion()) {
             Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
             Matcher matcher = pattern.matcher(message);

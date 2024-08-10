@@ -1,7 +1,14 @@
 # Unreleased
 
+# 3.0.9
+
 - Update HuskTown API
 - Fix scoreboard title with PlaceholderApi
+- Minor fixs
+
+# 3.0.8
+
+- Fix nms and 1.21
 
 # 3.0.7
 

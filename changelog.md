@@ -1,5 +1,7 @@
 # Unreleased
 
+# 3.1.0
+
 - Add ``enableEverySecondsCooldownMessage``, Periodically displays a message when the koth is launched
 - Fixed the koth default type when creating, the type will now be CAPTURE
 - Add ``%captureProgress%`` and `%capturePercent%` placeholder 

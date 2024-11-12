@@ -1,85 +1,86 @@
-# Available placeholders:
-# - %online-player% - Allows to run the order to all online players of the team
-# - %name% - Koth name
-# - %world% - World name
-# - %minX% - Min location X
-# - %minY% - Min location Y
-# - %minZ% - Min location Z
-# - %maxX% - Max location X
-# - %maxY% - Max location Y
-# - %maxZ% - Max location Z
-# - %centerX% - Center location X
-# - %centerY% - Center location Y
-# - %centerZ% - Center location Z
-# - %spawnSeconds% - Second before koth spawn
-# - %spawnFormat% - Time format before koth spawn
-# - %playerName% - Current player name
-# - %teamName% - Current player team name
-# - %teamId% - Current player team id
-# - %teamLeader% - Current player team leader name
-# - %captureSeconds% - Capture seconds (only for CAPTURE type)
-# - %captureFormat% - Capture time format (only for CAPTURE type)
+# Available placeholders for command execution:
+# - %online-player%: Targets all online players in the team
+# - %name%: Name of the Koth event
+# - %world%: Name of the world where Koth is located
+# - %minX%, %minY%, %minZ%: Minimum X, Y, Z coordinates of Koth area
+# - %maxX%, %maxY%, %maxZ%: Maximum X, Y, Z coordinates of Koth area
+# - %centerX%, %centerY%, %centerZ%: Center X, Y, Z coordinates of Koth area
+# - %spawnSeconds%: Seconds before Koth spawns
+# - %spawnFormat%: Formatted time before Koth spawns
+# - %playerName%: Name of the player capturing Koth
+# - %teamName%: Name of the player's team
+# - %teamId%: ID of the player's team
+# - %teamLeader%: Name of the team leader
+# - %captureSeconds%: Seconds taken to capture (only for CAPTURE type)
+# - %captureFormat%: Formatted capture time (only for CAPTURE type)
 
-# Koth display name
+# Display name for the Koth event
 name: test
 
-# Koth type
+# Type of Koth event (e.g., CAPTURE)
 type: CAPTURE
 
-# Capture time or score to achieve
+# Target capture time or score for winning Koth
 capture: 30
 
-# Time in seconds to spawn koth with /koth spawn command
+# Cooldown duration in seconds before Koth can be spawned again
 cooldownStart: 300
 
-# Time in seconds to automatically stop koth
+# Time in seconds after which the Koth event stops automatically
 stopAfterSeconds: 3600
 
-# Activate the message when a player starts capturing the koth
+# Toggle message display when a player starts capturing Koth
 enableStartCapMessage: true
 
-# Activate the message when a player loses the koth capture
+# Toggle message display when a player loses the Koth capture
 enableLooseCapMessage: true
 
-# Commands that will be executed when the koth is launched
+# Enable/disable periodic messages during capture
+enableEverySecondsCapMessage: false
+
+# Enable/disable periodic message during spawn cooldown
+enableEverySecondsCooldownMessage: false
+
+# List of commands executed when Koth starts
 startCommands: []
 
-# Commands that will be executed when the koth is won by a player
+# List of commands executed when a player wins the Koth
 endCommands: []
 
-# Allows to run random commands at the end of the koth
+# Configuration for random commands executed at the end of Koth
 randomEndCommands:
-  # Number of commands to execute
+  # Number of random commands to execute
   commandAmount: 2
-  # List of possible commands
+  # List of potential commands with execution probability
   commands:
-    - percent: 20 # Command percent
-      commands: # Commands list
+    - percent: 20 # Probability for this command
+      commands: # List of commands
         - "bc random command #1"
-    - percent: 20 # Command percent
-      commands: # Commands list
+    - percent: 20
+      commands:
         - "bc random command #2"
-    - percent: 10 # Command percent
-      commands: # Commands list
+    - percent: 10
+      commands:
         - "bc random command #3"
-    - percent: 40 # Command percent
-      commands: # Commands list
+    - percent: 40
+      commands:
         - "bc random command #4"
 
-# First location
+# Coordinates for the first location of Koth area
 minLocation:
   world: world
   x: 0
   y: 0
   z: 0
 
-# Second location
+# Coordinates for the second location of Koth area
 manLocation:
   world: world
   x: 0
   y: 0
   z: 0
 
+# Scoreboard settings for Koth event
 scoreboard:
   cooldown:
     enable: true
@@ -107,6 +108,7 @@ scoreboard:
       - " #636363◊ #ffffff%captureFormat%"
       - "&r"
 
+# Hologram display configuration for Koth
 hologram:
   enable: false
   lines:
@@ -118,21 +120,22 @@ hologram:
   y: 0
   z: 0
 
+# Webhook settings for sending Koth events to external services
 webhook:
   enable: true
-  url: "https://discord.com/api/webhooks/1187068418923438190/eHBOLr52d7S28rcMqtNAdHbCi-9Gpk1tG0IU1ulbf3p6z9IbM2UqoSl9MxRT1TdX5k-W"
-  # Available event:
-  # - SPAWN
-  # - START
-  # - STOP
-  # - START_CAP
-  # - WIN
-  # - LOOSE
+  url: "https://discord.com/api/webhooks/1187068418923438190/<your webhook>"
+  # List of Koth events that trigger the webhook
+  # - SPAWN: When Koth spawns
+  # - START: When Koth starts
+  # - STOP: When Koth stops
+  # - START_CAP: When capture starts
+  # - WIN: When Koth is won
+  # - LOOSE: When Koth capture is lost
   events:
     START:
       event: START
       title: 'Start Koth'
-      description: "Koth %name% has been started !"
+      description: "Koth %name% has been started!"
       # url: "<your url>"
       color:
         r: 40
@@ -142,35 +145,31 @@ webhook:
         text: zKoth
         iconUrl: https://groupez.dev/storage/images/9.png
       # thumbnail: "<your thumbnail>"
-      # image: "<your image>
+      # image: "<your image>"
       # author:
-      # name: "Maxlego08"
-      # url: ""
-      # iconUrl: ""
+      #   name: "Maxlego08"
+      #   url: ""
+      #   iconUrl: ""
       # fields:
       # - name: Info
       #   value: "A new koth"
       #   inline: false
 
+# Loot configuration for the Koth event
 loot:
-  # Takes 10 items from the list of items, to put all the items you must put -1
+  # Number of random items to select from the item list; use -1 for all items
   random: 3
-  # Available type :
-  # DROP
-  # CHEST
-  # INVENTORY
-  # NONE
+  # Type of loot distribution: DROP, CHEST, INVENTORY, NONE
   type: NONE
-  # Use /koth loot <koth name>
+  # Item list for loot; configure using /koth loot <koth name>
   items: []
 
-
-# Allows blacklist of team IDs so that it does not participate in koth, in this example, teams with ID 0 and -1 are blacklist
+# Blacklist configuration for team IDs that cannot participate in Koth
 blacklistTeamId:
   - "0"
   - "-1"
 
-# Configuration for the Progress Bar. Use by placeholders
+# Configuration for the Koth Progress Bar, used in placeholders
 progressBar:
   length: 20
   symbol: "|"

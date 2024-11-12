@@ -211,6 +211,14 @@ public interface Koth {
     boolean isEnableEverySecondsCapMessage();
 
     /**
+     * Checks if a message should be displayed every second during the game.
+     *
+     * @return {@code true} if the every-second game message is enabled, {@code false} otherwise.
+     */
+    boolean isEnableEverySecondsCooldownMessage();
+
+
+    /**
      * Defines a consumer to be called for scoreboards updates. This allows for dynamic scoreboard content based on the game state.
      *
      * @return A {@code CollectionConsumer<Player>} for scoreboard updates.

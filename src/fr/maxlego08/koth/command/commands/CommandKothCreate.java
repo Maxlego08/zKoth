@@ -31,7 +31,7 @@ public class CommandKothCreate extends VCommand {
     protected CommandType perform(KothPlugin plugin) {
 
         String name = argAsString(0);
-        KothType kothType = KothType.valueOf(argAsString(1, KothType.SCORE.name()).toUpperCase());
+        KothType kothType = KothType.valueOf(argAsString(1, KothType.CAPTURE.name()).toUpperCase());
         int capture = argAsInteger(2, 30);
 
         Optional<Selection> optional = this.manager.getSelection(this.player.getUniqueId());

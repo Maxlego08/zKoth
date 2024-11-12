@@ -166,7 +166,7 @@ public class CommandManager extends ZUtils implements CommandExecutor, TabComple
 				super.runAsync(this.plugin, () -> {
 					CommandType returnType = command.prePerform(this.plugin, sender, strings);
 					if (returnType == CommandType.SYNTAX_ERROR) {
-						message(sender, Message.COMMAND_SYNTAXE_ERROR, "%syntax%", command.getSyntax());
+						message(sender, Message.COMMAND_SYNTAX_ERROR, "%syntax%", command.getSyntax());
 					}
 				});
 				return CommandType.DEFAULT;
@@ -174,7 +174,7 @@ public class CommandManager extends ZUtils implements CommandExecutor, TabComple
 
 			CommandType returnType = command.prePerform(this.plugin, sender, strings);
 			if (returnType == CommandType.SYNTAX_ERROR) {
-				message(sender, Message.COMMAND_SYNTAXE_ERROR, "%syntax%", command.getSyntax());
+				message(sender, Message.COMMAND_SYNTAX_ERROR, "%syntax%", command.getSyntax());
 			}
 			return returnType;
 		}

@@ -54,6 +54,7 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
         boolean enableStartCapMessage = configuration.getBoolean("enableStartCapMessage", true);
         boolean enableLooseCapMessage = configuration.getBoolean("enableLooseCapMessage", true);
         boolean enableEverySecondsCapMessage = configuration.getBoolean("enableEverySecondsCapMessage", false);
+        boolean enableEverySecondsCooldownMessage = configuration.getBoolean("enableEverySecondsCooldownMessage", false);
         List<String> startCommands = configuration.getStringList("startCommands");
         List<String> endCommands = configuration.getStringList("endCommands");
         Location minLocation = locationLoader.load(configuration, "minLocation.", file);
@@ -90,7 +91,7 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
             });
         }
 
-        return new ZKoth(this.plugin, fileName, kothType, name, captureSeconds, minLocation, maxLocation, startCommands, endCommands, cooldownScoreboard, startScoreboard, cooldownStart, stopAfterSeconds, enableStartCapMessage, enableLooseCapMessage, enableEverySecondsCapMessage, hologramConfig, itemStacks, kothLootType, discordWebhookConfig, randomItemStacks, blacklistTeamId, progressBar, randomCommands, maxRandomCommands);
+        return new ZKoth(this.plugin, fileName, kothType, name, captureSeconds, minLocation, maxLocation, startCommands, endCommands, cooldownScoreboard, startScoreboard, cooldownStart, stopAfterSeconds, enableStartCapMessage, enableLooseCapMessage, enableEverySecondsCapMessage, enableEverySecondsCooldownMessage, hologramConfig, itemStacks, kothLootType, discordWebhookConfig, randomItemStacks, blacklistTeamId, progressBar, randomCommands, maxRandomCommands);
     }
 
     @Override
@@ -117,6 +118,7 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
         configuration.set("enableStartCapMessage", koth.isEnableStartCapMessage());
         configuration.set("enableLooseCapMessage", koth.isEnableLooseCapMessage());
         configuration.set("enableEverySecondsCapMessage", koth.isEnableEverySecondsCapMessage());
+        configuration.set("enableEverySecondsCooldownMessage", koth.isEnableEverySecondsCooldownMessage());
         locationLoader.save(koth.getMinLocation(), configuration, "minLocation.");
         locationLoader.save(koth.getMaxLocation(), configuration, "maxLocation.");
         scoreboardLoaderLoader.save(koth.getCooldownScoreboard(), configuration, "scoreboard.cooldown.");

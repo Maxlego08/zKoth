@@ -589,7 +589,7 @@ public abstract class VCommand extends Arguments {
 	public void syntaxMessage() {
 		this.subVCommands.forEach(command -> {
 			if (command.getPermission() == null || hasPermission(sender, command.getPermission())) {
-				message(this.sender, Message.COMMAND_SYNTAXE_HELP, "%syntax%", command.getSyntax(), "%description%",
+				message(this.sender, Message.COMMAND_SYNTAX_HELP, "%syntax%", command.getSyntax(), "%description%",
 						command.getDescription());
 			}
 		});

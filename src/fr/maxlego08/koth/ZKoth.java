@@ -23,7 +23,6 @@ import fr.maxlego08.koth.save.Config;
 import fr.maxlego08.koth.scoreboard.ScoreBoardManager;
 import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.logger.Logger;
-import fr.maxlego08.koth.zcore.utils.ColorTransformer;
 import fr.maxlego08.koth.zcore.utils.Cuboid;
 import fr.maxlego08.koth.zcore.utils.ProgressBar;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
@@ -70,6 +69,7 @@ public class ZKoth extends ZUtils implements Koth {
     private final boolean enableStartCapMessage;
     private final boolean enableLooseCapMessage;
     private final boolean enableEverySecondsCapMessage;
+    private final boolean enableEverySecondsCooldownMessage;
     private final HologramConfig hologramConfig;
     private final KothLootType kothLootType;
     private final List<String> blacklistTeamId;
@@ -92,7 +92,7 @@ public class ZKoth extends ZUtils implements Koth {
     private TimerTask timerTaskStop;
     private List<PlayerResult> playerResults = new ArrayList<>();
 
-    public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands, ScoreboardConfiguration cooldownScoreboard, ScoreboardConfiguration startScoreboard, int cooldownStart, int stopAfterSeconds, boolean enableStartCapMessage, boolean enableLooseCapMessage, boolean enableEverySecondsCapMessage, HologramConfig hologramConfig, List<ItemStack> itemStacks, KothLootType kothLootType, DiscordWebhookConfig discordWebhookConfig, int randomItemStacks, List<String> blacklistTeamId, ProgressBar progressBar, List<RandomCommand> randomCommands, int maxRandomCommands) {
+    public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation, List<String> startCommands, List<String> endCommands, ScoreboardConfiguration cooldownScoreboard, ScoreboardConfiguration startScoreboard, int cooldownStart, int stopAfterSeconds, boolean enableStartCapMessage, boolean enableLooseCapMessage, boolean enableEverySecondsCapMessage, boolean enableEverySecondsCooldownMessage, HologramConfig hologramConfig, List<ItemStack> itemStacks, KothLootType kothLootType, DiscordWebhookConfig discordWebhookConfig, int randomItemStacks, List<String> blacklistTeamId, ProgressBar progressBar, List<RandomCommand> randomCommands, int maxRandomCommands) {
         this.plugin = plugin;
         this.fileName = fileName;
         this.kothType = kothType;
@@ -109,6 +109,7 @@ public class ZKoth extends ZUtils implements Koth {
         this.enableStartCapMessage = enableStartCapMessage;
         this.enableLooseCapMessage = enableLooseCapMessage;
         this.enableEverySecondsCapMessage = enableEverySecondsCapMessage;
+        this.enableEverySecondsCooldownMessage = enableEverySecondsCooldownMessage;
         this.hologramConfig = hologramConfig;
         this.itemStacks = itemStacks;
         this.kothLootType = kothLootType;
@@ -135,6 +136,7 @@ public class ZKoth extends ZUtils implements Koth {
         this.enableStartCapMessage = true;
         this.enableLooseCapMessage = true;
         this.enableEverySecondsCapMessage = false;
+        this.enableEverySecondsCooldownMessage = false;
         this.hologramConfig = new HologramConfig(false, new ArrayList<>(), getCenter());
         this.discordWebhookConfig = null;
         this.itemStacks = new ArrayList<>();
@@ -349,6 +351,9 @@ public class ZKoth extends ZUtils implements Koth {
             if (Config.displayMessageCooldown.contains(currentRemainingSeconds)) {
                 broadcast(Message.EVENT_COOLDOWN);
             }
+            if (this.enableEverySecondsCapMessage) {
+                broadcast(Message.EVENT_COOLDOWN_EVERYSECONDS);
+            }
 
             if (currentRemainingSeconds <= 0) {
                 this.timerTask.cancel();
@@ -560,23 +565,24 @@ public class ZKoth extends ZUtils implements Koth {
                 KothCapEvent capEvent = new KothCapEvent(this, player, this.remainingSeconds.get(), this.kothTeam.getTeamName(player));
                 capEvent.call();
 
+                if (this.enableEverySecondsCapMessage) {
+                    broadcast(Message.EVENT_EVERYSECONDS);
+                }
+
                 if (Config.displayMessageKothCap.contains(currentRemainingSeconds)) {
                     broadcast(Message.EVENT_TIMER);
-                } else if (enableEverySecondsCapMessage) {
-                    broadcast(Message.EVENT_EVERYSECONDS);
                 }
 
                 updateDisplay();
 
                 switch (this.kothType) {
-                    case CAPTURE:
-                    default:
-                        this.remainingSeconds.decrementAndGet();
-                        break;
                     case SCORE:
                         // case TIMER:
                         this.playersValues.put(this.currentPlayer.getUniqueId(), this.getValue(this.currentPlayer) + 1);
                         this.playerResults.clear(); // Clear cache
+                        break;
+                    case CAPTURE:
+                    default:
                         break;
                 }
             }
@@ -612,7 +618,7 @@ public class ZKoth extends ZUtils implements Koth {
         this.plugin.getScoreBoardManager().clearBoard();
 
         this.endCommands.forEach(command -> dispatchCommand(command, player));
-        if (this.maxRandomCommands != 0 && this.randomCommands.size() != 0) {
+        if (this.maxRandomCommands != 0 && !this.randomCommands.isEmpty()) {
             int executedCommands = 0;
             while (executedCommands < maxRandomCommands) {
                 RandomCommand randomCommand = randomElement(this.randomCommands);
@@ -630,7 +636,7 @@ public class ZKoth extends ZUtils implements Koth {
         }
         Location location = center.clone();
 
-        if (this.itemStacks.size() != 0) {
+        if (!this.itemStacks.isEmpty()) {
             switch (this.kothLootType) {
                 case CHEST:
                     location.getBlock().setType(Material.CHEST);
@@ -699,7 +705,7 @@ public class ZKoth extends ZUtils implements Koth {
                 break;
             }
             case CENTER: {
-                if (message.getMessages().size() == 0) {
+                if (message.getMessages().isEmpty()) {
                     String realMessage = replaceMessage(message.getMessage());
                     broadcastCenterMessage(Collections.singletonList(realMessage));
                 } else {
@@ -708,7 +714,7 @@ public class ZKoth extends ZUtils implements Koth {
                 break;
             }
             case TCHAT: {
-                if (message.getMessages().size() == 0) this.broadcast(replaceMessage(message.getMessage()));
+                if (message.getMessages().isEmpty()) this.broadcast(replaceMessage(message.getMessage()));
                 else message.getMessages().forEach(m -> this.broadcast(replaceMessage(m)));
                 break;
             }
@@ -742,6 +748,8 @@ public class ZKoth extends ZUtils implements Koth {
         int seconds = this.remainingSeconds == null ? this.captureSeconds : this.remainingSeconds.get();
         string = string.replace("%captureFormat%", TimerBuilder.getStringTime(seconds));
         string = string.replace("%captureSeconds%", String.valueOf(seconds));
+        string = string.replace("%captureProgress%", getProgressBar(this.captureSeconds - seconds, this.captureSeconds, this.progressBar));
+        string = string.replace("%capturePercent%", this.captureSeconds == 0 ? "0" : format(percent(this.captureSeconds - seconds, this.captureSeconds)));
 
         return replaceKothInformations(string);
     }
@@ -881,5 +889,10 @@ public class ZKoth extends ZUtils implements Koth {
     @Override
     public int getMaxRandomCommands() {
         return this.maxRandomCommands;
+    }
+
+    @Override
+    public boolean isEnableEverySecondsCooldownMessage() {
+        return enableEverySecondsCooldownMessage;
     }
 }

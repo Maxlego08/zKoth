@@ -1,10 +1,14 @@
 # Unreleased
 
+- Add ``enableEverySecondsCooldownMessage``, Periodically displays a message when the koth is launched
+- Fixed the koth default type when creating, the type will now be CAPTURE
+- Add ``%captureProgress%`` and `%capturePercent%` placeholder 
+
 # 3.0.9
 
 - Update HuskTown API
 - Fix scoreboard title with PlaceholderApi
-- Minor fixs
+- Minor fixes
 
 # 3.0.8
 

@@ -34,11 +34,11 @@ public enum Message {
     FORMAT_DAY("d"),
     FORMAT_DAYS("days"),
 
-    COMMAND_SYNTAXE_ERROR("§cYou must execute the command like this§7: §a%syntax%"),
+    COMMAND_SYNTAX_ERROR("§cYou must execute the command like this§7: §a%syntax%"),
     COMMAND_NO_PERMISSION("§cYou do not have permission to run this command."),
     COMMAND_NO_CONSOLE("§cOnly one player can execute this command."),
     COMMAND_NO_ARG("§cImpossible to find the command with its arguments."),
-    COMMAND_SYNTAXE_HELP("§f%syntax% §7» §7%description%"),
+    COMMAND_SYNTAX_HELP("§f%syntax% §7» §7%description%"),
 
     RELOAD("§aYou have just reloaded the configuration files."),
 
@@ -104,6 +104,7 @@ public enum Message {
             "",
             "§8§m-+------------------------------+-"
     ),
+    EVENT_COOLDOWN_EVERYSECONDS(MessageType.ACTION, "§fThe koth §n%name%§f will appear in §d%spawnFormat% §8(§7%centerX%, %centerY%, %centerZ%§8)"),
 
     EVENT_STOP(MessageType.CENTER,
             "§8§m-+------------------------------+-",
@@ -123,7 +124,7 @@ public enum Message {
     EVENT_CATCH(MessageType.ACTION, "§d%playerName% §fjust started capturing the koth §n%name%§f. §8(§7%centerX%, %centerY%, %centerZ%§8)"),
     EVENT_LOOSE(MessageType.ACTION, "§d%playerName% §fjust loose koth §n%name%§f. §8(§7%centerX%, %centerY%, %centerZ%§8)"),
     EVENT_TIMER(MessageType.ACTION, "§fAnother §b%captureFormat% §fbefore §d%playerName% §fwins the koth §n%name%§e. §8(§7%centerX%, %centerY%, %centerZ%§8)"),
-    EVENT_EVERYSECONDS(MessageType.ACTION, "§d%playerName% §7- §8[§f%classicProgress%§8] §7- §b%classicPercent%§f%"),
+    EVENT_EVERYSECONDS(MessageType.ACTION, "§d%playerName% §7- §8[§f%captureProgress%§8] §7- §b%capturePercent%§f%"),
 
     MOVE_SUCCESS("§7You have just moved the koth §f%name%§7."),
 

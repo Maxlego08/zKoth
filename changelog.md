@@ -1,5 +1,7 @@
 # Unreleased
 
+- Fix command description
+
 # 3.1.0
 
 - Add ``enableEverySecondsCooldownMessage``, Periodically displays a message when the koth is launched

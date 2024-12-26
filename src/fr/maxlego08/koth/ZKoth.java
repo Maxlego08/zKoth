@@ -582,6 +582,8 @@ public class ZKoth extends ZUtils implements Koth {
                         this.playerResults.clear(); // Clear cache
                         break;
                     case CAPTURE:
+                        this.remainingSeconds.decrementAndGet();
+                        break;
                     default:
                         break;
                 }

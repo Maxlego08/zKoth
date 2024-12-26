@@ -747,11 +747,13 @@ public class ZKoth extends ZUtils implements Koth {
         string = string.replace("%teamId%", this.currentPlayer != null ? this.kothTeam.getTeamId(this.currentPlayer) : Config.noFaction);
         string = string.replace("%teamLeader%", this.currentPlayer != null ? this.kothTeam.getTeamName(this.currentPlayer) : Config.noFaction);
 
-        int seconds = this.remainingSeconds == null ? this.captureSeconds : this.remainingSeconds.get();
-        string = string.replace("%captureFormat%", TimerBuilder.getStringTime(seconds));
-        string = string.replace("%captureSeconds%", String.valueOf(seconds));
-        string = string.replace("%captureProgress%", getProgressBar(this.captureSeconds - seconds, this.captureSeconds, this.progressBar));
-        string = string.replace("%capturePercent%", this.captureSeconds == 0 ? "0" : format(percent(this.captureSeconds - seconds, this.captureSeconds)));
+        if (kothStatus == KothStatus.START) {
+            int seconds = this.remainingSeconds == null ? this.captureSeconds : this.remainingSeconds.get();
+            string = string.replace("%captureFormat%", TimerBuilder.getStringTime(seconds));
+            string = string.replace("%captureSeconds%", String.valueOf(seconds));
+            string = string.replace("%captureProgress%", getProgressBar(this.captureSeconds - seconds, this.captureSeconds, this.progressBar));
+            string = string.replace("%capturePercent%", this.captureSeconds == 0 ? "0" : format(percent(this.captureSeconds - seconds, this.captureSeconds)));
+        }
 
         return replaceKothInformations(string);
     }

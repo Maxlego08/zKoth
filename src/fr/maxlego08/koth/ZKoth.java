@@ -65,6 +65,7 @@ public class ZKoth extends ZUtils implements Koth {
     private final int cooldownStart;
     private final int stopAfterSeconds;
     private final int randomItemStacks;
+    private final int scoreboardRadius;
     private final Map<UUID, Integer> playersValues = new HashMap<>();
     private final boolean enableStartCapMessage;
     private final boolean enableLooseCapMessage;
@@ -119,6 +120,8 @@ public class ZKoth extends ZUtils implements Koth {
         this.progressBar = progressBar;
         this.randomCommands = randomCommands;
         this.maxRandomCommands = maxRandomCommands;
+        
+        this.scoreboardRadius = plugin.getConfig().getInt("scoreboardRadius", 50);
     }
 
     public ZKoth(KothPlugin plugin, String fileName, KothType kothType, String name, int captureSeconds, Location minLocation, Location maxLocation) {
@@ -146,6 +149,8 @@ public class ZKoth extends ZUtils implements Koth {
         this.progressBar = new ProgressBar(10, '-', "&a", "&7");
         this.randomCommands = new ArrayList<>();
         this.maxRandomCommands = 0;
+        
+        this.scoreboardRadius = plugin.getConfig().getInt("scoreboardRadius", 50);
     }
 
     @Override
@@ -443,6 +448,14 @@ public class ZKoth extends ZUtils implements Koth {
         if (this.blacklistTeamId.contains(this.kothTeam.getTeamId(player))) return;
 
         Cuboid cuboid = this.getCuboid();
+        
+        Location pLoc = player.getLocation();
+        if (pLoc.distanceSquared(this.getCenter()) > Math.pow(scoreboardRadius, 2)) {
+            plugin.getScoreBoardManager().delete(player);
+            plugin.getScoreBoardManager().getBoards().remove(player);
+        } else {
+            plugin.getScoreBoardManager().createBoard(player, color(startScoreboard.getTitle()));
+        }
 
         if (this.currentPlayer == null && cuboid.contains(player.getLocation())) {
 

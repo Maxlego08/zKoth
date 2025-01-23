@@ -120,6 +120,8 @@ schedulerMillisecond: 1000
 
 removeChestSec: 120
 
+scoreboardRadius: 50
+
 # Value that will be used for score placeholders if the position does not exist.
 defaultPlayerResult:
   playerName: "X"
